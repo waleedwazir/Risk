@@ -1,4 +1,5 @@
 START
+Indonesia
 81	167
 82	166
 82	167
@@ -107,6 +108,7 @@ START
 96	166
 96	167
 XXX
+New Guinea
 79	174
 79	175
 79	176
@@ -185,6 +187,7 @@ XXX
 88	187
 88	188
 XXX
+Western Australia
 115	166
 116	167
 115	168
@@ -483,8 +486,7 @@ XXX
 95	174
 95	175
 XXX
-
-
+Eastern Australia
 
 114	186
 114	186
@@ -789,3 +791,4 @@ XXX
 92	180
 92	181
 XXX
+

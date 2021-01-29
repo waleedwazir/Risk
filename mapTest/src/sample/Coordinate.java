@@ -5,6 +5,7 @@ public class Coordinate
     private int y;
     private int x;
 
+    //x and y reversed to account for 2D array indexing
     public Coordinate(int y, int x)
     {
         this.y = y;

@@ -20,11 +20,11 @@ public class Reader
         country  = new ArrayList<Coordinate>();
         countries = new ArrayList<ArrayList<Coordinate>>();
     }
-
     public void run()
     {
         try
         {
+            //increments each to loop to append the arraylist of coordinates to the 2D arraylist
             int index = 0;
             Scanner scan = new Scanner(file);
             while(scan.hasNextLine())
@@ -46,7 +46,8 @@ public class Reader
                 }
 
                 String[] split = line.split("\t");
-                setCoordinate(Integer.valueOf(split[0]),Integer.valueOf(split[1]));
+                //stores the coordinate in reverse order to account for 2D array indexing
+                setCoordinate(Integer.valueOf(split[1]), Integer.valueOf(split[0]));
                 country.add(coordinate);
             }
         } catch (FileNotFoundException e)
@@ -57,27 +58,15 @@ public class Reader
     }
     public void setCoordinate(int x, int y)
     {
-        coordinate = new Coordinate(y,x);
+        coordinate = new Coordinate(x,y);
     }
     public ArrayList<ArrayList<Coordinate>> getCountries()
     {
         return countries;
     }
-
-    public void printCoordinates()
-    {
-        int i = 0;
-        for(ArrayList<Coordinate> countryArray: countries)
-        {
-            System.out.println(i++);
-            for(Coordinate countryCoordinate: countryArray)
-            {
-                System.out.println(countryCoordinate.toString());
-            }
-        }
-    }
-
     private void appendCountry(ArrayList<ArrayList<Coordinate>> countries, ArrayList<Coordinate> country, int index){
+
+        //adds a newly initialised ArrayList to countries and fills it with Coordinate objects
         countries.add(new ArrayList<Coordinate>());
         for(Coordinate c:country){
             countries.get(index).add(c);

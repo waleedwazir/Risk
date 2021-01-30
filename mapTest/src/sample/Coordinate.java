@@ -24,4 +24,12 @@ public class Coordinate
         return "(" + y +","+ x+")";
     }
 
+    public double getDistance(Coordinate coordinate)
+    {
+        //returns the distance between coordinates
+        return Math.sqrt(Math.pow(y - coordinate.getY(),2) + Math.pow(x - coordinate.getX(),2));
+    }
+
+
+
 }

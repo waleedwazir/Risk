@@ -3,6 +3,8 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -21,6 +23,7 @@ public class Controller {
     AnchorPane anchor;
     @FXML
     Button startButton;
+
 
     static Rectangle[][] grid = new Rectangle[120][200];
     //initalises a Countries object
@@ -69,11 +72,9 @@ public class Controller {
 
         }
     }
-
     public static void fillRectangle(int y, int x){
         grid[y][x].setFill(Color.GREEN);
     }
-
     public void printResult(ActionEvent actionEvent){
         System.out.print("Final results:\n");
         for(int y=0;y<120;y++){
@@ -84,4 +85,5 @@ public class Controller {
             }
         }
     }
+
 }

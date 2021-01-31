@@ -24,7 +24,9 @@ public class Main extends Application {
                 int y = (int) event.getY()/5;
                 int x = (int) event.getX()/5;
                 System.out.println(y+"\t"+x);
-                Controller.fillRectangle(y, x);
+                if(!(x>199)) {
+                    Controller.fillRectangle(y, x);
+                }
             }
         });
     }

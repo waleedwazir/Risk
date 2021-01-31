@@ -2,11 +2,12 @@ package sample;
 
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
@@ -23,10 +25,25 @@ public class Controller {
     AnchorPane anchor;
     @FXML
     Button startButton;
+    @FXML
+    TextField text;
+    @FXML
+    VBox chatBox;
+
+    @FXML
+    ScrollPane scroll; //this must match the fx:id of the ScrollPane element
+
+    public List<Label> messages = new ArrayList<>();
+    public int messageIndex = 0;
+
+    public void updateScroll()
+    {
+        scroll.vvalueProperty().bind(chatBox.heightProperty());
+    }
 
 
     static Rectangle[][] grid = new Rectangle[120][200];
-    //initalises a Countries object
+    //initialises a Countries object
     Countries countries = new Countries();
 
 
@@ -86,4 +103,32 @@ public class Controller {
         }
     }
 
+    public void textOutput(TextField t)
+    {
+        //this will be changed to input validation when we get to that stage
+        if(!t.getText().equals("") && t.getText().length() <= 21)
+        {
+            messages.add(new Label(t.getText()));
+        }
+        else
+        {
+            messages.add(new Label("Invalid Input!"));
+        }
+        t.clear();
+        chatBox.getChildren().add(messages.get(messageIndex));
+        messageIndex++;
+        updateScroll();//scrolls the pane as text comes in
+    }
+    public void sendMessageEnter(KeyEvent keyEvent)
+    {
+        if(keyEvent.getCode() == KeyCode.ENTER)
+        {
+            textOutput(text);
+
+        }
+    }
+    public void sendMessageButton(ActionEvent actionEvent)
+    {
+        textOutput(text);
+    }
 }

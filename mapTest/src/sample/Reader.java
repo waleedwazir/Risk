@@ -12,13 +12,13 @@ public class Reader
     private File file;
     private Coordinate coordinate;
     private ArrayList<Coordinate>  country;
-    private ArrayList<ArrayList<Coordinate>> countries;
+    private ArrayList<Country> countries;
 
     public Reader(File test)
     {
         this.file = test;
         country  = new ArrayList<Coordinate>();
-        countries = new ArrayList<ArrayList<Coordinate>>();
+        countries = new ArrayList<Country>();
     }
     public void run()
     {
@@ -60,16 +60,17 @@ public class Reader
     {
         coordinate = new Coordinate(x,y);
     }
-    public ArrayList<ArrayList<Coordinate>> getCountries()
+    public ArrayList<Country> getCountries()
     {
         return countries;
     }
-    private void appendCountry(ArrayList<ArrayList<Coordinate>> countries, ArrayList<Coordinate> country, int index){
+    private void appendCountry(ArrayList<Country> countries, ArrayList<Coordinate> country, int index){
 
         //adds a newly initialised ArrayList to countries and fills it with Coordinate objects
-        countries.add(new ArrayList<Coordinate>());
+
+        countries.add(new Country());
         for(Coordinate c:country){
-            countries.get(index).add(c);
+            countries.get(index).addCoordinate(c);
         }
     }
 

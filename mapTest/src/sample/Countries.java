@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Countries
 {
     File file;
-    private ArrayList<ArrayList<Coordinate>> countries;
+    private ArrayList<Country> countries;
 
     //reads and stores all all coordinates in the countries array
     public Countries()
@@ -22,12 +22,12 @@ public class Countries
         countries = reader.getCountries();
     }
 
-    public ArrayList<ArrayList<Coordinate>> getCountries()
+    public ArrayList<Country> getCountries()
     {
         return countries;
     }
 
-    //returns an ArrayList of all the pixels in a country
+    /*//returns an ArrayList of all the pixels in a country
     public ArrayList<Coordinate> getIndonesia()
     {
         return countries.get(0);
@@ -195,5 +195,5 @@ public class Countries
     public ArrayList<Coordinate> getKamchatka()
     {
         return countries.get(41);
-    }
+    }*/
 }

@@ -65,7 +65,7 @@ public class Controller {
         int index = 0;//index to notify when the border coordinates are reached
         int numberOfCountries = 41;
 
-        for (ArrayList<Coordinate> country : countries.getCountries())
+        for (Country country : countries.getCountries())
         {
             if (index > numberOfCountries)//when index is greater than number of countries setFill is changed to black for the borders
             {

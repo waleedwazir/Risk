@@ -67,11 +67,25 @@ public class Reader
     private void appendCountry(ArrayList<Country> countries, ArrayList<Coordinate> country, int index){
 
         //adds a newly initialised ArrayList to countries and fills it with Coordinate objects
-
         countries.add(new Country());
+        if(index<42) {
+            countries.get(index).setName(getCountryName(index));
+        }
         for(Coordinate c:country){
             countries.get(index).addCoordinate(c);
         }
     }
+
+    private String getCountryName(int index){
+        String[] countryNames = {"Indonesia", "New Guinea", "Western Australia", "Eastern Australia", "North Africa", "Congo",
+        "Egypt", "East Africa", "South Africa", "Madagascar", "Argentina", "Venezuela", "Peru", "Brazil", "UK & Ireland",
+        "Iceland", "Western Europe", "Southern Europe", "Northern Europe", "Ukraine", "Scandinavia", "Greenland", "Quebec",
+        "Western USA", "Alberta", "Ontario", "North West Territory", "Eastern USA", "Central America", "Alaska",
+        "Middle East", "India", "China", "Siam", "Mongolia", "Japan", "Afghanistan", "Ural", "Siberia", "Irkutsk", "Yakutsk",
+        "Kamchatka"};
+        return countryNames[index];
+    }
+
+
 
 }

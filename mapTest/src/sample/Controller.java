@@ -50,10 +50,8 @@ public class Controller {
     public void newGrid(ActionEvent actionEvent)
     {
         pane.getChildren().clear();
-        for (int y = 0; y < 120; y++)
-        {
-            for (int x = 0; x < 200; x++)
-            {
+        for (int y = 0; y < 120; y++){
+            for (int x = 0; x < 200; x++){
                 Rectangle rect = new Rectangle(x * 5, (5 * y), 5, 5);
                 rect.setFill(Color.CYAN);
                 rect.setStroke(Color.CYAN);
@@ -89,6 +87,7 @@ public class Controller {
 
         }
     }
+
     public static void fillRectangle(int y, int x){
         grid[y][x].setFill(Color.GREEN);
     }

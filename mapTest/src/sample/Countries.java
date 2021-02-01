@@ -27,6 +27,8 @@ public class Countries
         return countries;
     }
 
+
+
     /*//returns an ArrayList of all the pixels in a country
     public ArrayList<Coordinate> getIndonesia()
     {

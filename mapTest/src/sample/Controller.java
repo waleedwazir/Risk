@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -35,9 +36,6 @@ public class Controller {
     @FXML
     ScrollPane scroll; //this must match the fx:id of the ScrollPane element
 
-    public Controller(){
-        VBox cloneChat = this.chatBox;
-    }
 
     public List<Label> messages = new ArrayList<>();
     public int messageIndex = 0;
@@ -152,18 +150,19 @@ public class Controller {
             for(int i=0;i<42;i++){
                 insert(countries.getCountries().get(i), queue, countries, i, y , x);
             }
-        }
-        for(int i=0;i<42;i++){
-            for(Coordinate c:queue.get(i)){
-                if(c.equals(clicked)){
-                    /*messages.add(new Label(queue.get(i).getName()));
-                    cloneChat.getChildren().add(messages.get(messageIndex));
-                    messageIndex++;*/
-                    System.out.println(queue.get(i).getName());
-                    break;
+            for(int i=0;i<42;i++){
+                for(Coordinate c:queue.get(i)){
+                    if(c.equals(clicked)){
+                        messages.add(new Label(queue.get(i).getName()));
+                        chatBox.getChildren().add(messages.get(messageIndex));
+                        messageIndex++;
+                        System.out.println(queue.get(i).getName());
+                        break;
+                    }
                 }
             }
         }
+
     }
 
     public void insert(Country country, ArrayList<Country> queue, Countries countries, int index, int y, int x){
@@ -181,4 +180,14 @@ public class Controller {
         queue.add(country);
     }
 
+    //method called when scene is clicked after map is initialised
+    public void anchorOnClick(MouseEvent mouseEvent)
+    {
+        int y = (int) mouseEvent.getY()/5;
+        int x = (int) mouseEvent.getX()/5;
+        System.out.println(y+"\t"+x);
+        if(!(x>199)) {
+            determineClick(y, x);
+        }
+    }
 }

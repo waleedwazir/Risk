@@ -18,18 +18,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 1200, 600));
         primaryStage.show();
         Controller controller = new Controller();
-
-        root.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int y = (int) event.getY()/5;
-                int x = (int) event.getX()/5;
-                System.out.println(y+"\t"+x);
-                if(!(x>199)) {
-                    controller.determineClick(y, x);
-                }
-            }
-        });
+        
     }
 
 

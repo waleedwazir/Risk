@@ -1,5 +1,7 @@
 package sample;
 
+import java.util.Objects;
+
 public class Coordinate
 {
     private int y;
@@ -30,6 +32,13 @@ public class Coordinate
         return Math.sqrt(Math.pow(y - coordinate.getY(),2) + Math.pow(x - coordinate.getX(),2));
     }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return y == that.y &&
+                x == that.x;
+    }
 
 }

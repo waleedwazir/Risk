@@ -27,6 +27,11 @@ public class Countries
         return countries;
     }
 
+    public int size(){
+        return countries.size();
+    }
+
+
 
 
     /*//returns an ArrayList of all the pixels in a country

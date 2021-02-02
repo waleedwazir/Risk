@@ -47,7 +47,7 @@ public class Reader
 
                 String[] split = line.split("\t");
                 //stores the coordinate in reverse order to account for 2D array indexing
-                setCoordinate(Integer.valueOf(split[1]), Integer.valueOf(split[0]));
+                setCoordinate(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
                 country.add(coordinate);
             }
         } catch (FileNotFoundException e)

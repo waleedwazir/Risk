@@ -1,4 +1,5 @@
 Indonesia 0
+88	165
 81	167
 82	166
 82	167
@@ -49,7 +50,6 @@ Indonesia 0
 88	162
 88	163
 88	164
-88	165
 88	166
 88	167
 88	170
@@ -108,6 +108,7 @@ Indonesia 0
 96	167
 XXX
 New Guinea 1
+84	182
 79	174
 79	175
 79	176
@@ -152,7 +153,6 @@ New Guinea 1
 84	179
 84	180
 84	181
-84	182
 84	183
 84	184
 84	185
@@ -187,6 +187,7 @@ New Guinea 1
 88	188
 XXX
 Western Australia 2
+106	174
 115	166
 116	167
 115	168
@@ -486,6 +487,7 @@ Western Australia 2
 98	171
 XXX
 Eastern Australia 3
+102	187
 114	186
 114	186
 115	186
@@ -790,6 +792,7 @@ Eastern Australia 3
 92	181
 XXX
 North Africa 4
+75	92
 62	88
 62	89
 62	90
@@ -1301,6 +1304,7 @@ North Africa 4
 88	101
 XXX
 Congo 5
+91	105
 84	106
 85	104
 85	105
@@ -1428,6 +1432,7 @@ Congo 5
 98	110
 XXX
 Eygpt 6
+70	105
 65	99
 65	100
 66	99
@@ -1529,6 +1534,7 @@ Eygpt 6
 74	106
 XXX
 East Africa 7
+85	117
 74	108
 74	109
 74	110
@@ -1789,6 +1795,7 @@ East Africa 7
 101	115
 XXX
 South Africa 8
+106	107
 95	99
 95	100
 95	101
@@ -2046,6 +2053,7 @@ South Africa 8
 116	107
 XXX
 Madagascar 9
+107	126
 100	129
 100	130
 101	128
@@ -2116,6 +2124,7 @@ Madagascar 9
 113	124
 XXX
 Argentina 10
+99	49
 88	43
 89	43
 89	44
@@ -2367,6 +2376,7 @@ Argentina 10
 117	50
 XXX
 Venezuela 11
+67	43
 63	42
 64	40
 64	41
@@ -2488,6 +2498,7 @@ Venezuela 11
 73	43
 XXX
 Peru 12
+82	42
 72	35
 73	34
 73	35
@@ -2623,6 +2634,7 @@ Peru 12
 91	55
 XXX
 Brazil 13
+79	59
 70	50
 70	59
 71	49
@@ -3016,6 +3028,7 @@ Brazil 13
 73	64
 XXX
 Ireland and UK 14
+37	80
 29	78
 29	79
 29	80
@@ -3120,6 +3133,7 @@ Ireland and UK 14
 43	79
 XXX
 Iceland 15
+23	83
 20	79
 20	85
 20	86
@@ -3172,6 +3186,7 @@ Iceland 15
 25	86
 XXX
 Western Europe 16
+52	84
 43	87
 43	88
 44	86
@@ -3346,6 +3361,7 @@ Western Europe 16
 62	84
 XXX
 Southern Europe 17
+49	98
 44	104
 44	105
 45	98
@@ -3492,6 +3508,7 @@ Southern Europe 17
 60	103
 XXX
 Northern Europe 18
+39	98
 32	95
 33	95
 34	95
@@ -3654,6 +3671,7 @@ Northern Europe 18
 46	101
 XXX
 Ukraine 19
+31	118
 14	123
 14	124
 14	127
@@ -4307,6 +4325,7 @@ Ukraine 19
 52	122
 XXX
 Scandinavia 20
+21	99
 13	103
 13	107
 14	102
@@ -4471,6 +4490,7 @@ Scandinavia 20
 30	98
 XXX
 GREENLAND 21
+11	67
 17	61
 2	66
 2	67
@@ -4765,6 +4785,7 @@ GREENLAND 21
 24	64
 XXX
 Quebec 22
+29	54
 21	51
 21	52
 21	53
@@ -4935,6 +4956,7 @@ Quebec 22
 40	56
 XXX
 WESTERN UNITED STATES 23
+40	28
 34	22
 34	23
 34	24
@@ -5160,6 +5182,7 @@ WESTERN UNITED STATES 23
 50	30
 XXX
 ALBERTA 24
+27	27
 22	19
 22	20
 22	21
@@ -5326,6 +5349,7 @@ ALBERTA 24
 32	33
 XXX
 ONTARIO 25
+29	40
 22	37
 22	38
 22	39
@@ -5426,6 +5450,7 @@ ONTARIO 25
 36	46
 XXX
 NORTH WEST TERRITORY 26
+17	30
 8	44
 8	45
 9	44
@@ -5648,6 +5673,7 @@ NORTH WEST TERRITORY 26
 20	41
 XXX
 EASTERN UNITED STATES 27
+44	42
 34	39
 34	43
 35	39
@@ -5878,6 +5904,7 @@ EASTERN UNITED STATES 27
 54	45
 XXX
 CENTRAL AMERICA 28
+57	30
 48	22
 49	22
 49	23
@@ -5977,6 +6004,7 @@ CENTRAL AMERICA 28
 66	35
 XXX
 ALASKA 29
+17	11
 11	9
 11	10
 11	11
@@ -6125,6 +6153,7 @@ ALASKA 29
 27	19
 XXX
 Middle East 30
+63	121
 53	112
 53	113
 53	114
@@ -6566,6 +6595,7 @@ Middle East 30
 78	126
 XXX
 india 31
+64	145
 52	138
 52	142
 52	143
@@ -6850,6 +6880,7 @@ india 31
 80	146
 XXX
 China 32
+52	157
 38	146
 38	147
 39	145
@@ -7278,6 +7309,7 @@ China 32
 63	168
 XXX
 siam 33
+68	161
 61	157
 62	156
 62	157
@@ -7403,6 +7435,7 @@ siam 33
 78	163
 XXX
 mongolia 34
+40	163
 32	165
 32	166
 32	167
@@ -7619,6 +7652,7 @@ mongolia 34
 47	175
 XXX
 japan 35
+42	184
 31	182
 31	183
 32	182
@@ -7710,6 +7744,7 @@ japan 35
 51	178
 XXX
 Afghanistan 36
+43	133
 40	122
 38	122
 36	124
@@ -7970,6 +8005,7 @@ Afghanistan 36
 53	133
 XXX
 ural 37
+26	137
 32	132
 31	132
 29	132
@@ -8213,6 +8249,7 @@ ural 37
 39	143
 XXX
 siberia 38
+18	148
 14	138
 14	137
 13	137
@@ -8649,6 +8686,7 @@ siberia 38
 40	151
 XXX
 Irkutsk 39
+28	161
 21	160
 21	161
 21	162
@@ -8812,6 +8850,7 @@ Irkutsk 39
 35	160
 XXX
 yakutsk 40
+13	164
 6	159
 6	160
 7	158
@@ -8971,6 +9010,7 @@ yakutsk 40
 21	158
 XXX
 kamchatka 41
+17	176
 8	174
 8	175
 9	174

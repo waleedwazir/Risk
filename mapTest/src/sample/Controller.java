@@ -36,6 +36,9 @@ public class Controller {
     @FXML
     ScrollPane scroll; //this must match the fx:id of the ScrollPane element
 
+    @FXML
+    Pane names;
+
 
     public List<Label> messages = new ArrayList<>();
     public int messageIndex = 0;
@@ -88,6 +91,7 @@ public class Controller {
             }
             index++;
             printResults.toFront();
+            names.toFront();
 
         }
     }
@@ -155,10 +159,7 @@ public class Controller {
             for(int i=0;i<42;i++){
                 for(Coordinate c:queue.get(i)){
                     if(c.equals(clicked)){
-                        messages.add(new Label(queue.get(i).getName()));
-                        chatBox.getChildren().add(messages.get(messageIndex));
-                        messageIndex++;
-                        System.out.println(queue.get(i).getName());
+                        textOutput(new TextField(queue.get(i).getName()));
                         break;
                     }
                 }

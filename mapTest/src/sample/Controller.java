@@ -128,6 +128,7 @@ public class Controller {
         messageIndex++;
         updateScroll();//scrolls the pane as text comes in
     }
+
     public void sendMessageEnter(KeyEvent keyEvent)
     {
         if(keyEvent.getCode() == KeyCode.ENTER)
@@ -144,6 +145,7 @@ public class Controller {
 
     //Determining the country a player clicks on
     public void determineClick(int y, int x){
+        breadFirstSearch bfs = new breadFirstSearch();
         Coordinate clicked = new Coordinate(y, x);
         ArrayList<Country> queue = new ArrayList<Country>();
         if(grid[y][x].getFill()!=Color.CYAN && grid[y][x].getFill()!=Color.BLACK){
@@ -161,7 +163,9 @@ public class Controller {
                     }
                 }
             }
+            bfs.startBFS(clicked, grid, Color.YELLOW);
         }
+
 
     }
 

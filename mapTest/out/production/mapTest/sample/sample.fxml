@@ -65,7 +65,6 @@
             </ImageView>
          </children>
       </StackPane>
-      <Button fx:id="printResults" mnemonicParsing="false" onAction="#printResult" text="Button" />
       <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGrid" prefHeight="26.0" prefWidth="56.0" text="Button" />

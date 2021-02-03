@@ -23,7 +23,6 @@ import java.util.Queue;
 public class Controller {
 
     public Pane pane;
-    public Button printResults;
     @FXML
     AnchorPane anchor;
     @FXML
@@ -48,7 +47,7 @@ public class Controller {
         scroll.vvalueProperty().bind(chatBox.heightProperty());
     }
 
-
+    //declaration of grid
     static Rectangle[][] grid = new Rectangle[120][200];
     //initialises a Countries object
     Countries countries = new Countries();
@@ -90,31 +89,10 @@ public class Controller {
                 }
             }
             index++;
-            printResults.toFront();
             names.toFront();
-
         }
     }
 
-    public static void fillRectangle(int y, int x){
-        grid[y][x].setFill(Color.GREEN);
-    }
-
-    public void printResult(ActionEvent actionEvent){
-        System.out.print("Final results:\n");
-        for(int y=0;y<120;y++){
-            for(int x=0;x<200;x++){
-                if(grid[y][x].getFill()==Color.GREEN){
-                    System.out.println(y+"\t"+x);
-                }
-            }
-        }
-        for(Country c: countries.getCountries()){
-            Coordinate x = c.getCoordinates().get(0);
-            grid[x.getY()][x.getX()].setFill(Color.GREEN);
-            grid[x.getY()][x.getX()].setStroke(Color.GREEN);
-        }
-    }
 
     public void textOutput(TextField t)
     {
@@ -149,13 +127,22 @@ public class Controller {
 
     //Determining the country a player clicks on
     public void determineClick(int y, int x){
-        breadFirstSearch bfs = new breadFirstSearch();
-        Coordinate clicked = new Coordinate(y, x);
-        ArrayList<Country> queue = new ArrayList<Country>();
+        breadFirstSearch bfs = new breadFirstSearch(); //object used for animation
+        Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
+                                                    //the context of the grid
+        ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
+
+        //if statement to prevent unnecessary searches in sea and on borders
         if(grid[y][x].getFill()!=Color.CYAN && grid[y][x].getFill()!=Color.BLACK){
+
+            //loops through the countries array and perform insertion sort on the country objects
+            //into a queue based on the distance of those countries middle node to the point that
+            //was clicked
             for(int i=0;i<42;i++){
-                insert(countries.getCountries().get(i), queue, countries, i, y , x);
+                insert(countries.getCountries().get(i), queue, y , x);
             }
+            //loops through the queue and determines if the country in the index
+            //of the queue contains the clicked square
             for(int i=0;i<42;i++){
                 for(Coordinate c:queue.get(i)){
                     if(c.equals(clicked)){
@@ -164,13 +151,14 @@ public class Controller {
                     }
                 }
             }
-            bfs.startBFS(clicked, grid, Color.YELLOW);
+            bfs.startBFS(clicked, grid, Color.YELLOW);  //currently here for testing the animation of
+                                                        //claiming a country
         }
 
 
     }
 
-    public void insert(Country country, ArrayList<Country> queue, Countries countries, int index, int y, int x){
+    public void insert(Country country, ArrayList<Country> queue, int y, int x){
         Coordinate clicked = new Coordinate(y, x);
         if(queue.size()==0){
             queue.add(country);
@@ -188,9 +176,10 @@ public class Controller {
     //method called when scene is clicked after map is initialised
     public void anchorOnClick(MouseEvent mouseEvent)
     {
+        //determines the x and y in relation to the context of the
+        //grid
         int y = (int) mouseEvent.getY()/5;
         int x = (int) mouseEvent.getX()/5;
-        System.out.println(y+"\t"+x);
         if(!(x>199)) {
             determineClick(y, x);
         }

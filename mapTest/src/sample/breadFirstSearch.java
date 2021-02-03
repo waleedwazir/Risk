@@ -39,19 +39,34 @@ public class breadFirstSearch {
         //a loop that only ends once the queue is empty
         //holds just 1 coordinate at start
         while(!queue.isEmpty()){
+            //increment the time to place the frame on the timeline at incremented places
             timepoint = timepoint.add(pause);
+
+            //remove first coordinate from the queue
             Coordinate c = queue.remove();
+
+            //add the animation of painting the coordinate on the grid to the frame
             kf = new KeyFrame(timepoint, e -> visit(grid, c, colour));
+
+            //add the frame to the timeline
             tl.getKeyFrames().add(kf);
+
+            //adds the neighbours of the coordinate to the queue
             addNeighbours(grid, c, queue, colour, visited);
+            //adds the coordinate to the visited arraylist
             visited.add(c);
         }
+        //play the timeline of frames
         tl.play();
     }
 
     public void addNeighbours(Rectangle[][] grid, Coordinate c, Queue<Coordinate> queue, Color colour, ArrayList<Coordinate> visited){
+        //retrieve the x and y of the coordinate
         int y = c.getY();
         int x = c.getX();
+        //checks for neighbouring coordinates and adds them to the queue
+        //if they aren't a border or if they haven't been visited yet
+        //repeat this for all orientations
         if(grid[y][x-1].getFill()!=Color.BLACK && !hasCoord(visited, new Coordinate(y, x-1))){//left
             Coordinate neighbour = new Coordinate(y, x-1);
             queue.add(neighbour);
@@ -75,13 +90,16 @@ public class breadFirstSearch {
     }
 
     public void visit(Rectangle[][] grid, Coordinate c, Color colour){
+        //set the colour of the square in the grid at
+        //specified coordinate
         grid[c.getY()][c.getX()].setFill(colour);
         grid[c.getY()][c.getX()].setStroke(colour);
     }
 
     public static boolean hasCoord(ArrayList<Coordinate> visited, Coordinate c){
-        for(Coordinate x:visited){
-            if(c.getX()==x.getX() && c.getY()==x.getY()){
+        //function to determine if a coordinate is contained within an arraylist
+        for(Coordinate x:visited){//loops through each coordinate in visited
+            if(c.getX()==x.getX() && c.getY()==x.getY()){//if the coordinate is found returns true
                 return true;
             }
         }

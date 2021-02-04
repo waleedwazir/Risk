@@ -11,7 +11,7 @@ public class Player {
     private Colors PlayerColor;
     private HashMap<String, Country> AssignedCountries;
 
-    //countries held
+    public Player(){};
 
     // colors for the players
     enum Colors {

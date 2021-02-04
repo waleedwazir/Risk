@@ -1,13 +1,17 @@
 package sample;
 
 
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -28,6 +32,8 @@ public class Controller {
     TextField text;
     @FXML
     VBox chatBox;
+    @FXML
+    Pane nodeList;
 
     @FXML
     ScrollPane scroll; //this must match the fx:id of the ScrollPane element
@@ -87,7 +93,18 @@ public class Controller {
             }
             index++;
             names.toFront();
+            nodeList.toFront();
         }
+
+        printNodeValue();
+    }
+    public void printNodeValue()
+    {
+        ObservableList<Node> list = nodeList.getChildren();
+        System.out.println(list.get(0));
+        System.out.println(list.get(1));
+
+
     }
 
 

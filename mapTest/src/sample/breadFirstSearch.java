@@ -4,9 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -16,7 +14,7 @@ public class breadFirstSearch {
     //bread first search implementation in the context of our grid,
     //used as a tool for animation on countries.
 
-    public void startBFS(Coordinate start, Rectangle[][] grid, Color colour){
+    public void startBFS(Coordinate start, Rectangle[][] grid, Color colour, ArrayList<Country> countries, int index){
         //declaring a timeline to which we will add frames to create the animation
         Timeline tl = new Timeline();
 
@@ -38,6 +36,7 @@ public class breadFirstSearch {
 
         //a loop that only ends once the queue is empty
         //holds just 1 coordinate at start
+        //the clicked coordinate
         while(!queue.isEmpty()){
             //increment the time to place the frame on the timeline at incremented places
             timepoint = timepoint.add(pause);
@@ -55,6 +54,14 @@ public class breadFirstSearch {
             addNeighbours(grid, c, queue, colour, visited);
             //adds the coordinate to the visited arraylist
             visited.add(c);
+            if(queue.isEmpty()){
+                if(isBadIndex(index)){
+                    Coordinate missing = getCountryRemainder(countries.get(index), visited);
+                    if(missing!=null){
+                        queue.add(missing);
+                    }
+                }
+            }
         }
         //play the timeline of frames
         tl.play();
@@ -100,6 +107,29 @@ public class breadFirstSearch {
         //function to determine if a coordinate is contained within an arraylist
         for(Coordinate x:visited){//loops through each coordinate in visited
             if(c.getX()==x.getX() && c.getY()==x.getY()){//if the coordinate is found returns true
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //finds remaining squares that need to be painted when country has segmented parts
+    public Coordinate getCountryRemainder(Country country, ArrayList<Coordinate> visited){
+        for(Coordinate c:country){
+            if(!hasCoord(visited, c)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    //countries that have segmented pieces of land
+    //returns true if the index of the clicked country
+    //is one such country
+    public boolean isBadIndex(int index){
+        int[] badIndices = {0, 14, 17, 19, 28};
+        for(Integer badIndex:badIndices){
+            if(badIndex==index){
                 return true;
             }
         }

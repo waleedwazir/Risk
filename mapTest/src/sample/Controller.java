@@ -11,14 +11,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
 import javafx.event.ActionEvent;
 
-import java.io.File;
+import java.sql.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class Controller {
 
@@ -143,16 +140,19 @@ public class Controller {
             }
             //loops through the queue and determines if the country in the index
             //of the queue contains the clicked square
+            String countryName="";
             for(int i=0;i<42;i++){
                 for(Coordinate c:queue.get(i)){
                     if(c.equals(clicked)){
-                        textOutput(new TextField(queue.get(i).getName()));
+                        countryName = queue.get(i).getName();
+                        textOutput(new TextField(countryName));
                         break;
                     }
                 }
             }
-            bfs.startBFS(clicked, grid, Color.YELLOW);  //currently here for testing the animation of
-                                                        //claiming a country
+            bfs.startBFS(clicked, grid, Color.YELLOW, countries.getCountries(), getCountryIndex(countries.getCountries(), countryName));
+            //currently here for testing the animation of
+            //claiming a country
         }
 
 
@@ -183,5 +183,14 @@ public class Controller {
         if(!(x>199)) {
             determineClick(y, x);
         }
+    }
+
+    public int getCountryIndex(ArrayList<Country> countries, String name){
+        for(int i=0;i<42;i++){
+            if(countries.get(i).getName()==name){
+                return i;
+            }
+        }
+        return -1;
     }
 }

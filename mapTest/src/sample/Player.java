@@ -1,15 +1,17 @@
 package sample;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Player {
 
     private String name;
-    private String PlayerColor;
     private int totalCards;
     private int totalArmies;
-    private ArrayList<Country> AssignedCountries;
+    private Colors PlayerColor;
+    private HashMap<String, Country> AssignedCountries;
+
+    //countries held
 
     // colors for the players
     enum Colors {
@@ -19,26 +21,35 @@ public class Player {
         PURPLE,
         ORANGE
     }
+    
+    public Player(String name){
+        
+        this.name = name;
+        
+        AssignedCountries = new HashMap<String, Country>();
+        
+    }
 
-    public void setPlayerColor(String PlayerColor){
+
+    public void setColors (Colors PlayerColor){
         this.PlayerColor = PlayerColor;
     }
 
-    public String getPlayerColor(){
+    public Colors getColors(){
         return PlayerColor;
     }
 
 
-    public void setName(String name){
+    public void getName(String name){
         this.name = name;
     }
 
-    public void setAssignedCountries(ArrayList<Country>AssignedCountries){
+    public void setAssignedCountries(HashMap<String, Country>AssignedCountries){
         this.AssignedCountries = AssignedCountries;
 
     }
 
-    public ArrayList<Country> getAssignedCountries() {
+    public HashMap<String, Country> getAssignedCountries() {
         return AssignedCountries;
     }
 
@@ -60,16 +71,31 @@ public class Player {
         this.totalArmies = totalArmies;
     }
 
-    public Player(String name) {
-        super();
-        this.name = name;
+    /*
+    function that adds country's captured to the arraylist
+    used hashmap because of string
+    
+     */
+    public void addCountry(Country country){
+        
+        
+        getAssignedCountries().put(country.getName(), country);
+
     }
+
+
+    //removes country when a player loses it
+    public void removeCountry(String Country){
+        getAssignedCountries().remove(Country);
+    }
+
+   
 
 
 
         // shows the player and the amount of total assets it has
     public String toString(){
-        return name + "Owns: " + getAssignedCountries() + " Color is: " + getPlayerColor() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
+        return name + "Owns: " + getAssignedCountries() + " Color is: " + getColors() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
     }
 
 

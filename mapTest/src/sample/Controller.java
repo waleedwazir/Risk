@@ -1,8 +1,6 @@
 package sample;
 
 
-import javafx.beans.Observable;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,8 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.event.ActionEvent;
 import javafx.scene.text.Text;
-
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,15 +89,16 @@ public class Controller {
                 }
             }
             index++;
-            names.toFront();
-            nodeList.toFront();
         }
-
+        names.setVisible(true);
+        nodeList.setVisible(true);
+        names.toFront();
+        nodeList.toFront();
         printNodeValue();
     }
+
     public void printNodeValue()
     {
-
         for (Node node : nodeList.getChildren()) {
             if (node instanceof StackPane) {
                 // clear

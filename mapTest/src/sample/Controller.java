@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.event.ActionEvent;
+import javafx.scene.text.Text;
 
 import java.sql.Array;
 import java.util.ArrayList;
@@ -100,9 +101,16 @@ public class Controller {
     }
     public void printNodeValue()
     {
-        ObservableList<Node> list = nodeList.getChildren();
-        System.out.println(list.get(0));
-        System.out.println(list.get(1));
+
+        for (Node node : nodeList.getChildren()) {
+            if (node instanceof StackPane) {
+                // clear
+                if(((StackPane)node).getChildren().get(2) instanceof Text)
+                {
+                    ((Text) ((StackPane)node).getChildren().get(2)).setText("5");
+                }
+            }
+        }
 
 
     }

@@ -8,6 +8,15 @@
 
 <AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorOnClick" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
+      <StackPane prefHeight="600.0" prefWidth="1000.0">
+         <children>
+            <ImageView fitHeight="600.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/riskmapscaled%20(1).jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </StackPane>
       <Pane fx:id="nodeList" prefHeight="600.0" prefWidth="1000.0" visible="false">
          <children>
             <StackPane layoutX="807.0" layoutY="430.0" prefHeight="34.0" prefWidth="34.0">

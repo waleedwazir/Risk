@@ -39,6 +39,7 @@ public class Controller {
     Pane names;
 
 
+    public ArrayList<Text> nodeValues = new ArrayList<>();
     public List<Label> messages = new ArrayList<>();
     public int messageIndex = 0;
 
@@ -90,26 +91,51 @@ public class Controller {
             }
             index++;
         }
+        setNodeValues();//initialises node ArrayList
         names.setVisible(true);
         nodeList.setVisible(true);
         names.toFront();
         nodeList.toFront();
-        printNodeValue();
+        incrementNodeValue((0));//increments the value on the Indonesia node by 1
+
     }
 
-    public void printNodeValue()
+    public void setNodeValues()
     {
-        for (Node node : nodeList.getChildren()) {
+        //loops through all children of the nodeList which are StackPanes that contain the nodes
+        for(Node node: nodeList.getChildren())
             if (node instanceof StackPane) {
                 // clear
-                if(((StackPane)node).getChildren().get(2) instanceof Text)
+                if(((StackPane)node).getChildren().get(2) instanceof Text)//the object at the second index is a Text object
                 {
+                    //this will be moved later, initialises a nodes value
+                    //casts the node twice so its a Text object and sets the value
                     ((Text) ((StackPane)node).getChildren().get(2)).setText("5");
+
+                    //fills an ArrayList with all the Text objects that contrain the values for our nodes
+                    nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
                 }
             }
-        }
+    }
 
+    public void incrementNodeValue(int index)
+    {
+        //stores the integer value of the string on our node
+        int value = Integer.valueOf(nodeValues.get(index).getText());
 
+        //testing purpose to make sure change is happening, outputs to the chat box
+        text.setText("Old value: " + value);
+        textOutput(text);
+
+        //increments the value
+        value++;
+
+        //sets the text to the string value of our integer
+        nodeValues.get(index).setText((String.valueOf(value)));
+
+        //outputs new value to textbox
+        text.setText("New value: " + value);
+        textOutput(text);
     }
 
 

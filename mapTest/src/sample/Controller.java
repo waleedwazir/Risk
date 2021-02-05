@@ -43,16 +43,15 @@ public class Controller {
     public List<Label> messages = new ArrayList<>();
     public int messageIndex = 0;
 
-    public void updateScroll()
-    {
-        scroll.vvalueProperty().bind(chatBox.heightProperty());
-    }
-
     //declaration of grid
     static Rectangle[][] grid = new Rectangle[120][200];
     //initialises a Countries object
     Countries countries = new Countries();
 
+    public void updateScroll()
+    {
+        scroll.vvalueProperty().bind(chatBox.heightProperty());
+    }
 
     public void newGrid(ActionEvent actionEvent)
     {

@@ -72,7 +72,7 @@ public class Player {
     }
 
     /*
-    function that adds country's captured to the arraylist
+    function that adds a captured country to the arraylist
     used hashmap because of string
     
      */
@@ -82,6 +82,15 @@ public class Player {
         getAssignedCountries().put(country.getName(), country);
 
     }
+    
+    //similar to the function above but can add multiple countries at once
+    public void addCountry(ArrayList<Country> countryList){
+        for(int i = 0; i < countryList.size(); i++){
+            getAssignedCountries().put(countryList.get(i).getName(), countryList.get(i));
+        }
+    }
+    
+   
 
 
     //removes country when a player loses it
@@ -93,7 +102,7 @@ public class Player {
 
 
 
-        // shows the player and the amount of total assets it has
+        // toString shows the player and the amount of total assets it has
     public String toString(){
         return name + "Owns: " + getAssignedCountries() + " Color is: " + getColors() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
     }

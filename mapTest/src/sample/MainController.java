@@ -4,21 +4,18 @@ package sample;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.event.ActionEvent;
 import javafx.scene.text.Text;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Controller {
+public class MainController
+{
 
     public Pane pane;
     @FXML
@@ -26,32 +23,27 @@ public class Controller {
     @FXML
     Button startButton;
     @FXML
-    TextField text;
-    @FXML
-    VBox chatBox;
-    @FXML
     Pane nodeList;
 
     @FXML
-    ScrollPane scroll; //this must match the fx:id of the ScrollPane element
-
-    @FXML
     Pane names;
-
-
     public ArrayList<Text> nodeValues = new ArrayList<>();
-    public List<Label> messages = new ArrayList<>();
-    public int messageIndex = 0;
 
     //declaration of grid
     static Rectangle[][] grid = new Rectangle[120][200];
+
     //initialises a Countries object
     Countries countries = new Countries();
 
-    public void updateScroll()
+
+
+    @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
+
+    @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
-        scroll.vvalueProperty().bind(chatBox.heightProperty());
+        chatBoxController.injectMainController(this);
     }
+
 
     public void newGrid(ActionEvent actionEvent)
     {
@@ -95,7 +87,7 @@ public class Controller {
         nodeList.setVisible(true);
         names.toFront();
         nodeList.toFront();
-        incrementNodeValue((0));//increments the value on the Indonesia node by 1
+        //incrementNodeValue((0));//increments the value on the Indonesia node by 1
 
     }
 
@@ -115,57 +107,6 @@ public class Controller {
                     nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
                 }
             }
-    }
-
-    public void incrementNodeValue(int index)
-    {
-        //stores the integer value of the string on our node
-        int value = Integer.valueOf(nodeValues.get(index).getText());
-
-        //testing purpose to make sure change is happening, outputs to the chat box
-        text.setText("Old value: " + value);
-        textOutput(text);
-
-        //increments the value
-        value++;
-
-        //sets the text to the string value of our integer
-        nodeValues.get(index).setText((String.valueOf(value)));
-
-        //outputs new value to textbox
-        text.setText("New value: " + value);
-        textOutput(text);
-    }
-
-
-    public void textOutput(TextField t)
-    {
-        //this will be changed to input validation when we get to that stage
-        if(!t.getText().equals("") && t.getText().length() <= 21)
-        {
-            messages.add(new Label(t.getText()));
-        }
-        else
-        {
-            messages.add(new Label("Invalid Input!"));
-        }
-        t.clear();
-        chatBox.getChildren().add(messages.get(messageIndex));
-        messageIndex++;
-        updateScroll();//scrolls the pane as text comes in
-    }
-
-    public void sendMessageEnter(KeyEvent keyEvent)
-    {
-        if(keyEvent.getCode() == KeyCode.ENTER)
-        {
-            textOutput(text);
-
-        }
-    }
-    public void sendMessageButton(ActionEvent actionEvent)
-    {
-        textOutput(text);
     }
 
 
@@ -192,7 +133,7 @@ public class Controller {
                 for(Coordinate c:queue.get(i)){
                     if(c.equals(clicked)){
                         countryName = queue.get(i).getName();
-                        textOutput(new TextField(countryName));
+                        chatBoxController.textOutput(new TextField(countryName));
                         break;
                     }
                 }
@@ -203,6 +144,25 @@ public class Controller {
         }
 
 
+    }
+
+    public void incrementNodeValue(int index)
+    {
+        //stores the integer value of the string on our node
+        int value = Integer.valueOf(nodeValues.get(index).getText());
+
+        //testing purpose to make sure change is happening, outputs to the chat box
+        chatBoxController.textOutput(new TextField("Old value: " + value));
+
+
+        //increments the value
+        value++;
+
+        //sets the text to the string value of our integer
+        nodeValues.get(index).setText((String.valueOf(value)));
+
+        //outputs new value to textbox
+        chatBoxController.textOutput(new TextField("New value: " + value));
     }
 
     public void insert(Country country, ArrayList<Country> queue, int y, int x){
@@ -240,4 +200,5 @@ public class Controller {
         }
         return -1;
     }
+
 }

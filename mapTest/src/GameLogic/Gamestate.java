@@ -4,11 +4,13 @@ import Player.Player;
 import javafx.scene.control.TextField;
 import Controllers.ChatBoxController;
 import Controllers.MainController;
+import javafx.scene.paint.Color;
 
 public class Gamestate {
     Player player1 = new Player();
     Player player2 = new Player();
     Player[] players = {player1, player2};
+
 
     ChatBoxController chatBoxController;
     MainController mainController;
@@ -25,7 +27,10 @@ public class Gamestate {
     public void Gamestart(){
 
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
-        setPlayerName(players, 0);
+        //setPlayerName(players, 0);
+        players[0].setColors(Color.RED);
+        players[1].setColors(Color.BLUE);
+        startClaimPhase();
     }
 
     public void setPlayerName(Player[] players, int index){
@@ -34,6 +39,10 @@ public class Gamestate {
         if(players[0].getName()==null) {
             waitingPlayerNames = true;
         }
+    }
+    public Player[] getPlayers()
+    {
+        return players;
     }
 
     public void getTextInput(TextField t){
@@ -47,4 +56,11 @@ public class Gamestate {
             chatBoxController.setWaitingTextInput(false);
         }
     }
+    public void startClaimPhase()
+    {
+        mainController.setPlayerClaim(true);
+        chatBoxController.textOutput(new TextField("Claim your countries!"));
+        chatBoxController.textOutput(new TextField("Player 1 claim a country!"));
+    }
+
 }

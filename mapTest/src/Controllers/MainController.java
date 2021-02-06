@@ -6,6 +6,7 @@ import Map.Coordinate;
 import Map.Countries;
 import Map.Country;
 import Map.breadFirstSearch;
+import Player.Player;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -37,8 +38,10 @@ public class MainController
     Countries countries = new Countries();
 
     Gamestate gamestate;
+    Player[] players;
+    private int countriesClaimed = 0;
 
-    public boolean playerClaim = true;
+    public boolean playerClaim = false;
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
@@ -47,6 +50,7 @@ public class MainController
         chatBoxController.injectMainController(this);
         this.gamestate = new Gamestate();
         chatBoxController.setGameState(gamestate);
+        players = gamestate.getPlayers();
 
         newGrid();
         nodeList.setVisible(true);
@@ -57,6 +61,15 @@ public class MainController
         gamestate.setController(chatBoxController, this);
         gamestate.Gamestart();
 
+    }
+
+    public void setPlayerClaim(Boolean state)
+    {
+        playerClaim = state;
+    }
+    public Boolean getPlayerClaim()
+    {
+        return playerClaim;
     }
 
 
@@ -117,42 +130,67 @@ public class MainController
 
     //Determining the country a player clicks on
     public void determineClick(int y, int x){
-        breadFirstSearch bfs = new breadFirstSearch(); //object used for animation
-        Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
-                                                    //the context of the grid
-        ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
 
-        //if statement to prevent unnecessary searches in sea and on borders
-        if(grid[y][x].getFill()!=Color.CYAN && grid[y][x].getFill()!=Color.BLACK){
+        if(playerClaim)
+        {
+            int playerIndex = countriesClaimed%2;
 
-            //loops through the countries array and perform insertion sort on the country objects
-            //into a queue based on the distance of those countries middle node to the point that
-            //was clicked
-            for(int i=0;i<42;i++){
-                insert(countries.getCountries().get(i), queue, y , x);
-            }
-            //loops through the queue and determines if the country in the index
-            //of the queue contains the clicked square
-            String countryName="";
-            for(int i=0;i<42;i++){
-                for(Coordinate c:queue.get(i)){
-                    if(c.equals(clicked)){
-                        countryName = queue.get(i).getName();
-                        chatBoxController.textOutput(new TextField(countryName));
-                        break;
+            breadFirstSearch bfs = new breadFirstSearch(); //object used for animation
+            Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
+            //the context of the grid
+            ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
+
+            //if statement to prevent unnecessary searches in sea and on borders
+            if(grid[y][x].getFill()!=Color.CYAN && grid[y][x].getFill()!=Color.BLACK){
+
+                //loops through the countries array and perform insertion sort on the country objects
+                //into a queue based on the distance of those countries middle node to the point that
+                //was clicked
+                for(int i=0;i<42;i++){
+                    insert(countries.getCountries().get(i), queue, y , x);
+                }
+                //loops through the queue and determines if the country in the index
+                //of the queue contains the clicked square
+                String countryName="";
+                for(int i=0;i<42;i++){
+                    for(Coordinate c:queue.get(i)){
+                        if(c.equals(clicked)){
+                            countryName = queue.get(i).getName();
+                            //chatBoxController.textOutput(new TextField(countryName));
+                            break;
+                        }
                     }
                 }
-            }
-            if(playerClaim)
-            {
-                int countryIndex = getCountryIndex(countries.getCountries(), countryName);
-                bfs.startBFS(clicked, grid, Color.YELLOW, countries.getCountries(), countryIndex);
-                claimCountry(countryIndex);
-            }
 
-            //currently here for testing the animation of
-            //claiming a country
+                int countryIndex = getCountryIndex(countries.getCountries(), countryName);
+                bfs.startBFS(clicked, grid, players[playerIndex].getColors(), countries.getCountries(), countryIndex);
+                claimCountry(countryIndex);
+                //players[playerIndex].addCountry(countries.getCountries().get(countryIndex));
+                countriesClaimed++;
+
+                if(countriesClaimed != 18 )//temp value, this tracks when to stop allowing players to claim territory
+                {
+                    if(playerIndex == 0)
+                    {
+                        chatBoxController.textOutput(new TextField("Player 2 claim a country"));
+                    }else
+                    {
+                        chatBoxController.textOutput(new TextField("Player 1 claim a country"));
+                    }
+
+                }else
+                {
+                    playerClaim = false;
+                    chatBoxController.textOutput(new TextField("Claiming phase over!"));
+                }
+
+
+                //currently here for testing the animation of
+                //claiming a country
+            }
         }
+
+
 
 
     }
@@ -231,6 +269,10 @@ public class MainController
             }
         }
         return -1;
+    }
+    public int getCountriesClaimed()
+    {
+        return getCountriesClaimed();
     }
 
 }

@@ -1,6 +1,7 @@
 package Player;
 
 import Map.Country;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ public class Player {
     private String name;
     private int totalCards;
     private int totalArmies;
-    private Colors PlayerColor;
+    private Color PlayerColor;
     private HashMap<String, Country> AssignedCountries;
 
     public Player(){};
@@ -34,11 +35,13 @@ public class Player {
     }
 
 
-    public void setColors (Colors PlayerColor){
+
+
+    public void setColors (Color PlayerColor){
         this.PlayerColor = PlayerColor;
     }
 
-    public Colors getColors(){
+    public Color getColors(){
         return PlayerColor;
     }
 

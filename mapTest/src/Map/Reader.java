@@ -53,6 +53,7 @@ public class Reader
                 setCoordinate(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
                 country.add(coordinate);
             }
+            scan.close();
         } catch (FileNotFoundException e)
         {
             System.out.println("Error reading file: " + e.getStackTrace());

@@ -20,7 +20,7 @@ public class breadFirstSearch {
 
         //useful Duration objects, used to create the flow of frames
         Duration timepoint = Duration.ZERO; //the points at which frames will be placed
-        Duration pause = Duration.millis(3); //duration between frames
+        Duration pause = Duration.millis(6); //duration between frames
 
         //declaration of our frame object
         KeyFrame kf;
@@ -37,6 +37,7 @@ public class breadFirstSearch {
         //a loop that only ends once the queue is empty
         //holds just 1 coordinate at start
         //the clicked coordinate
+        int i = 0;
         while(!queue.isEmpty()){
             //increment the time to place the frame on the timeline at incremented places
             timepoint = timepoint.add(pause);
@@ -47,13 +48,15 @@ public class breadFirstSearch {
             //add the animation of painting the coordinate on the grid to the frame
             kf = new KeyFrame(timepoint, e -> visit(grid, c, colour));
 
+            //adds the neighbours of the coordinate to the queue
+            addNeighbours(grid, c, queue, colour, visited);
+
+            //adds the coordinate to the visited arraylist
+            visited.add(c);
+
             //add the frame to the timeline
             tl.getKeyFrames().add(kf);
 
-            //adds the neighbours of the coordinate to the queue
-            addNeighbours(grid, c, queue, colour, visited);
-            //adds the coordinate to the visited arraylist
-            visited.add(c);
             if(queue.isEmpty()){
                 if(isBadIndex(index)){
                     Coordinate missing = getCountryRemainder(countries.get(index), visited);
@@ -66,6 +69,7 @@ public class breadFirstSearch {
         //play the timeline of frames
         tl.play();
     }
+
 
     public void addNeighbours(Rectangle[][] grid, Coordinate c, Queue<Coordinate> queue, Color colour, ArrayList<Coordinate> visited){
         //retrieve the x and y of the coordinate

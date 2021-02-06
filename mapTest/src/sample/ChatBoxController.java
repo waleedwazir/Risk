@@ -9,6 +9,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,8 @@ public class ChatBoxController
     public ScrollPane scrollPane;
     public VBox vBox;
     private  MainController mainController;
+    private boolean waitingTextInput = false;
+    Gamestate gamestate;
 
     public ArrayList<Label> messages = new ArrayList<Label>();
     public int messageIndex = 0;
@@ -59,7 +63,9 @@ public class ChatBoxController
             {
                 newMessages = lines.size();
                 for(String message:lines) {
-                    messages.add(new Label(message));
+                    Text text = new Text(message);
+                    text.setFont(Font.font("PT Serif", 11));
+                    messages.add(new Label(text.getText()));
                 }
             }
             else
@@ -82,7 +88,13 @@ public class ChatBoxController
 
     public void sendMessageButton(ActionEvent actionEvent)
     {
-        textOutput(textInput);
+        if(waitingTextInput){
+            gamestate.getTextInput(textInput);
+            waitingTextInput = false;
+            textInput.clear();
+        }else{
+            textOutput(textInput);
+        }
     }
 
 
@@ -90,10 +102,22 @@ public class ChatBoxController
     {
         if(keyEvent.getCode() == KeyCode.ENTER)
         {
-            textOutput(textInput);
+            if(waitingTextInput){
+                gamestate.getTextInput(textInput);
+                textInput.clear();
+            }else{
+                textOutput(textInput);
+            }
         }
     }
 
+    public void setWaitingTextInput(boolean state){
+        waitingTextInput = state;
+    }
+
+    public void setGameState(Gamestate gamestate){
+        this.gamestate = gamestate;
+    }
 
 
 }

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorOnClick" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainController">
    <children>
-      <Pane fx:id="names" prefHeight="600.0" prefWidth="1000.0">
+      <Pane fx:id="names" prefHeight="600.0" prefWidth="1000.0" visible="false">
          <children>
             <Text fill="#0d0202" layoutX="252.0" layoutY="148.0" stroke="WHITE" strokeType="OUTSIDE" text="QUEBEC">
                <font>
@@ -515,15 +514,6 @@
             </StackPane>
          </children>
       </Pane>
-      <StackPane prefHeight="600.0" prefWidth="1000.0">
-         <children>
-            <ImageView fitHeight="600.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/riskmapscaled%20(1).jpg" />
-               </image>
-            </ImageView>
-         </children>
-      </StackPane>
       <Pane fx:id="pane" prefHeight="43.0" prefWidth="78.0">
          <children>
             <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGrid" prefHeight="26.0" prefWidth="56.0" text="Button" />

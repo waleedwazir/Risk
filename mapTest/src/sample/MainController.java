@@ -35,25 +35,26 @@ public class MainController
     //initialises a Countries object
     Countries countries = new Countries();
 
-
+    Gamestate gamestate;
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
         chatBoxController.injectMainController(this);
+        this.gamestate = new Gamestate();
+        chatBoxController.setGameState(gamestate);
     }
 
 
     public void newGrid(ActionEvent actionEvent)
     {
-        pane.getChildren().clear();
+        pane.getChildren().removeAll();
         for (int y = 0; y < 120; y++){
             for (int x = 0; x < 200; x++){
                 Rectangle rect = new Rectangle(x * 5, (5 * y), 5, 5);
                 rect.setFill(Color.CYAN);
                 rect.setStroke(Color.CYAN);
-                rect.setOpacity(0.8);
                 anchor.getChildren().add(rect);
                 grid[y][x] = rect;
             }
@@ -69,8 +70,6 @@ public class MainController
                 {
                     grid[c.getY()][c.getX()].setFill(Color.BLACK);
                     grid[c.getY()][c.getX()].setStroke(Color.BLACK);
-                    grid[c.getY()][c.getX()].setOpacity(0.8);
-
                 }
             } else
             {
@@ -85,8 +84,11 @@ public class MainController
         setNodeValues();//initialises node ArrayList
         names.setVisible(true);
         nodeList.setVisible(true);
+        names.setVisible(true);
         names.toFront();
         nodeList.toFront();
+        gamestate.setController(chatBoxController, this);
+        gamestate.Gamestart();
         //incrementNodeValue((0));//increments the value on the Indonesia node by 1
 
     }

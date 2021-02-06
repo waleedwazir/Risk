@@ -1,7 +1,6 @@
 package Controllers;
 
 
-import Controllers.ChatBoxController;
 import GameLogic.Gamestate;
 import Map.Coordinate;
 import Map.Countries;
@@ -39,6 +38,8 @@ public class MainController
 
     Gamestate gamestate;
 
+    public boolean playerClaim = true;
+
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
@@ -48,7 +49,6 @@ public class MainController
         chatBoxController.setGameState(gamestate);
 
         newGrid();
-        setNodeValues();//initialises node ArrayList
         nodeList.setVisible(true);
         initializeNodes();
         names.toFront();
@@ -99,20 +99,17 @@ public class MainController
 
     }
 
-    public void setNodeValues()
+    public void claimCountry(int countryIndex)
     {
-        //loops through all children of the nodeList which are StackPanes that contain the nodes
-        for(Node node: nodeList.getChildren())
-            if (node instanceof StackPane) {
+
+        for(int i =0; i< nodeValues.size();i++)
+            if (nodeValues.get(i) instanceof Text) {
                 // clear
-                if(((StackPane)node).getChildren().get(2) instanceof Text)//the object at the second index is a Text object
-                {
                     //this will be moved later, initialises a nodes value
                     //casts the node twice so its a Text object and sets the value
-                    ((Text) ((StackPane)node).getChildren().get(2)).setText("5");
-
-                    //fills an ArrayList with all the Text objects that contrain the values for our nodes
-                    nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
+                if(i == countryIndex)
+                {
+                    ((Text) nodeValues.get(i)).setText("1");
                 }
             }
     }
@@ -146,7 +143,13 @@ public class MainController
                     }
                 }
             }
-            bfs.startBFS(clicked, grid, Color.YELLOW, countries.getCountries(), getCountryIndex(countries.getCountries(), countryName));
+            if(playerClaim)
+            {
+                int countryIndex = getCountryIndex(countries.getCountries(), countryName);
+                bfs.startBFS(clicked, grid, Color.YELLOW, countries.getCountries(), countryIndex);
+                claimCountry(countryIndex);
+            }
+
             //currently here for testing the animation of
             //claiming a country
         }
@@ -156,6 +159,19 @@ public class MainController
 
     public void initializeNodes()
     {
+        //loops through all children of the nodeList which are StackPanes that contain the nodes
+       for(Node node: nodeList.getChildren())
+            if (node instanceof StackPane) {
+                // clear
+                if(((StackPane)node).getChildren().get(2) instanceof Text)//the object at the second index is a Text object
+                {
+                    //this will be moved later, initialises a nodes value
+                    //casts the node twice so its a Text object and sets the value
+                    ((Text) ((StackPane)node).getChildren().get(2)).setText("1");
+                    //fills an ArrayList with all the Text objects that contrain the values for our nodes
+                    nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
+                }
+            }
         for(Text armySize:nodeValues)
         {
             armySize.setText("0");

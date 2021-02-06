@@ -17,11 +17,8 @@ import java.util.ArrayList;
 public class MainController
 {
 
-    public Pane pane;
     @FXML
     AnchorPane anchor;
-    @FXML
-    Button startButton;
     @FXML
     Pane nodeList;
 
@@ -44,12 +41,23 @@ public class MainController
         chatBoxController.injectMainController(this);
         this.gamestate = new Gamestate();
         chatBoxController.setGameState(gamestate);
+
+        newGrid();
+        setNodeValues();//initialises node ArrayList
+        names.setVisible(true);
+        initializeNodes();
+        nodeList.setVisible(true);
+        names.setVisible(true);
+        names.toFront();
+        nodeList.toFront();
+        gamestate.setController(chatBoxController, this);
+        gamestate.Gamestart();
+
     }
 
 
-    public void newGrid(ActionEvent actionEvent)
+    public void newGrid()
     {
-        pane.getChildren().removeAll();
         for (int y = 0; y < 120; y++){
             for (int x = 0; x < 200; x++){
                 Rectangle rect = new Rectangle(x * 5, (5 * y), 5, 5);
@@ -81,14 +89,8 @@ public class MainController
             }
             index++;
         }
-        setNodeValues();//initialises node ArrayList
-        names.setVisible(true);
-        nodeList.setVisible(true);
-        names.setVisible(true);
-        names.toFront();
-        nodeList.toFront();
-        gamestate.setController(chatBoxController, this);
-        gamestate.Gamestart();
+
+
         //incrementNodeValue((0));//increments the value on the Indonesia node by 1
 
     }
@@ -146,6 +148,14 @@ public class MainController
         }
 
 
+    }
+
+    public void initializeNodes()
+    {
+        for(Text armySize:nodeValues)
+        {
+            armySize.setText("0");
+        }
     }
 
     public void incrementNodeValue(int index)

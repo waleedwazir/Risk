@@ -49,12 +49,11 @@ public class MainController
 
         newGrid();
         setNodeValues();//initialises node ArrayList
-        names.setVisible(true);
-        initializeNodes();
         nodeList.setVisible(true);
-        names.setVisible(true);
+        initializeNodes();
         names.toFront();
         nodeList.toFront();
+
         gamestate.setController(chatBoxController, this);
         gamestate.Gamestart();
 

@@ -12,7 +12,7 @@ public class Countries
     //reads and stores all all coordinates in the countries array
     public Countries()
     {
-        this.file = new File("./resources/countries.txt");
+        this.file = new File("Map/countries.txt");
         readFile();
     }
     public void readFile() {

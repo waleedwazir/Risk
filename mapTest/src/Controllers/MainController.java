@@ -137,7 +137,7 @@ public class MainController
 
             breadFirstSearch bfs = new breadFirstSearch(); //object used for animation
             Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
-            //the context of the grid
+                                                        //the context of the grid
             ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
 
             //if statement to prevent unnecessary searches in sea and on borders
@@ -165,28 +165,23 @@ public class MainController
                 int countryIndex = getCountryIndex(countries.getCountries(), countryName);
                 bfs.startBFS(clicked, grid, players[playerIndex].getColors(), countries.getCountries(), countryIndex);
                 claimCountry(countryIndex);
-                //players[playerIndex].addCountry(countries.getCountries().get(countryIndex));
+                players[playerIndex].addCountry(countries.getCountries().get(countryIndex));
                 countriesClaimed++;
+                System.out.println(players[playerIndex].toString()); //currently for debugging
 
                 if(countriesClaimed != 18 )//temp value, this tracks when to stop allowing players to claim territory
                 {
-                    if(playerIndex == 0)
-                    {
-                        chatBoxController.textOutput(new TextField("Player 2 claim a country"));
-                    }else
-                    {
-                        chatBoxController.textOutput(new TextField("Player 1 claim a country"));
+                    if(playerIndex == 0){
+                        chatBoxController.textOutput(new TextField(players[playerIndex+1].getName()+" claim a country!"));
+                    }else{
+                        chatBoxController.textOutput(new TextField(players[playerIndex-1].getName()+" claim a country"));
                     }
 
-                }else
-                {
+                }else{
                     playerClaim = false;
                     chatBoxController.textOutput(new TextField("Claiming phase over!"));
                 }
 
-
-                //currently here for testing the animation of
-                //claiming a country
             }
         }
 

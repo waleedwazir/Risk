@@ -27,10 +27,9 @@ public class Gamestate {
     public void Gamestart(){
 
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
-        //setPlayerName(players, 0);
+        setPlayerName(players, 0);
         players[0].setColors(Color.RED);
         players[1].setColors(Color.BLUE);
-        startClaimPhase();
     }
 
     public void setPlayerName(Player[] players, int index){
@@ -53,6 +52,7 @@ public class Gamestate {
             setPlayerName(players, 1);
         }else{
             players[1].setName(t.getText());
+            startClaimPhase();
             chatBoxController.setWaitingTextInput(false);
         }
     }
@@ -60,7 +60,7 @@ public class Gamestate {
     {
         mainController.setPlayerClaim(true);
         chatBoxController.textOutput(new TextField("Claim your countries!"));
-        chatBoxController.textOutput(new TextField("Player 1 claim a country!"));
+        chatBoxController.textOutput(new TextField(players[0].getName()+" claim a country!"));
     }
 
 }

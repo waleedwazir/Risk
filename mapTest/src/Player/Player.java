@@ -13,7 +13,7 @@ public class Player {
     private int totalCards;
     private int totalArmies;
     private Color PlayerColor;
-    private HashMap<String, Country> AssignedCountries;
+    private HashMap<String, Country> AssignedCountries = new HashMap<String, Country>();
 
     public Player(){};
 

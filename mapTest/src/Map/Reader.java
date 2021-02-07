@@ -4,7 +4,9 @@ import Map.Coordinate;
 import Map.Country;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -25,39 +27,34 @@ public class Reader
     }
     public void run()
     {
-        try
+        //increments each to loop to append the arraylist of coordinates to the 2D arraylist
+        int index = 0;
+
+        Scanner scan = new Scanner(new InputStreamReader(getClass().getResourceAsStream("countries.txt")));
+        while(scan.hasNextLine())
         {
-            //increments each to loop to append the arraylist of coordinates to the 2D arraylist
-            int index = 0;
-            Scanner scan = new Scanner(file);
-            while(scan.hasNextLine())
+            String line = scan.nextLine();
+            if(line.equals("XXX"))
             {
-                String line = scan.nextLine();
-                if(line.equals("XXX"))
-                {
-                    //lets scanner know we have reached the end of a country
-                    //adds the country to continent ArrayList and clears the country ArrayList
+                //lets scanner know we have reached the end of a country
+                //adds the country to continent ArrayList and clears the country ArrayList
 
-                    appendCountry(countries, country, index);
-                    index++;
-                    country.clear();
-                }
-                if(!line.matches("[0-9]*.\t[0-9]*"))
-                {
-                    //scanner will skip any line that isn't in coordinate format
-                    continue;
-                }
-
-                String[] split = line.split("\t");
-                //stores the coordinate in reverse order to account for 2D array indexing
-                setCoordinate(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
-                country.add(coordinate);
+                appendCountry(countries, country, index);
+                index++;
+                country.clear();
             }
-            scan.close();
-        } catch (FileNotFoundException e)
-        {
-            System.out.println("Error reading file: " + e.getStackTrace());
+            if(!line.matches("[0-9]*.\t[0-9]*"))
+            {
+                //scanner will skip any line that isn't in coordinate format
+                continue;
+            }
+
+            String[] split = line.split("\t");
+            //stores the coordinate in reverse order to account for 2D array indexing
+            setCoordinate(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
+            country.add(coordinate);
         }
+        scan.close();
 
     }
     public void setCoordinate(int x, int y)

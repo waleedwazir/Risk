@@ -13,6 +13,7 @@ class ArmyTest {
 /*
     @Test
     void incrementSize() {
+    // change void to int for test to work
         Army test = new Army(new Player(), 50, new Country());
         int output = test.incrementSize(5);
         int output1 = test.incrementSize(6);

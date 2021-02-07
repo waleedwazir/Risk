@@ -525,7 +525,7 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="10" />
                </children>
             </StackPane>
-            <Pane fx:id="keyPane" layoutX="19.0" layoutY="378.0" prefHeight="141.0" prefWidth="120.0">
+            <Pane fx:id="keyPane" layoutX="19.0" layoutY="378.0" prefHeight="141.0" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: black;">
                <children>
                   <Text layoutX="5.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Europe" />
                   <Text layoutX="5.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="North America" />

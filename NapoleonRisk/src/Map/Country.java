@@ -8,22 +8,27 @@ public class Country implements Iterable<Coordinate>{
     private String name;
     private ArrayList<Coordinate> coordinates= new ArrayList<Coordinate>();
 
+    //adds a coordinate to the country's coordinate arraylist
     public void addCoordinate(Coordinate c){
         coordinates.add(c);
     }
 
+    //getter for coordinates of a country
     public ArrayList<Coordinate> getCoordinates(){
         return coordinates;
     }
 
+    //setter for country's name
     public void setName(String name) {
         this.name = name;
     }
 
+    //getter for country's name
     public String getName(){
         return name;
     }
 
+    //Iterator for iterating through country's coordinates
     private class CountryIterator<Coordinate> implements Iterator<Coordinate>{
         int index = 0;
 
@@ -44,7 +49,7 @@ public class Country implements Iterable<Coordinate>{
         }
     }
 
-
+    //initialise Country iterator
     @Override
     public Iterator<Coordinate> iterator() {
         return new CountryIterator<Coordinate>();

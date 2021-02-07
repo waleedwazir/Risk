@@ -28,8 +28,8 @@ public class Gamestate {
 
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
         setPlayerName(players, 0);
-        players[0].setColors(Color.RED);
-        players[1].setColors(Color.BLUE);
+        players[0].setColors(Color.TOMATO);
+        players[1].setColors(Color.ROYALBLUE);
     }
 
     public void setPlayerName(Player[] players, int index){

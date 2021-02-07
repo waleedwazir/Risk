@@ -25,6 +25,10 @@ public class Reader
         country  = new ArrayList<Coordinate>();
         countries = new ArrayList<Country>();
     }
+    public Reader()
+    {
+
+    }
     public void run()
     {
         //increments each to loop to append the arraylist of coordinates to the 2D arraylist
@@ -77,7 +81,7 @@ public class Reader
         }
     }
 
-    private String getCountryName(int index){
+    public static String getCountryName(int index){
         String[] countryNames = {"Indonesia", "New Guinea", "Western Australia", "Eastern Australia", "North Africa", "Congo",
         "Egypt", "East Africa", "South Africa", "Madagascar", "Argentina", "Venezuela", "Peru", "Brazil", "UK & Ireland",
         "Iceland", "Western Europe", "Southern Europe", "Northern Europe", "Ukraine", "Scandinavia", "Greenland", "Quebec",

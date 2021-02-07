@@ -2,11 +2,12 @@ package Controllers;
 
 
 import GameLogic.Gamestate;
-import Map.Coordinate;
-import Map.Countries;
-import Map.Country;
-import Map.breadFirstSearch;
+import Map.*;
 import Player.Player;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,7 +18,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+
 import java.util.ArrayList;
+import java.util.Random;
+import Map.Reader;
+import javafx.util.Duration;
 
 public class MainController
 {
@@ -42,12 +47,21 @@ public class MainController
     private int countriesClaimed = 0;
 
     public boolean playerClaim = false;
+    public boolean neutralsClaim = true;
+    private boolean animationActive = false;
+
+    breadFirstSearch bfs = new breadFirstSearch(); //object used for animation //object used for animation
+
+    private int randomIndex;
+
+    private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET};
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
         chatBoxController.injectMainController(this);
+        bfs.injectMainController(this);
         this.gamestate = new Gamestate();
         chatBoxController.setGameState(gamestate);
         players = gamestate.getPlayers();
@@ -61,6 +75,15 @@ public class MainController
         gamestate.setController(chatBoxController, this);
         gamestate.Gamestart();
 
+    }
+
+    public Boolean getAnimationActive()
+    {
+        return animationActive;
+    }
+    public void setAnimationActive(Boolean state)
+    {
+        animationActive = state;
     }
 
     public void setPlayerClaim(Boolean state)
@@ -135,7 +158,6 @@ public class MainController
         {
             int playerIndex = countriesClaimed%2;
 
-            breadFirstSearch bfs = new breadFirstSearch(); //object used for animation
             Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
                                                         //the context of the grid
             ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
@@ -167,13 +189,47 @@ public class MainController
                 claimCountry(countryIndex);
                 players[playerIndex].addCountry(countries.getCountries().get(countryIndex));
                 countriesClaimed++;
-                System.out.println(players[playerIndex].toString()); //currently for debugging
 
                 if(countriesClaimed != 18 )//temp value, this tracks when to stop allowing players to claim territory
                 {
                     if(playerIndex == 0){
-                        chatBoxController.textOutput(new TextField(players[playerIndex+1].getName()+" claim a country!"));
+
+                            chatBoxController.textOutput(new TextField(players[playerIndex+1].getName()+" claim a country!"));
+
                     }else{
+
+                        if(neutralsClaim)
+                        {
+                            if(countriesClaimed <= 12)
+                            {
+                                for(int i=0;i<4;i++)
+                                {
+                                    Coordinate neutralCountry = neutralChooseCountry();
+                                    determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColours[i]);
+                                }
+                                /*
+                                Timeline timeline = new Timeline();
+                                Duration timePoint = Duration.ZERO;
+                                Duration pause = Duration.seconds(3);
+                                KeyFrame kF;
+                                for(int i=0;i<4;i++)
+                                {
+                                    Coordinate neutralCountry = neutralChooseCountry();
+                                    Color neutralColor = neutralColours[i];
+                                    timePoint.add(pause);
+                                    kF = new KeyFrame(timePoint,e -> determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColor));
+                                    timeline.getKeyFrames().add(kF);
+                                }
+                                timeline.play();
+
+                                 */
+
+                            }
+
+                            chatBoxController.textOutput(new TextField("Neutral claimed a country"));
+
+                        }
+
                         chatBoxController.textOutput(new TextField(players[playerIndex-1].getName()+" claim a country"));
                     }
 
@@ -268,6 +324,53 @@ public class MainController
     public int getCountriesClaimed()
     {
         return getCountriesClaimed();
+    }
+
+    public void neutralClaimCountry(int index)
+    {
+
+        if(nodeValues.get(index) instanceof Text)
+        {
+            (nodeValues.get(index)).setText("1");
+        }
+    }
+    public Coordinate neutralChooseCountry()
+    {
+        Random rand = new Random();
+        int upperBound = 42;
+        randomIndex = rand.nextInt(upperBound);
+
+        if(nodeValues.get(randomIndex) instanceof Text)
+        {
+            while((nodeValues).get(randomIndex).getText() != "0")
+            {
+                randomIndex = rand.nextInt(upperBound);
+            }
+        }
+        neutralClaimCountry(randomIndex);
+        return countries.getCountries().get(randomIndex).getCoordinates().get(0);
+    }
+
+    public void determineNeutral(int y, int x,Color color){
+
+            Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
+            int countryIndex = getCountryIndex(countries.getCountries(), Reader.getCountryName(randomIndex) );
+            bfs.startBFS(clicked, grid, color, countries.getCountries(), countryIndex);
+
+    }
+
+    public void neutralTimelineRecursion(Coordinate coordinate, int n)
+    {
+        Timeline timeline = new Timeline();
+        Duration tp = Duration.ZERO;
+        KeyFrame KF = new KeyFrame(tp,e -> determineNeutral(coordinate.getY(), coordinate.getX(), neutralColours[n]));
+        timeline.getKeyFrames().add(KF);
+        timeline.play();
+
+        if(n < 3)
+        {
+            timeline.setOnFinished(e -> neutralTimelineRecursion(neutralChooseCountry(),n + 1));
+        }
     }
 
 }

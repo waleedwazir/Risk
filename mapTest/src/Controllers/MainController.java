@@ -206,8 +206,9 @@ public class MainController
                             {
                                 for(int i=0;i<4;i++)
                                 {
-                                    Coordinate neutralCountry = neutralChooseCountry();
-                                    determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColours[i]);
+                                    Country neutralCountry = neutralChooseCountry();
+                                    setColourCountry(neutralCountry, neutralColours[i]);
+                                    //determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColours[i]);
                                 }
                                 /*
                                 Timeline timeline = new Timeline();
@@ -336,7 +337,7 @@ public class MainController
             (nodeValues.get(index)).setText("1");
         }
     }
-    public Coordinate neutralChooseCountry()
+    public Country neutralChooseCountry()
     {
         Random rand = new Random();
         int upperBound = 42;
@@ -350,28 +351,22 @@ public class MainController
             }
         }
         neutralClaimCountry(randomIndex);
-        return countries.getCountries().get(randomIndex).getCoordinates().get(0);
+        return countries.getCountries().get(randomIndex);
+        //return countries.getCountries().get(randomIndex).getCoordinates().get(0);
     }
 
     public void determineNeutral(int y, int x,Color color){
-
             Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
             int countryIndex = getCountryIndex(countries.getCountries(), Reader.getCountryName(randomIndex) );
             bfs.startBFS(clicked, grid, color, countries.getCountries(), countryIndex);
 
     }
 
-    public void neutralTimelineRecursion(Coordinate coordinate, int n)
-    {
-        Timeline timeline = new Timeline();
-        Duration tp = Duration.ZERO;
-        KeyFrame KF = new KeyFrame(tp,e -> determineNeutral(coordinate.getY(), coordinate.getX(), neutralColours[n]));
-        timeline.getKeyFrames().add(KF);
-        timeline.play();
 
-        if(n < 3)
-        {
-            timeline.setOnFinished(e -> neutralTimelineRecursion(neutralChooseCountry(),n + 1));
+    public void setColourCountry(Country country, Color colour){
+        for(Coordinate c:country){
+            grid[c.getY()][c.getX()].setFill(colour);
+            grid[c.getY()][c.getX()].setStroke(colour);
         }
     }
 

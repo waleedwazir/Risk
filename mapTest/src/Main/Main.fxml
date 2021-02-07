@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -223,7 +224,12 @@
             </Text>
          </children>
       </Pane>
-      <Pane fx:id="nodeList" prefHeight="600.0" prefWidth="1000.0" visible="false">
+      <Pane layoutX="1000.0" prefHeight="600.0" prefWidth="200.0">
+         <children>
+            <fx:include fx:id="chatBox" source="ChatBox.fxml" />
+         </children>
+      </Pane>
+      <Pane fx:id="nodeList" prefHeight="600.0" prefWidth="1000.0">
          <children>
             <StackPane layoutX="807.0" layoutY="430.0" prefHeight="34.0" prefWidth="34.0">
                <children>
@@ -519,11 +525,22 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="10" />
                </children>
             </StackPane>
-         </children>
-      </Pane>
-      <Pane layoutX="1000.0" prefHeight="600.0" prefWidth="200.0">
-         <children>
-            <fx:include fx:id="chatBox" source="ChatBox.fxml" />
+            <Pane fx:id="keyPane" layoutX="19.0" layoutY="378.0" prefHeight="141.0" prefWidth="120.0">
+               <children>
+                  <Text layoutX="5.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Europe" />
+                  <Text layoutX="5.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="North America" />
+                  <Text layoutX="5.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="South America" />
+                  <Text layoutX="5.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Asia" />
+                  <Text layoutX="5.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Australia" />
+                  <Text layoutX="5.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Africa" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a37c15" height="10.0" layoutX="47.0" layoutY="11.0" stroke="#a37c15" strokeType="INSIDE" width="10.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e21fff" height="10.0" layoutX="60.0" layoutY="111.0" stroke="#e21fff" strokeType="INSIDE" width="10.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5ce51c" height="10.0" layoutX="39.0" layoutY="91.0" stroke="#5ce51c" strokeType="INSIDE" width="10.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fff01f" height="10.0" layoutX="91.0" layoutY="71.0" stroke="#fff01f" strokeType="INSIDE" width="10.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="50.0" layoutY="31.0" stroke="DODGERBLUE" strokeType="INSIDE" width="10.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff801f" height="10.0" layoutX="91.0" layoutY="51.0" stroke="#ff801f" strokeType="INSIDE" width="10.0" />
+               </children>
+            </Pane>
          </children>
       </Pane>
 

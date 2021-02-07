@@ -27,6 +27,7 @@ import javafx.util.Duration;
 public class MainController
 {
 
+    public Pane keyPane;
     @FXML
     AnchorPane anchor;
     @FXML
@@ -62,6 +63,7 @@ public class MainController
     {
         chatBoxController.injectMainController(this);
         bfs.injectMainController(this);
+        keyPane.setStyle("-fx-background-color: #ffffff");
         this.gamestate = new Gamestate();
         chatBoxController.setGameState(gamestate);
         players = gamestate.getPlayers();

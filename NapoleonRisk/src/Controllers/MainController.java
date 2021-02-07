@@ -4,10 +4,6 @@ package Controllers;
 import GameLogic.Gamestate;
 import Map.*;
 import Player.Player;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -22,19 +18,18 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.Random;
 import Map.Reader;
-import javafx.util.Duration;
-
 public class MainController
 {
 
-    public Pane keyPane;
     @FXML
     AnchorPane anchor;
-    @FXML
-    Pane nodeList;
 
     @FXML
-    Pane names;
+    Pane nodeList;//pane which contains all the stack panes of nodes
+    @FXML
+    Pane names;//pane which contains all the names of countries
+
+    //ArrayList of values at the nodes
     public ArrayList<Text> nodeValues = new ArrayList<>();
 
     //declaration of grid
@@ -43,50 +38,61 @@ public class MainController
     //initialises a Countries object
     Countries countries = new Countries();
 
-    Gamestate gamestate;
-    Player[] players;
-    private int countriesClaimed = 0;
+    Gamestate gamestate;//declaring GameState object
+    Player[] players;//declaring players array
 
-    public boolean playerClaim = false;
-    public boolean neutralsClaim = true;
-    private boolean animationActive = false;
+    private int countriesClaimed = 0;//counter used during the ClaimPhase
+
+    public boolean playerClaim = false;//set to true in GameState when it's time for players to claim initial countries
+    public boolean neutralsClaim = true;//sets to false when neutrals have been allocated countries
 
     breadFirstSearch bfs = new breadFirstSearch(); //object used for animation //object used for animation
 
-    private int randomIndex;
+    private int randomIndex;//used as the index for getting a random country to assign to neutral players
 
-    private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET};
+    private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET}; //stores colours of neutral players
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
-        chatBoxController.injectMainController(this);
-        bfs.injectMainController(this);
-        this.gamestate = new Gamestate();
-        chatBoxController.setGameState(gamestate);
-        players = gamestate.getPlayers();
+        chatBoxController.injectMainController(this);//passes MainController to ChatBoxController
+        this.gamestate = new Gamestate(); //initialises GameState Object
+        chatBoxController.setGameState(gamestate);//Outputs instructions to user and starts the game
 
-        newGrid();
-        nodeList.setVisible(true);
-        initializeNodes();
+        players = gamestate.getPlayers();//fetches the players from GameState
+
+        newGrid();//creates a 200 x 120 grid of rectangle and colours them to displayed the map
+
+        initializeNodes();//sets all node values to 0
+
+        //pulls these panes to front
         names.toFront();
         nodeList.toFront();
 
+        //passes both controllers to GameState , creating new instances of these will not work!
         gamestate.setController(chatBoxController, this);
         gamestate.Gamestart();
 
     }
 
-    public Boolean getAnimationActive()
+    //initialises all nodes to 0
+    public void initializeNodes()
     {
-        return animationActive;
-    }
-    public void setAnimationActive(Boolean state)
-    {
-        animationActive = state;
-    }
+        //loops through all children of the nodeList which are StackPanes that contain the nodes
+        for(Node node: nodeList.getChildren())
+            if (node instanceof StackPane) {
+                if(((StackPane)node).getChildren().get(2) instanceof Text)//the object at the second index is a Text object
+                {
+                    //casts the node twice so its a Text object and sets the value
+                    ((Text) ((StackPane)node).getChildren().get(2)).setText("0");
+                    //fills an ArrayList with all the Text objects that contrain the values for our nodes
+                    nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
+                }
+            }
 
+    }
+    //function for GameState to set when its time to allow players to claim countries
     public void setPlayerClaim(Boolean state)
     {
         playerClaim = state;
@@ -96,7 +102,22 @@ public class MainController
         return playerClaim;
     }
 
+    //claims a country for a player
+    public void claimCountry(int countryIndex)
+    {
+        //a node's index is the same as the countries they are in
+        //sets a country's node to 1
+        for(int i =0; i< nodeValues.size();i++)
+            if (nodeValues.get(i) instanceof Text) {
+                //sets the value of a node at a given index to 1
+                if(i == countryIndex)
+                {
+                    (nodeValues.get(i)).setText("1");
+                }
+            }
+    }
 
+    //prints grid of rectangles and fills in the countries
     public void newGrid()
     {
         for (int y = 0; y < 120; y++){
@@ -136,20 +157,6 @@ public class MainController
 
     }
 
-    public void claimCountry(int countryIndex)
-    {
-
-        for(int i =0; i< nodeValues.size();i++)
-            if (nodeValues.get(i) instanceof Text) {
-                // clear
-                    //this will be moved later, initialises a nodes value
-                    //casts the node twice so its a Text object and sets the value
-                if(i == countryIndex)
-                {
-                    ((Text) nodeValues.get(i)).setText("1");
-                }
-            }
-    }
 
 
     //Determining the country a player clicks on
@@ -159,7 +166,7 @@ public class MainController
         {
             int playerIndex = countriesClaimed%2;
 
-            Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
+            Coordinate clicked = new Coordinate(y, x);  //initialises a coordinate object at the y and x in
                                                         //the context of the grid
             ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
 
@@ -185,25 +192,25 @@ public class MainController
                     }
                 }
 
-                int countryIndex = getCountryIndex(countries.getCountries(), countryName);
-                bfs.startBFS(clicked, grid, players[playerIndex].getColors(), countries.getCountries(), countryIndex);
-                claimCountry(countryIndex);
-                players[playerIndex].addCountry(countries.getCountries().get(countryIndex));
-                countriesClaimed++;
+                int countryIndex = getCountryIndex(countries.getCountries(), countryName);//returns index of a country in countries by its name
+                bfs.startBFS(clicked, grid, players[playerIndex].getColors(), countries.getCountries(), countryIndex);//runs a bread first search
+                claimCountry(countryIndex);//sets the node on a given country to 1
+                players[playerIndex].addCountry(countries.getCountries().get(countryIndex));//adds the country to player object
+                countriesClaimed++;//increments every time a player claims a country
 
-                if(countriesClaimed != 18 )//temp value, this tracks when to stop allowing players to claim territory
+                if(countriesClaimed != 18 )//works while there are countries to still be claimed
                 {
-                    if(playerIndex == 0){
+                    if(playerIndex == 0){//if its player ones turn
 
                             chatBoxController.textOutput(new TextField(players[playerIndex+1].getName()+" claim a country!"));
 
                     }else{
 
-                        if(neutralsClaim)
+                        if(neutralsClaim)//true during claim phase and while neutral players still need to claim countries
                         {
-                            if(countriesClaimed <= 12)
+                            if(countriesClaimed <= 12)//stops when each neutral player has 6 countries claimed
                             {
-                                for(int i=0;i<4;i++)
+                                for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutralColours array
                                 {
                                     Country neutralCountry = neutralChooseCountry();
                                     setColourCountry(neutralCountry, neutralColours[i]);
@@ -236,6 +243,7 @@ public class MainController
                     }
 
                 }else{
+                    //set to false when claim phase is over
                     playerClaim = false;
                     chatBoxController.textOutput(new TextField("Claiming phase over!"));
                 }
@@ -248,46 +256,8 @@ public class MainController
 
     }
 
-    public void initializeNodes()
-    {
-        //loops through all children of the nodeList which are StackPanes that contain the nodes
-       for(Node node: nodeList.getChildren())
-            if (node instanceof StackPane) {
-                // clear
-                if(((StackPane)node).getChildren().get(2) instanceof Text)//the object at the second index is a Text object
-                {
-                    //this will be moved later, initialises a nodes value
-                    //casts the node twice so its a Text object and sets the value
-                    ((Text) ((StackPane)node).getChildren().get(2)).setText("1");
-                    //fills an ArrayList with all the Text objects that contrain the values for our nodes
-                    nodeValues.add(((Text) ((StackPane)node).getChildren().get(2)));
-                }
-            }
-        for(Text armySize:nodeValues)
-        {
-            armySize.setText("0");
-        }
-    }
-
-    public void incrementNodeValue(int index)
-    {
-        //stores the integer value of the string on our node
-        int value = Integer.valueOf(nodeValues.get(index).getText());
-
-        //testing purpose to make sure change is happening, outputs to the chat box
-        chatBoxController.textOutput(new TextField("Old value: " + value));
-
-
-        //increments the value
-        value++;
-
-        //sets the text to the string value of our integer
-        nodeValues.get(index).setText((String.valueOf(value)));
-
-        //outputs new value to textbox
-        chatBoxController.textOutput(new TextField("New value: " + value));
-    }
-
+    //insertion sorts countries into a queue based on there distance to beacon nodes
+    //part of an algorithm to find what country is clicked on by the player
     public void insert(Country country, ArrayList<Country> queue, int y, int x){
         Coordinate clicked = new Coordinate(y, x);
         if(queue.size()==0){
@@ -315,6 +285,7 @@ public class MainController
         }
     }
 
+    //returns a country's index from its name
     public int getCountryIndex(ArrayList<Country> countries, String name){
         for(int i=0;i<42;i++){
             if(countries.get(i).getName()==name){
@@ -323,11 +294,8 @@ public class MainController
         }
         return -1;
     }
-    public int getCountriesClaimed()
-    {
-        return getCountriesClaimed();
-    }
 
+    //method that claims a county for a neutral player
     public void neutralClaimCountry(int index)
     {
 
@@ -336,6 +304,9 @@ public class MainController
             (nodeValues.get(index)).setText("1");
         }
     }
+
+    //initialises a random number from 0 - 41
+    //if the country at that index is empty, claim it. Otherwise repeat until a country that is empty is claimed
     public Country neutralChooseCountry()
     {
         Random rand = new Random();
@@ -354,14 +325,17 @@ public class MainController
         //return countries.getCountries().get(randomIndex).getCoordinates().get(0);
     }
 
+    //bts search when a neutral player claims a country
+    //has some lag issues at the moment
     public void determineNeutral(int y, int x,Color color){
-            Coordinate clicked = new Coordinate(y, x);  //intialises a coordinate object at the y and x in
+            Coordinate clicked = new Coordinate(y, x);  //initialises a coordinate object at the y and x in
             int countryIndex = getCountryIndex(countries.getCountries(), Reader.getCountryName(randomIndex) );
             bfs.startBFS(clicked, grid, color, countries.getCountries(), countryIndex);
 
     }
 
 
+    //sets a country's colour without using the bts
     public void setColourCountry(Country country, Color colour){
         for(Coordinate c:country){
             grid[c.getY()][c.getX()].setFill(colour);

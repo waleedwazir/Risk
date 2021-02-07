@@ -25,7 +25,6 @@ public class breadFirstSearch {
 
     public void startBFS(Coordinate start, Rectangle[][] grid, Color colour, ArrayList<Country> countries, int index){
         //declaring a timeline to which we will add frames to create the animation
-        mainController.setAnimationActive(true);
         Timeline tl = new Timeline();
 
         //useful Duration objects, used to create the flow of frames
@@ -78,7 +77,6 @@ public class breadFirstSearch {
         }
         //play the timeline of frames
         tl.play();
-        tl.setOnFinished(e -> mainController.setAnimationActive(false));
     }
 
 

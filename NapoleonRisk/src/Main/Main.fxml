@@ -224,11 +224,6 @@
             </Text>
          </children>
       </Pane>
-      <Pane layoutX="1000.0" prefHeight="600.0" prefWidth="200.0">
-         <children>
-            <fx:include fx:id="chatBox" source="ChatBox.fxml" />
-         </children>
-      </Pane>
       <Pane fx:id="nodeList" prefHeight="600.0" prefWidth="1000.0">
          <children>
             <StackPane layoutX="807.0" layoutY="430.0" prefHeight="34.0" prefWidth="34.0">
@@ -541,6 +536,11 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff801f" height="10.0" layoutX="91.0" layoutY="51.0" stroke="#ff801f" strokeType="INSIDE" width="10.0" />
                </children>
             </Pane>
+         </children>
+      </Pane>
+      <Pane layoutX="1000.0" prefHeight="600.0" prefWidth="200.0">
+         <children>
+            <fx:include fx:id="chatBox" source="ChatBox.fxml" />
          </children>
       </Pane>
 

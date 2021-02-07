@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class ChatBoxController
 {
+    //instance variables
     public TextField textInput;
     public ScrollPane scrollPane;
     public VBox vBox;
@@ -22,14 +23,18 @@ public class ChatBoxController
     private boolean waitingTextInput = false;
     Gamestate gamestate;
 
+    //ArrayList of labels that are displayed in the vBox
+    //messageIndex used to track latest entry
     public ArrayList<Label> messages = new ArrayList<Label>();
     public int messageIndex = 0;
 
-    public void injectMainController(MainController mainController)//sets the main controller to our maincontroller
+    //passes MainController to this one so that its functions can be referenced
+    public void injectMainController(MainController mainController)//sets the main controller to our MainController
     {
         this.mainController = mainController;
     }
 
+    //method that outputs text to the chat box
     public void textOutput(TextField t)
     {
         //lines array that stores each new message for the chatbox
@@ -80,11 +85,14 @@ public class ChatBoxController
             updateScroll();//scrolls the pane as text comes in
 
     }
+
+    //scrolls the scroll pane when new messages exceed it's current size
     public void updateScroll()
     {
         scrollPane.vvalueProperty().bind(vBox.heightProperty());
     }
 
+    //action event for sending a message from text field when clicking the send button
     public void sendMessageButton(ActionEvent actionEvent)
     {
         if(waitingTextInput){
@@ -96,7 +104,7 @@ public class ChatBoxController
         }
     }
 
-
+    //action event for sending a message from the text field when enter is pressed
     public void sendMessageEnter(KeyEvent keyEvent)
     {
         if(keyEvent.getCode() == KeyCode.ENTER)
@@ -110,10 +118,12 @@ public class ChatBoxController
         }
     }
 
+    //setter to allow GameState to know when we are waiting for user input
     public void setWaitingTextInput(boolean state){
         waitingTextInput = state;
     }
 
+    //passes GameState object to this controller
     public void setGameState(Gamestate gamestate){
         this.gamestate = gamestate;
     }

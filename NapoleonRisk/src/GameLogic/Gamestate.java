@@ -11,6 +11,8 @@ public class Gamestate {
     Player player2 = new Player();
     Player[] players = {player1, player2};
 
+    Dice dice = new Dice();
+
     //Contoller object that the gamestate interacts with
     ChatBoxController chatBoxController;
     MainController mainController;
@@ -58,7 +60,8 @@ public class Gamestate {
             setPlayerName(players, 1);
         }else{
             players[1].setName(t.getText());
-            startClaimPhase(); //start claim phase
+            mainController.distributeCountries();
+            System.out.println(dice.rollXDice(5));
             chatBoxController.setWaitingTextInput(false);
         }
     }

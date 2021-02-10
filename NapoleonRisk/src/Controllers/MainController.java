@@ -4,9 +4,9 @@ package Controllers;
 import GameLogic.Gamestate;
 import Map.*;
 import Player.Player;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -151,8 +151,6 @@ public class MainController
             }
             index++;
         }
-
-
         //incrementNodeValue((0));//increments the value on the Indonesia node by 1
 
     }
@@ -161,11 +159,6 @@ public class MainController
 
     //Determining the country a player clicks on
     public void determineClick(int y, int x){
-
-        if(playerClaim)
-        {
-            int playerIndex = countriesClaimed%2;
-
             Coordinate clicked = new Coordinate(y, x);  //initialises a coordinate object at the y and x in
                                                         //the context of the grid
             ArrayList<Country> queue = new ArrayList<Country>(); //create queue of Country objects
@@ -193,67 +186,87 @@ public class MainController
                 }
 
                 int countryIndex = getCountryIndex(countries.getCountries(), countryName);//returns index of a country in countries by its name
-                bfs.startBFS(clicked, grid, players[playerIndex].getColors(), countries.getCountries(), countryIndex);//runs a bread first search
-                claimCountry(countryIndex);//sets the node on a given country to 1
-                players[playerIndex].addCountry(countries.getCountries().get(countryIndex));//adds the country to player object
-                countriesClaimed++;//increments every time a player claims a country
-
-                if(countriesClaimed != 18 )//works while there are countries to still be claimed
+                bfs.startBFS(clicked, grid, Color.SLATEGREY, countries.getCountries(), countryIndex);//runs a bread first search
+                //claimCountry(countryIndex);//sets the node on a given country to 1
+            }
+    }
+    public void distributeCountries()
+    {
+        new Thread(() -> {
+            while (countriesClaimed != 18)
+            {
+                int playerIndex = countriesClaimed%2;
+                if(playerIndex == 0)
                 {
-                    if(playerIndex == 0){//if its player ones turn
-
-                            chatBoxController.textOutput(new TextField(players[playerIndex+1].getName()+" claim a country!"));
-
-                    }else{
-
-                        if(neutralsClaim)//true during claim phase and while neutral players still need to claim countries
+                   // setRandomCountryColour(players[playerIndex].getColors());
+                    Platform.runLater(() -> setRandomCountryColour(players[playerIndex].getColors()));
+                    try {
+                        Thread.sleep(500);
+                    } catch(InterruptedException v){System.out.println(v);}
+                }else
+                {
+                    //setRandomCountryColour(players[playerIndex].getColors());
+                    Platform.runLater(() -> setRandomCountryColour(players[playerIndex].getColors()));
+                    try {
+                        Thread.sleep(500);
+                    } catch(InterruptedException v){System.out.println(v);}
+                    if(countriesClaimed <= 12)
+                    {
+                        for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutralColours array
                         {
-                            if(countriesClaimed <= 12)//stops when each neutral player has 6 countries claimed
-                            {
-                                for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutralColours array
-                                {
-                                    Country neutralCountry = neutralChooseCountry();
-                                    setColourCountry(neutralCountry, neutralColours[i]);
-                                    //determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColours[i]);
-                                }
-                                /*
-                                Timeline timeline = new Timeline();
-                                Duration timePoint = Duration.ZERO;
-                                Duration pause = Duration.seconds(3);
-                                KeyFrame kF;
-                                for(int i=0;i<4;i++)
-                                {
-                                    Coordinate neutralCountry = neutralChooseCountry();
-                                    Color neutralColor = neutralColours[i];
-                                    timePoint.add(pause);
-                                    kF = new KeyFrame(timePoint,e -> determineNeutral(neutralCountry.getY(),neutralCountry.getX(),neutralColor));
-                                    timeline.getKeyFrames().add(kF);
-                                }
-                                timeline.play();
-
-                                 */
-
-                            }
-
-                            chatBoxController.textOutput(new TextField("Neutral claimed a country"));
-
+                            //setRandomCountryColour(neutralColours[i]);
+                            int index = i;
+                            Platform.runLater(() -> setRandomCountryColour(neutralColours[index]));
+                            try {
+                                Thread.sleep(500);
+                            } catch(InterruptedException v){System.out.println(v);}
                         }
-
-                        chatBoxController.textOutput(new TextField(players[playerIndex-1].getName()+" claim a country"));
                     }
 
-                }else{
-                    //set to false when claim phase is over
-                    playerClaim = false;
-                    chatBoxController.textOutput(new TextField("Claiming phase over!"));
-                }
+                }//adds the country to player object
+                countriesClaimed++;}
+        }).start();
+    }
+    public void setRandomCountryColour(Color color)
+    {
+        Country neutralCountry = chooseRandomEmptyCountry();
+        setColourCountry(neutralCountry, color);
+        if(color == players[0].getColors())
+        {
+            players[0].addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
+        }else if(color == players[1].getColors())
+        {
+            players[1].addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
+        }
+    }
+    //method that claims a county for a neutral player
+    public void claimEmptyCountry(int index)
+    {
 
+        if(nodeValues.get(index) instanceof Text)
+        {
+            (nodeValues.get(index)).setText("1");
+        }
+    }
+
+    //initialises a random number from 0 - 41
+    //if the country at that index is empty, claim it. Otherwise repeat until a country that is empty is claimed
+    public Country chooseRandomEmptyCountry()
+    {
+        Random rand = new Random();
+        int upperBound = 42;
+        randomIndex = rand.nextInt(upperBound);
+
+        if(nodeValues.get(randomIndex) instanceof Text)
+        {
+            while((nodeValues).get(randomIndex).getText() != "0")
+            {
+                randomIndex = rand.nextInt(upperBound);
             }
         }
-
-
-
-
+        claimEmptyCountry(randomIndex);
+        return countries.getCountries().get(randomIndex);
+        //return countries.getCountries().get(randomIndex).getCoordinates().get(0);
     }
 
     //insertion sorts countries into a queue based on there distance to beacon nodes
@@ -295,35 +308,8 @@ public class MainController
         return -1;
     }
 
-    //method that claims a county for a neutral player
-    public void neutralClaimCountry(int index)
-    {
 
-        if(nodeValues.get(index) instanceof Text)
-        {
-            (nodeValues.get(index)).setText("1");
-        }
-    }
 
-    //initialises a random number from 0 - 41
-    //if the country at that index is empty, claim it. Otherwise repeat until a country that is empty is claimed
-    public Country neutralChooseCountry()
-    {
-        Random rand = new Random();
-        int upperBound = 42;
-        randomIndex = rand.nextInt(upperBound);
-
-        if(nodeValues.get(randomIndex) instanceof Text)
-        {
-            while((nodeValues).get(randomIndex).getText() != "0")
-            {
-                randomIndex = rand.nextInt(upperBound);
-            }
-        }
-        neutralClaimCountry(randomIndex);
-        return countries.getCountries().get(randomIndex);
-        //return countries.getCountries().get(randomIndex).getCoordinates().get(0);
-    }
 
     //bts search when a neutral player claims a country
     //has some lag issues at the moment

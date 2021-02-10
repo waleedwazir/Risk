@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorOnClick" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
+<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorOnClick" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
    <children>
       <Pane fx:id="names" prefHeight="600.0" prefWidth="1000.0">
          <children>
@@ -538,7 +538,7 @@
             </Pane>
          </children>
       </Pane>
-      <Pane layoutX="1000.0" prefHeight="600.0" prefWidth="200.0">
+      <Pane prefHeight="800.0" prefWidth="1000.0">
          <children>
             <fx:include fx:id="chatBox" source="ChatBox.fxml" />
          </children>

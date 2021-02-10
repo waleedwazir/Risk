@@ -51,7 +51,7 @@ public class Gamestate {
 
     //method for retreiving input from the chatbox controller and the processes it appropriately
     public void getTextInput(TextField t){
-        chatBoxController.textOutput(new TextField("Player name: "+t.getText()));
+        chatBoxController.textOutput(new TextField("> "+t.getText()));
         if(waitingPlayerNames){
             players[0].setName(t.getText());
             waitingPlayerNames = false;

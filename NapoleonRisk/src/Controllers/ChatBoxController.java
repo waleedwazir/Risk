@@ -42,6 +42,7 @@ public class ChatBoxController
         int newMessages; //number of new lines, this accounts for how to increment message index
 
         //Algorithm for splitting long strings into multiple messages appropriately for the chat box
+        /*
         if(t.getText().length()>21) {
             String remainder = t.getText();
             while (!remainder.isEmpty()) {
@@ -60,8 +61,9 @@ public class ChatBoxController
             //System.out.print(lines);
         }else{
             lines.add(t.getText());
-        }
+        }*/
 
+        lines.add(t.getText());
         //this will be changed to input validation when we get to that stage
             if(!t.getText().equals(""))
             {

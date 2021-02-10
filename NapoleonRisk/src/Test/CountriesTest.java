@@ -1,4 +1,4 @@
-package Map;
+/*package Map;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -27,4 +27,4 @@ class CountriesTest {
 
         assertEquals(49,test.size());
     }
-}
+}*/

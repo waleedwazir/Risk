@@ -26,12 +26,7 @@
   <component name="ChangeListManager">
     <list default="true" id="10fbadd7-d5ee-442a-a270-f74e3e48c96c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controllers/ChatBoxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/ChatBoxController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameLogic/Gamestate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameLogic/Gamestate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Map/Coordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Map/Coordinate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Map/Countries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Map/Countries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Map/Country.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Map/Country.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player/Army.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player/Army.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,10 +53,11 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.uml" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -86,15 +82,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -128,6 +122,7 @@
       <updated>1612645553835</updated>
       <workItem from="1612645555534" duration="17675000" />
       <workItem from="1612726693299" duration="2536000" />
+      <workItem from="1613070723763" duration="2621000" />
     </task>
     <servers />
   </component>
@@ -159,6 +154,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="551" y="307" width="433" height="216" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1536.824@0.0.1536.824" timestamp="1612730245041" />
+    <state x="516" y="267" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1613070964220">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="516" y="267" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.824@0.0.1536.824" timestamp="1613070964220" />
+    <state width="254" height="195" key="DatabaseViewActions_Filter" timestamp="1613070828327">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="254" height="195" key="DatabaseViewActions_Filter/0.0.1536.824@0.0.1536.824" timestamp="1613070828327" />
     <state x="548" y="167" key="FileChooserDialogImpl" timestamp="1612646106107">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -179,10 +182,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1612726974129" />
-    <state x="249" y="0" key="SettingsEditor" timestamp="1612726932692">
+    <state x="249" y="0" key="SettingsEditor" timestamp="1613071499986">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1612726932692" />
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1613071499986" />
     <state x="573" y="281" key="classpath-attribute-editor" timestamp="1612646455314">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

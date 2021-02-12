@@ -227,7 +227,11 @@ public class MainController
 
                 }//adds the country to player object
                 countriesClaimed++;}
+            Platform.runLater(() -> gamestate.passArmies(armies));
+            Platform.runLater(() -> gamestate.GameTurns());
+
         }).start();
+
     }
 
     public void setCountryColour(Player player)
@@ -267,6 +271,15 @@ public class MainController
         claimEmptyCountry(randomIndex);
         return countries.getCountries().get(randomIndex);
         //return countries.getCountries().get(randomIndex).getCoordinates().get(0);
+    }
+
+    public void updateNode(Army army)
+    {
+        int index = getCountryIndex(countries.getCountries(),army.getCountry().getName());
+        if(nodeValues.get(index) instanceof Text)
+        {
+            (nodeValues.get(index)).setText(String.valueOf(army.getArmySize()));
+        }
     }
 
     //insertion sorts countries into a queue based on there distance to beacon nodes

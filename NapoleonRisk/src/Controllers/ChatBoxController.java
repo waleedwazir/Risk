@@ -71,7 +71,15 @@ public class ChatBoxController
                 for(String message:lines) {
                     Text text = new Text(message);
                     text.setFont(Font.font("PT Serif", 11));
-                    messages.add(new Label(text.getText()));
+                    Label label = new Label(text.getText());
+
+                    //textToPlayerColour is set to either 0 or 1 when we want to output text in the player colour
+                    //otherwise it's set to -1
+                    if(gamestate.getTextToPlayerColour() == 0 || gamestate.getTextToPlayerColour() == 1)
+                    {
+                        label.setTextFill(gamestate.getPlayers()[gamestate.getTextToPlayerColour()].getColour());
+                    }
+                    messages.add(label);
                 }
             }
             else

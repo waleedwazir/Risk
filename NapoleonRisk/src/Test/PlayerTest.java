@@ -16,7 +16,7 @@ class PlayerTest {
     void getColors() {
         Player color = new Player();
         color.setColors(Color.GREEN);
-        assertEquals(color.getColors(), Color.GREEN);
+        assertEquals(color.getColour(), Color.GREEN);
 
     }
 
@@ -67,7 +67,7 @@ class PlayerTest {
 
         HashMap<String, Country> man = new HashMap<String, Country>() ;
         list.setAssignedCountries(man);
-        String output = list.getName() + "Owns: " + list.getAssignedCountries() + " Color is: " + list.getColors() + " Total Cards: " + list.getTotalCards() + " Total Armies: " +  list.getTotalArmies();
+        String output = list.getName() + "Owns: " + list.getAssignedCountries() + " Color is: " + list.getColour() + " Total Cards: " + list.getTotalCards() + " Total Armies: " +  list.getTotalArmies();
 
         assertEquals(list.toString(), output);
 

@@ -25,10 +25,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10fbadd7-d5ee-442a-a270-f74e3e48c96c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player/Army.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player/Army.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NapoleonRisk/Controllers/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NapoleonRisk/Controllers/MainController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NapoleonRisk/Main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NapoleonRisk/Main/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NapoleonRisk/Player/Army.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NapoleonRisk/Player/Army.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NapoleonRisk/Player/Player$Colors.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NapoleonRisk/Player/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NapoleonRisk/Player/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Player/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Test/PlayerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Test/PlayerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +61,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -126,7 +132,7 @@
       <workItem from="1612726693299" duration="2536000" />
       <workItem from="1613070723763" duration="2656000" />
       <workItem from="1613077949478" duration="11000" />
-      <workItem from="1613140679218" duration="2348000" />
+      <workItem from="1613140679218" duration="4426000" />
     </task>
     <servers />
   </component>
@@ -146,10 +152,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="223" y="67" width="1089" height="737" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1612727008865">
+    <state x="223" y="67" width="1089" height="737" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1613144842273">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="223" y="67" width="1089" height="737" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1612727008865" />
+    <state x="223" y="67" width="1089" height="737" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1613144842273" />
     <state x="499" y="203" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1612646430552">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -170,26 +176,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="548" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1612646106107" />
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1612726974129">
+    <state width="1493" height="91" key="GridCell.Tab.0.bottom" timestamp="1613145455432">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1612726974129" />
-    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1612726974129">
+    <state width="1493" height="91" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1613145455432" />
+    <state width="1493" height="91" key="GridCell.Tab.0.center" timestamp="1613145455432">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1612726974129" />
-    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1612726974129">
+    <state width="1493" height="91" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1613145455432" />
+    <state width="1493" height="91" key="GridCell.Tab.0.left" timestamp="1613145455431">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1612726974129" />
-    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1612726974129">
+    <state width="1493" height="91" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1613145455431" />
+    <state width="1493" height="91" key="GridCell.Tab.0.right" timestamp="1613145455432">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1612726974129" />
-    <state x="249" y="0" key="SettingsEditor" timestamp="1613071499986">
+    <state width="1493" height="91" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1613145455432" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1613144883564">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1613071499986" />
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1613144883564" />
     <state x="573" y="281" key="classpath-attribute-editor" timestamp="1612646455314">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

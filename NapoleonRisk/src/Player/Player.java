@@ -18,6 +18,7 @@ public class Player {
     public Player(){
     }
 
+    //neutral constructor
     public Player(Color colour){
         this.PlayerColor = colour;
     }
@@ -30,7 +31,7 @@ public class Player {
         this.PlayerColor = PlayerColor;
     }
 
-    public Color getColors(){
+    public Color getColour(){
         return PlayerColor;
     }
 
@@ -91,7 +92,7 @@ public class Player {
 
     // toString shows the player and the amount of total assets it has
     public String toString(){
-        return name + "Owns: " + getAssignedCountries() + " Color is: " + getColors() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
+        return name + "Owns: " + getAssignedCountries() + " Color is: " + getColour() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
     }
 
     public void setTroops(int num){

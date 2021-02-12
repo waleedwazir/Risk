@@ -50,12 +50,16 @@ public class MainController
 
     private int randomIndex;//used as the index for getting a random country to assign to neutral players
 
+    Player[] neutrals = new Player[4];
     private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET}; //stores colours of neutral players
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
+        for(int i=0;i<4;i++) {
+            neutrals[i] = new Player(neutralColours[i]);
+        }
         chatBoxController.injectMainController(this);//passes MainController to ChatBoxController
         this.gamestate = new Gamestate(); //initialises GameState Object
         chatBoxController.setGameState(gamestate);//Outputs instructions to user and starts the game
@@ -190,6 +194,7 @@ public class MainController
                 //claimCountry(countryIndex);//sets the node on a given country to 1
             }
     }
+
     public void distributeCountries()
     {
         new Thread(() -> {
@@ -198,15 +203,13 @@ public class MainController
                 int playerIndex = countriesClaimed%2;
                 if(playerIndex == 0)
                 {
-                   // setRandomCountryColour(players[playerIndex].getColors());
-                    Platform.runLater(() -> setRandomCountryColour(players[playerIndex].getColors()));
+                    Platform.runLater(() -> setCountryColour(players[playerIndex]));
                     try {
                         Thread.sleep(500);
                     } catch(InterruptedException v){System.out.println(v);}
                 }else
                 {
-                    //setRandomCountryColour(players[playerIndex].getColors());
-                    Platform.runLater(() -> setRandomCountryColour(players[playerIndex].getColors()));
+                    Platform.runLater(() -> setCountryColour(players[playerIndex]));
                     try {
                         Thread.sleep(500);
                     } catch(InterruptedException v){System.out.println(v);}
@@ -214,9 +217,8 @@ public class MainController
                     {
                         for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutralColours array
                         {
-                            //setRandomCountryColour(neutralColours[i]);
                             int index = i;
-                            Platform.runLater(() -> setRandomCountryColour(neutralColours[index]));
+                            Platform.runLater(() -> setCountryColour(neutrals[index]));
                             try {
                                 Thread.sleep(500);
                             } catch(InterruptedException v){System.out.println(v);}
@@ -227,22 +229,17 @@ public class MainController
                 countriesClaimed++;}
         }).start();
     }
-    public void setRandomCountryColour(Color color)
+
+    public void setCountryColour(Player player)
     {
         Country neutralCountry = chooseRandomEmptyCountry();
-        setColourCountry(neutralCountry, color);
-        if(color == players[0].getColors())
-        {
-            players[0].addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
-        }else if(color == players[1].getColors())
-        {
-            players[1].addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
-        }
+        setColourCountry(neutralCountry, player.getColour());
+        player.addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
     }
+
     //method that claims a county for a neutral player
     public void claimEmptyCountry(int index)
     {
-
         if(nodeValues.get(index) instanceof Text)
         {
             (nodeValues.get(index)).setText("1");
@@ -293,7 +290,8 @@ public class MainController
         //grid
         int y = (int) mouseEvent.getY()/5;
         int x = (int) mouseEvent.getX()/5;
-        if(!(x>199)) {
+        if(!(y>119)) {
+            System.out.println(y+" "+x);
             determineClick(y, x);
         }
     }

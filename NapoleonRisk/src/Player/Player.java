@@ -2,7 +2,6 @@ package Player;
 
 import Map.Country;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,28 +13,18 @@ public class Player {
     private int totalArmies;
     private Color PlayerColor;
     private HashMap<String, Country> AssignedCountries = new HashMap<String, Country>();
+    private int troops;
 
-    public Player(){};
-
-    // colors for the players
-    enum Colors {
-        GREEN,
-        YELLOW,
-        BLUE,
-        PURPLE,
-        ORANGE
+    public Player(){
     }
-    
+
+    public Player(Color colour){
+        this.PlayerColor = colour;
+    }
+
     public Player(String name){
-        
         this.name = name;
-        
-        AssignedCountries = new HashMap<String, Country>();
-        
     }
-
-
-
 
     public void setColors (Color PlayerColor){
         this.PlayerColor = PlayerColor;
@@ -45,18 +34,16 @@ public class Player {
         return PlayerColor;
     }
 
-
     public void setName(String name){
         this.name = name;
     }
-    public String getName()
-    {
+
+    public String getName() {
         return name;
     }
 
     public void setAssignedCountries(HashMap<String, Country>AssignedCountries){
         this.AssignedCountries = AssignedCountries;
-
     }
 
     public HashMap<String, Country> getAssignedCountries() {
@@ -87,10 +74,7 @@ public class Player {
     
      */
     public void addCountry(Country country){
-        
-        
         getAssignedCountries().put(country.getName(), country);
-
     }
     
     //similar to the function above but can add multiple countries at once
@@ -99,24 +83,27 @@ public class Player {
             getAssignedCountries().put(countryList.get(i).getName(), countryList.get(i));
         }
     }
-    
-   
-
 
     //removes country when a player loses it
     public void removeCountry(String Country){
         getAssignedCountries().remove(Country);
     }
 
-   
-
-
-
-        // toString shows the player and the amount of total assets it has
+    // toString shows the player and the amount of total assets it has
     public String toString(){
         return name + "Owns: " + getAssignedCountries() + " Color is: " + getColors() + " Total Cards: " + getTotalCards() + " Total Armies: " +  getTotalArmies();
     }
 
+    public void setTroops(int num){
+        troops = num;
+    }
 
+    public void addTroops(int num){
+        troops+=num;
+    }
+
+    public int getTroops(){
+        return troops;
+    }
 
 }

@@ -16,6 +16,8 @@ public class Army {
         this.country = country;
     }
 
+
+
     //getters and setters
     public int getArmySize() {
         return armySize;

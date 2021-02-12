@@ -18,6 +18,12 @@ public class Army {
 
 
 
+
+    public String toString(){
+        return player.getName()+" Army Size: "+armySize+" Country: "+country.getName();
+    }
+
+
     //getters and setters
     public int getArmySize() {
         return armySize;

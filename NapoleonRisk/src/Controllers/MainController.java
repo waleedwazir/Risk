@@ -3,7 +3,7 @@ package Controllers;
 
 import GameLogic.Gamestate;
 import Map.*;
-import Player.Player;
+import Player.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,16 +14,16 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 import java.util.Random;
 import Map.Reader;
+
+
 public class MainController
 {
 
     @FXML
     AnchorPane anchor;
-
     @FXML
     Pane nodeList;//pane which contains all the stack panes of nodes
     @FXML
@@ -40,6 +40,7 @@ public class MainController
 
     Gamestate gamestate;//declaring GameState object
     Player[] players;//declaring players array
+    Army[] armies = new Army[42];
 
     private int countriesClaimed = 0;//counter used during the ClaimPhase
 
@@ -51,15 +52,13 @@ public class MainController
     private int randomIndex;//used as the index for getting a random country to assign to neutral players
 
     Player[] neutrals = new Player[4];
-    private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET}; //stores colours of neutral players
+     //stores colours of neutral players
 
     @FXML private ChatBoxController chatBoxController;//reference to the chat box controller
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
-        for(int i=0;i<4;i++) {
-            neutrals[i] = new Player(neutralColours[i]);
-        }
+
         chatBoxController.injectMainController(this);//passes MainController to ChatBoxController
         this.gamestate = new Gamestate(); //initialises GameState Object
         chatBoxController.setGameState(gamestate);//Outputs instructions to user and starts the game
@@ -197,6 +196,7 @@ public class MainController
 
     public void distributeCountries()
     {
+        neutrals = gamestate.getNeutrals();
         new Thread(() -> {
             while (countriesClaimed != 18)
             {
@@ -233,8 +233,11 @@ public class MainController
     public void setCountryColour(Player player)
     {
         Country neutralCountry = chooseRandomEmptyCountry();
+        int countryIndex = getCountryIndex(countries.getCountries(), neutralCountry.getName());
+        armies[countryIndex] = new Army(player, 1, neutralCountry);
+        player.decrementTroops(1);
         setColourCountry(neutralCountry, player.getColour());
-        player.addCountry(countries.getCountries().get(getCountryIndex(countries.getCountries(),neutralCountry.getName())));//adds the country to player object
+        player.addCountry(countries.getCountries().get(countryIndex));//adds the country to player object
     }
 
     //method that claims a county for a neutral player

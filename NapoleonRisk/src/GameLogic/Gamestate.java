@@ -7,9 +7,11 @@ import Controllers.MainController;
 import javafx.scene.paint.Color;
 
 public class Gamestate {
-    Player player1 = new Player();
-    Player player2 = new Player();
+    Player player1 = new Player(Color.TOMATO, 36);
+    Player player2 = new Player(Color.ROYALBLUE, 36);
     Player[] players = {player1, player2};
+    Player[] neutrals = new Player[4];
+    private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET};
 
     Dice dice = new Dice();
 
@@ -30,10 +32,12 @@ public class Gamestate {
 
     //game start logic, welcomes and initialise players, then starts user input logic
     public void Gamestart(){
+        for(int i=0;i<4;i++) {
+            neutrals[i] = new Player(neutralColours[i]);
+        }
+
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
         setPlayerName(players, 0);
-        players[0].setColors(Color.TOMATO); //Set player colours
-        players[1].setColors(Color.ROYALBLUE);
     }
 
     //algorithm and game logic for retreiving player information from controller
@@ -75,4 +79,7 @@ public class Gamestate {
         chatBoxController.textOutput(new TextField(players[0].getName()+" claim a country!"));
     }
 
+    public Player[] getNeutrals(){
+        return neutrals;
+    }
 }

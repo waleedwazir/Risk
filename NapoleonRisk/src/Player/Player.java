@@ -21,10 +21,12 @@ public class Player {
     //neutral constructor
     public Player(Color colour){
         this.PlayerColor = colour;
+        this.troops = 24;
     }
 
-    public Player(String name){
-        this.name = name;
+    public Player(Color colour, int num){
+        this.PlayerColor = colour;
+        troops = num;
     }
 
     public void setColors (Color PlayerColor){
@@ -37,6 +39,7 @@ public class Player {
 
     public void setName(String name){
         this.name = name;
+        this.troops = 36;
     }
 
     public String getName() {
@@ -101,6 +104,10 @@ public class Player {
 
     public void addTroops(int num){
         troops+=num;
+    }
+
+    public void decrementTroops(int num){
+        troops-=num;
     }
 
     public int getTroops(){

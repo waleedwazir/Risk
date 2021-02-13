@@ -7,6 +7,7 @@ import Player.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -100,6 +101,7 @@ public class MainController
     {
         playerClaim = state;
     }
+
     public Boolean getPlayerClaim()
     {
         return playerClaim;
@@ -182,22 +184,19 @@ public class MainController
                     for(Coordinate c:queue.get(i)){
                         if(c.equals(clicked)){
                             countryName = queue.get(i).getName();
-                            //chatBoxController.textOutput(new TextField(countryName));
+                            chatBoxController.setTextInput(new TextField(countryName));
                             break;
                         }
                     }
                 }
-
-                int countryIndex = getCountryIndex(countries.getCountries(), countryName);//returns index of a country in countries by its name
-                bfs.startBFS(clicked, grid, Color.SLATEGREY, countries.getCountries(), countryIndex);//runs a bread first search
-                //claimCountry(countryIndex);//sets the node on a given country to 1
+                //int countryIndex = getCountryIndex(countries.getCountries(), countryName);//returns index of a country in countries by its name
             }
     }
 
     public void distributeCountries()
     {
         neutrals = gamestate.getNeutrals();
-        new Thread(() -> {
+        Thread thread = new Thread(() -> {
             while (countriesClaimed != 18)
             {
                 int playerIndex = countriesClaimed%2;
@@ -215,7 +214,7 @@ public class MainController
                     } catch(InterruptedException v){System.out.println(v);}
                     if(countriesClaimed <= 12)
                     {
-                        for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutralColours array
+                        for(int i=0;i<4;i++)//claims a random country 4 times , using the colours from neutrals array
                         {
                             int index = i;
                             Platform.runLater(() -> setCountryColour(neutrals[index]));
@@ -228,10 +227,10 @@ public class MainController
                 }//adds the country to player object
                 countriesClaimed++;}
             Platform.runLater(() -> gamestate.passArmies(armies));
-            Platform.runLater(() -> gamestate.GameTurns());
+            Platform.runLater(() -> gamestate.GameTurns(1));
 
-        }).start();
-
+        });
+        thread.start();
     }
 
     public void setCountryColour(Player player)
@@ -307,7 +306,6 @@ public class MainController
         int y = (int) mouseEvent.getY()/5;
         int x = (int) mouseEvent.getX()/5;
         if(!(y>119)) {
-            System.out.println(y+" "+x);
             determineClick(y, x);
         }
     }

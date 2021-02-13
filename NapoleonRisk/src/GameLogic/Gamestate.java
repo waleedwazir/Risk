@@ -2,10 +2,12 @@ package GameLogic;
 
 import Map.Country;
 import Player.*;
+import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import Controllers.ChatBoxController;
 import Controllers.MainController;
 import javafx.scene.paint.Color;
+import java.util.Random;
 
 
 public class Gamestate {
@@ -46,6 +48,8 @@ public class Gamestate {
         }
 
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
+        chatBoxController.textOutput(new TextField("Clicking on a country will print it's name to the console,"));
+        chatBoxController.textOutput(new TextField("this feature is for ease of use and eliminates the need of typing!"));
         setPlayerName(players, 0);
     }
 
@@ -96,21 +100,35 @@ public class Gamestate {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
             Army army = armies[countryIndex];
-            army.incrementSize(3);
-            mainController.updateNode(army);
-            waitingPlayer1Deployment = false;
-            waitingPlayer2Deployment = true;
-            chatBoxController.textOutput(new TextField(players[1].getName()+" deploy troops!"));
+            chatBoxController.setWaitingTextInput(true);
+            if(army.getPlayer()==players[0]) {
+                chatBoxController.textOutput(new TextField("Troops deployed to "+countryName+"!"));
+                players[0].decrementTroops(3);
+                army.incrementSize(3);
+                mainController.updateNode(army);
+                waitingPlayer1Deployment = false;
+                waitingPlayer2Deployment = true;
+                chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+            }else{
+                chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+            }
 
         }else if(waitingPlayer2Deployment)
         {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
             Army army = armies[countryIndex];
-            army.incrementSize(3);
-            mainController.updateNode(army);
-
-            //logic for neutrals will go here
+            if(army.getPlayer()==players[1]) {
+                chatBoxController.textOutput(new TextField("Troops deployed to "+countryName+"!"));
+                players[1].decrementTroops(3);
+                army.incrementSize(3);
+                mainController.updateNode(army);
+                waitingPlayer2Deployment = false;
+                deploymentPhase(2);
+            }else{
+                chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                chatBoxController.setWaitingTextInput(true);
+            }
 
         }
     }
@@ -130,24 +148,57 @@ public class Gamestate {
     }
 
     //method that will call all the phases of the GameState
-    public void GameTurns()
+    public void GameTurns(int phase)
     {
-        deploymentPhase();
+        if(phase==1) {
+            deploymentPhase(1);
+        }
     }
 
     //begins the deployment phase, allowing players and neutrals to deploy their troops
     //called in main controller
-    public void deploymentPhase()
+    public void deploymentPhase(int phase)
     {
-        waitingPlayer1Deployment = true;
-        chatBoxController.setWaitingTextInput(true);
-        chatBoxController.textOutput(new TextField("Input the name of the country you want to deploy troops on!"));
-        chatBoxController.textOutput(new TextField(players[0].getName()+" deploy troops!"));
+        if(phase==1 && players[0].getTroops()>0) {//start player deployment logic
+            waitingPlayer1Deployment = true;
+            chatBoxController.setWaitingTextInput(true);
+            chatBoxController.textOutput(new TextField("Input the name of the country you want to deploy troops on!"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " deploy troops!"));
+        }else if(neutrals[0].getTroops()>0){//start neutral deployment logic
+                Thread neutralDeploy = new Thread(() -> {
+                    for(int i=0;i<4;i++){
+                        Random generator = new Random();
+                        Object[] values = neutrals[i].getAssignedCountries().values().toArray();
+                        Country randomCountry = (Country) values[generator.nextInt(values.length)];
+                        Army army = armies[randomCountry.getIndex()];
+                        neutrals[i].decrementTroops(1);
+                        army.incrementSize(1);
+                        mainController.updateNode(army);
+                        System.out.println("working");
+                        Platform.runLater(() -> chatBoxController.textOutput(new TextField("Neutral deployed a troop to "+randomCountry.getName()+"!")));
+                        try {
+                            Thread.sleep(300);
+                        } catch(InterruptedException v){System.out.println(v);}
+                    }
+                    Platform.runLater(() -> deploymentPhase(1));
+
+                });
+                neutralDeploy.start();
+            }else if(players[0].getTroops()>0){
+            deploymentPhase(1);
+        }else{
+            chatBoxController.textOutput(new TextField("Deployment phase over!"));
+            GameTurns(2);
+        }
+
+
     }
+
     public void passArmies(Army[] armies)
     {
         this.armies = armies;
     }
+
     public int getTextToPlayerColour()
     {
         return textToPlayerColour;

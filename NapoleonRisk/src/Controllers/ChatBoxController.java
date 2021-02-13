@@ -106,8 +106,8 @@ public class ChatBoxController
     public void sendMessageButton(ActionEvent actionEvent)
     {
         if(waitingTextInput){
-            gamestate.getTextInput(textInput);
             waitingTextInput = false;
+            gamestate.getTextInput(textInput);
             textInput.clear();
         }else{
             textOutput(textInput);
@@ -125,6 +125,12 @@ public class ChatBoxController
             }else{
                 textOutput(textInput);
             }
+        }
+    }
+
+    public void setTextInput(TextField t){
+        if(textInput.getText().isEmpty()){
+            textInput.setText(t.getText());
         }
     }
 

@@ -17,6 +17,7 @@ public class Gamestate {
     Player[] neutrals = new Player[4];
     private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET};
     private int turn = 0;
+    private Dice dice = new Dice();
 
 
     Army[] armies;
@@ -32,6 +33,14 @@ public class Gamestate {
     boolean waitingPlayer2Name = false;
     boolean waitingPlayer1Deployment = false;
     boolean waitingPlayer2Deployment = false;
+
+    boolean waitingPlayer1Roll = false;
+    boolean waitingPlayer2Roll = false;
+
+    //stores the value of the players rolls
+    private int player1Roll;
+    private int player2Roll;
+
 
 
     //initialises the two controllers so that the gamestate object can reference the appropriate ones
@@ -130,6 +139,51 @@ public class Gamestate {
                 chatBoxController.setWaitingTextInput(true);
             }
 
+        }else if(waitingPlayer1Roll)
+        {
+            if(t.getText().equals("roll"))
+            {
+                player1Roll = dice.throwDice();
+                chatBoxController.textOutput(new TextField(players[0].getName()+" rolled a "+player1Roll));
+                waitingPlayer1Roll = false;
+                waitingPlayer2Roll = true;
+                chatBoxController.textOutput(new TextField(players[1].getName()+" roll your dice!"));
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid command -> use \"roll\" to roll a dice!"));
+            }
+
+        }else if(waitingPlayer2Roll)
+        {
+            if(t.getText().equals("roll"))
+            {
+                player2Roll = dice.throwDice();
+                chatBoxController.textOutput(new TextField(players[1].getName()+" rolled a "+player2Roll));
+                if(player1Roll == player2Roll)
+                {
+                    waitingPlayer1Roll = true;
+                    waitingPlayer2Roll = false;
+                    chatBoxController.textOutput(new TextField("It was a tie! Please roll again!"));
+                    chatBoxController.textOutput(new TextField(players[1].getName()+" roll your dice!"));
+                }
+                else if(player2Roll > player1Roll)
+                {
+                    Player temp = players[0];
+                    players[0] = players[1];
+                    players[1] = temp;
+                }
+                if(!(player1Roll == player2Roll))
+                {
+                    waitingPlayer2Roll = false;
+                    chatBoxController.textOutput(new TextField(players[0].getName()+" won !!! They get to go first!"));
+                    chatBoxController.setWaitingTextInput(false);
+                    chatBoxController.textOutput(new TextField(">>>The Deployment Phase will now being<<<"));
+                    GameTurns(2);
+                }
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid command -> use \"roll\" to roll a dice!"));
+            }
         }
     }
 
@@ -151,6 +205,9 @@ public class Gamestate {
     public void GameTurns(int phase)
     {
         if(phase==1) {
+            rollForTurnOrder();
+        }else if (phase == 2)
+        {
             deploymentPhase(1);
         }
     }
@@ -188,7 +245,7 @@ public class Gamestate {
             deploymentPhase(1);
         }else{
             chatBoxController.textOutput(new TextField("Deployment phase over!"));
-            GameTurns(2);
+            GameTurns(3);
         }
 
 
@@ -202,6 +259,15 @@ public class Gamestate {
     public int getTextToPlayerColour()
     {
         return textToPlayerColour;
+    }
+
+    //called in GameTurns to roll for turn order between the two players
+    public void rollForTurnOrder()
+    {
+        chatBoxController.textOutput(new TextField("Players will now roll dice to determine turn order! Type \"roll\" to do so"));
+        chatBoxController.textOutput(new TextField(players[0].getName() +" roll your dice!"));
+        waitingPlayer1Roll = true;
+        chatBoxController.setWaitingTextInput(true);
     }
 
 

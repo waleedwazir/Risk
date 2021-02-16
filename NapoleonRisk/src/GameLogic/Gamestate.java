@@ -108,35 +108,43 @@ public class Gamestate {
         {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
-            Army army = armies[countryIndex];
-            chatBoxController.setWaitingTextInput(true);
-            if(army.getPlayer()==players[0]) {
-                chatBoxController.textOutput(new TextField("Troops deployed to "+countryName+"!"));
-                players[0].decrementTroops(3);
-                army.incrementSize(3);
-                mainController.updateNode(army);
-                waitingPlayer1Deployment = false;
-                waitingPlayer2Deployment = true;
-                chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+            if(countryIndex!=-1) {
+                Army army = armies[countryIndex];
+                chatBoxController.setWaitingTextInput(true);
+                if (army.getPlayer() == players[0]) {
+                    chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
+                    players[0].decrementTroops(3);
+                    army.incrementSize(3);
+                    mainController.updateNode(army);
+                    waitingPlayer1Deployment = false;
+                    waitingPlayer2Deployment = true;
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+                } else {
+                    chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                }
             }else{
-                chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                chatBoxController.textOutput(new TextField("Invalid input! Please try again."));
             }
 
         }else if(waitingPlayer2Deployment)
         {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
-            Army army = armies[countryIndex];
-            if(army.getPlayer()==players[1]) {
-                chatBoxController.textOutput(new TextField("Troops deployed to "+countryName+"!"));
-                players[1].decrementTroops(3);
-                army.incrementSize(3);
-                mainController.updateNode(army);
-                waitingPlayer2Deployment = false;
-                deploymentPhase(2);
+            if(countryIndex!=-1) {
+                Army army = armies[countryIndex];
+                if (army.getPlayer() == players[1]) {
+                    chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
+                    players[1].decrementTroops(3);
+                    army.incrementSize(3);
+                    mainController.updateNode(army);
+                    waitingPlayer2Deployment = false;
+                    deploymentPhase(2);
+                } else {
+                    chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                    chatBoxController.setWaitingTextInput(true);
+                }
             }else{
-                chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
-                chatBoxController.setWaitingTextInput(true);
+                chatBoxController.textOutput(new TextField("Invalid input! Please try again."));
             }
 
         }else if(waitingPlayer1Roll)
@@ -231,7 +239,6 @@ public class Gamestate {
                         neutrals[i].decrementTroops(1);
                         army.incrementSize(1);
                         mainController.updateNode(army);
-                        System.out.println("working");
                         Platform.runLater(() -> chatBoxController.textOutput(new TextField("Neutral deployed a troop to "+randomCountry.getName()+"!")));
                         try {
                             Thread.sleep(300);

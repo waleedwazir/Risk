@@ -72,7 +72,7 @@ public class Country implements Iterable<Coordinate>{
         return minChangeIndex;
     }
 
-    static int calculateLevenshtein(String x, String y) {
+    public static int calculateLevenshtein(String x, String y) {
         if(x.length()==0){
             return 6;
         }
@@ -88,13 +88,13 @@ public class Country implements Iterable<Coordinate>{
                 }
                 else {
                     dp[i][j] = min(dp[i - 1][j - 1]
-                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
-                            dp[i - 1][j] + 1,
-                            dp[i][j - 1] + 1);
+                                    + costOfSubstitution(x.charAt(i - 1),
+                                    y.charAt(j - 1)),
+                                    dp[i - 1][j] + 1,
+                                    dp[i][j - 1] + 1);
                 }
             }
         }
-
         return dp[x.length()][y.length()];
     }
 

@@ -1,6 +1,6 @@
 package Controllers;
 
-import GameLogic.Gamestate;
+import GameLogic.GameState;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -21,7 +21,7 @@ public class ChatBoxController
     public VBox vBox;
     private MainController mainController;
     private boolean waitingTextInput = false;
-    Gamestate gamestate;
+    GameState gamestate;
 
     //ArrayList of labels that are displayed in the vBox
     //messageIndex used to track latest entry
@@ -140,7 +140,7 @@ public class ChatBoxController
     }
 
     //passes GameState object to this controller
-    public void setGameState(Gamestate gamestate){
+    public void setGameState(GameState gamestate){
         this.gamestate = gamestate;
     }
 

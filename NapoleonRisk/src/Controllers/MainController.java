@@ -1,7 +1,7 @@
 package Controllers;
 
 
-import GameLogic.Gamestate;
+import GameLogic.GameState;
 import Map.*;
 import Player.*;
 import javafx.application.Platform;
@@ -39,7 +39,7 @@ public class MainController
     //initialises a Countries object
     Countries countries = new Countries();
 
-    Gamestate gamestate;//declaring GameState object
+    GameState gamestate;//declaring GameState object
     Player[] players;//declaring players array
     Army[] armies = new Army[42];
 
@@ -48,7 +48,7 @@ public class MainController
     public boolean playerClaim = false;//set to true in GameState when it's time for players to claim initial countries
     public boolean neutralsClaim = true;//sets to false when neutrals have been allocated countries
 
-    breadFirstSearch bfs = new breadFirstSearch(); //object used for animation //object used for animation
+    BreathFirstSearch bfs = new BreathFirstSearch(); //object used for animation //object used for animation
 
     private int randomIndex;//used as the index for getting a random country to assign to neutral players
 
@@ -61,7 +61,7 @@ public class MainController
     {
 
         chatBoxController.injectMainController(this);//passes MainController to ChatBoxController
-        this.gamestate = new Gamestate(); //initialises GameState Object
+        this.gamestate = new GameState(); //initialises GameState Object
         chatBoxController.setGameState(gamestate);//Outputs instructions to user and starts the game
 
         players = gamestate.getPlayers();//fetches the players from GameState

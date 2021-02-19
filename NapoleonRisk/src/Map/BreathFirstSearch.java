@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class breadFirstSearch {
+public class BreathFirstSearch
+{
 
     //bread first search implementation in the context of our grid,
     //used as a tool for animation on countries.

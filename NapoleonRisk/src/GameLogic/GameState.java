@@ -12,7 +12,8 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 
 
-public class Gamestate {
+public class GameState
+{
     Player player1 = new Player(Color.TOMATO, 36);
     Player player2 = new Player(Color.ROYALBLUE, 36);
     Player[] players = {player1, player2};

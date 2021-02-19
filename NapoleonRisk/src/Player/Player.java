@@ -1,5 +1,6 @@
 package Player;
 
+import Cards.CardHandle;
 import Map.Country;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ public class Player {
     private Color PlayerColor;
     private HashMap<String, Country> AssignedCountries = new HashMap<String, Country>();
     private int troops;
+    private CardHandle hand;
+    private int turnInCount;
 
     public Player(){
     }
@@ -75,12 +78,12 @@ public class Player {
     /*
     function that adds a captured country to the arraylist
     used hashmap because of string
-    
+
      */
     public void addCountry(Country country){
         getAssignedCountries().put(country.getName(), country);
     }
-    
+
     //similar to the function above but can add multiple countries at once
     public void addCountry(ArrayList<Country> countryList){
         for(int i = 0; i < countryList.size(); i++){
@@ -113,5 +116,37 @@ public class Player {
     public int getTroops(){
         return troops;
     }
+
+    public void addCard(CardHandle card){
+        hand.add(card);
+    }
+
+    //removes cards to from players hand to reflect cards being turned in
+    public void removeCards(int[] cardsTurnedInIndex) {
+
+        hand.removeCards(cardsTurnedInIndex[0], cardsTurnedInIndex[1], cardsTurnedInIndex[2]);
+    }
+
+    public int getTurnInCount() {
+
+        turnInCount++;
+        return turnInCount;
+    }
+
+    public ArrayList<CardHandle> getHand() {
+
+        return hand.getCards();
+    }
+
+    public CardHandle getHandObject() {
+
+        return hand;
+    }
+
+    public boolean mustTurnInCards() {
+
+        return hand.mustTurnIn();
+    }
+
 
 }

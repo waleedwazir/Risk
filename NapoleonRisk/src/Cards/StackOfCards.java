@@ -11,25 +11,25 @@ public class StackOfCards {
     private String[] typesArr;
     private ArrayList<CardHandle> stack;
     private ArrayList<Country> countries;
-    private String[] wild;
     private int index;
     private CardHandle getCard;
 
     /*
-    create cards for each country
+    create 42 cards, one for each country
+
+    each country will have a one of each infantry, Cavalry and Artillery
      */
     public StackOfCards(ArrayList<Country> countries) {
+
+        Collections.shuffle(countries);
 
         //Type of cards
         typesArr = new String[]{ "Infantry", "Cavalry", "Artillery"};
 
-        //not implemented yet
-        wild = new String[]{"WildCard"};
-
-
         stack = new ArrayList<CardHandle>();
 
         for (index = 0; index < countries.size(); index++) {
+            //adds new cards to deck
             stack.add(new CardHandle(typesArr[index / 14], countries.get(index)));
             System.out.println("New Card added to Deck: " + stack.get(index).getName());
         }
@@ -37,11 +37,14 @@ public class StackOfCards {
         Collections.shuffle(stack);
     }
 
-    public void shuffleDeck() {
+    //shuffles Deck of cards
+    public void shuffle() {
 
         Collections.shuffle(stack);
     }
 
+
+    //removes a card from the deck and return it
     public CardHandle draw() {
 
         getCard = stack.get(0);
@@ -49,11 +52,16 @@ public class StackOfCards {
         return getCard;
     }
 
+    //adds a card to the deck
     public void add(CardHandle card) {
 
         stack.add(card);
     }
 
+
+
 }
+
+
 
 

@@ -70,7 +70,6 @@ public class Reader
         return countries;
     }
     private void appendCountry(ArrayList<Country> countries, ArrayList<Coordinate> country, int index){
-
         //adds a newly initialised ArrayList to countries and fills it with Coordinate objects
         countries.add(new Country());
         if(index<42) {

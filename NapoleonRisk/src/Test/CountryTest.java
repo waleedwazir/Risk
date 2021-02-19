@@ -3,9 +3,7 @@ package Test;
 import Map.Coordinate;
 import Map.Country;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CountryTest {

@@ -1,5 +1,7 @@
 package GameLogic;
 
+import Cards.Card;
+import Cards.Deck;
 import Map.Country;
 import Player.*;
 import javafx.application.Platform;
@@ -22,9 +24,14 @@ public class Gamestate {
 
     Army[] armies;
 
+
     //Controller object that the GameState interacts with
     ChatBoxController chatBoxController;
     MainController mainController;
+
+    //this needs to be changed
+    Deck deck;
+    Card card = new Card();
 
     int textToPlayerColour = -1;
 
@@ -47,6 +54,7 @@ public class Gamestate {
     public void setController(ChatBoxController chatBoxController, MainController mainController){
         this.chatBoxController = chatBoxController;
         this.mainController = mainController;
+        deck = new Deck(mainController.getCountries());
     }
 
 
@@ -88,6 +96,10 @@ public class Gamestate {
             chatBoxController.textOutput(new TextField(players[0].getName()+" you are RED"));
             textToPlayerColour = -1;
 
+            card = deck.draw();
+            players[0].getHand().add(card);
+            chatBoxController.textOutput(new TextField(players[0].getName()+" drew the " + card.toString()+" card"));
+
             waitingPlayer1Name = false;
             waitingPlayer2Name = true;
             setPlayerName(players, 1);
@@ -98,7 +110,12 @@ public class Gamestate {
             //outputs next message in player 2's colour
             textToPlayerColour = 1;
             chatBoxController.textOutput(new TextField(players[1].getName()+" you are BLUE"));
+
             textToPlayerColour = -1;
+
+            card = deck.draw();
+            players[1].getHand().add(card);
+            chatBoxController.textOutput(new TextField(players[1].getName()+" drew the " + card.toString() +" card"));
 
             mainController.distributeCountries();
             chatBoxController.setWaitingTextInput(false);
@@ -172,7 +189,7 @@ public class Gamestate {
                     waitingPlayer1Roll = true;
                     waitingPlayer2Roll = false;
                     chatBoxController.textOutput(new TextField("It was a tie! Please roll again!"));
-                    chatBoxController.textOutput(new TextField(players[1].getName()+" roll your dice!"));
+                    chatBoxController.textOutput(new TextField(players[0].getName()+" roll your dice!"));
                 }
                 else if(player2Roll > player1Roll)
                 {

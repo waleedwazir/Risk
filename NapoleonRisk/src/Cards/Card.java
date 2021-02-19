@@ -3,20 +3,21 @@ package Cards;
 import Map.Country;
 import java.util.ArrayList;
 
-public  class CardHandle {
+public  class Card
+{
 
     private boolean cond;
-    private ArrayList<CardHandle> hand;
+    private ArrayList<Card> hand;
     private  Country country;
     private  String type;
 
-    public CardHandle(){
+    public Card(){
 
         //instantiate deck
-        hand = new ArrayList<CardHandle>();
+        hand = new ArrayList<Card>();
     }
 
-    public CardHandle(String type, Country country ) {
+    public Card(String type, Country country ) {
         this.type = type;
         this.country = country;
     }
@@ -30,7 +31,7 @@ public  class CardHandle {
     }
 
     public String getName() {
-        return country.getName() + " " + type;
+        return country.getName();
     }
 
     //returns true if the player can turn in cards
@@ -52,7 +53,7 @@ public  class CardHandle {
     }
 
     //adds card
-    public void add(CardHandle card){
+    public void add(Card card){
         hand.add(card);
     }
 
@@ -79,13 +80,14 @@ public  class CardHandle {
         return cond;
     }
 
+    @Override
     public String toString(){
-        return getName() + getType() + getCountry();
+        return getName() + " "+ getType();
     }
 
 
     //returns the hand
-    public ArrayList<CardHandle> getCards() {
+    public ArrayList<Card> getCards() {
         return hand;
     }
 

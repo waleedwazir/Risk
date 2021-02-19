@@ -1,6 +1,6 @@
 package Player;
 
-import Cards.CardHandle;
+import Cards.Card;
 import Map.Country;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class Player {
     private Color PlayerColor;
     private HashMap<String, Country> AssignedCountries = new HashMap<String, Country>();
     private int troops;
-    private CardHandle hand;
+    private Card hand;
     private int turnInCount;
 
     public Player(){
@@ -25,11 +25,13 @@ public class Player {
     public Player(Color colour){
         this.PlayerColor = colour;
         this.troops = 24;
+        hand = new Card();
     }
 
     public Player(Color colour, int num){
         this.PlayerColor = colour;
         troops = num;
+        hand = new Card();
     }
 
     public void setColors (Color PlayerColor){
@@ -117,7 +119,7 @@ public class Player {
         return troops;
     }
 
-    public void addCard(CardHandle card){
+    public void addCard(Card card){
         hand.add(card);
     }
 
@@ -133,12 +135,12 @@ public class Player {
         return turnInCount;
     }
 
-    public ArrayList<CardHandle> getHand() {
+    public ArrayList<Card> getHand() {
 
         return hand.getCards();
     }
 
-    public CardHandle getHandObject() {
+    public Card getHandObject() {
 
         return hand;
     }

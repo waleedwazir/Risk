@@ -340,5 +340,9 @@ public class MainController
             grid[c.getY()][c.getX()].setStroke(colour);
         }
     }
+    public Countries getCountries()
+    {
+        return countries;
+    }
 
 }

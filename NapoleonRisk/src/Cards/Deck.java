@@ -2,50 +2,47 @@ package Cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import Map.Countries;
 import Map.Country;
 
-public class StackOfCards {
+public class Deck
+{
 
-    private String input;
-    private String name;
     private String[] typesArr;
-    private ArrayList<CardHandle> stack;
+    private ArrayList<Card> stack;
     private ArrayList<Country> countries;
     private int index;
-    private CardHandle getCard;
+    private Card getCard;
 
     /*
     create 42 cards, one for each country
 
     each country will have a one of each infantry, Cavalry and Artillery
      */
-    public StackOfCards(ArrayList<Country> countries) {
+    public Deck(Countries countries) {
 
-        Collections.shuffle(countries);
+        this.countries = countries.getCountries();
+        //Collections.shuffle(this.countries);
 
         //Type of cards
         typesArr = new String[]{ "Infantry", "Cavalry", "Artillery"};
 
-        stack = new ArrayList<CardHandle>();
+        stack = new ArrayList<Card>();
 
-        for (index = 0; index < countries.size(); index++) {
+        for (index = 0; index < 42; index++) {
             //adds new cards to deck
-            stack.add(new CardHandle(typesArr[index / 14], countries.get(index)));
-            System.out.println("New Card added to Deck: " + stack.get(index).getName());
+            stack.add(new Card(typesArr[index / 14], this.countries.get(index)));
+            //System.out.println("New Card added to Deck: " + stack.get(index).getName());
         }
 
         Collections.shuffle(stack);
     }
 
-    //shuffles Deck of cards
-    public void shuffle() {
-
-        Collections.shuffle(stack);
-    }
 
 
     //removes a card from the deck and return it
-    public CardHandle draw() {
+    public Card draw() {
 
         getCard = stack.get(0);
         stack.remove(0);
@@ -53,7 +50,7 @@ public class StackOfCards {
     }
 
     //adds a card to the deck
-    public void add(CardHandle card) {
+    public void add(Card card) {
 
         stack.add(card);
     }

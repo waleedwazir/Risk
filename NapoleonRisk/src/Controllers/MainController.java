@@ -193,6 +193,7 @@ public class MainController
             }
     }
 
+    //game logic for distributing countries at the beginning of the game
     public void distributeCountries()
     {
         neutrals = gamestate.getNeutrals();
@@ -226,6 +227,7 @@ public class MainController
 
                 }//adds the country to player object
                 countriesClaimed++;}
+            //starts the next part of the game logic
             Platform.runLater(() -> gamestate.passArmies(armies));
             Platform.runLater(() -> gamestate.GameTurns(1));
 
@@ -233,6 +235,7 @@ public class MainController
         thread.start();
     }
 
+    //method to find a random country and assign it to the passed player
     public void setCountryColour(Player player)
     {
         Country neutralCountry = chooseRandomEmptyCountry();
@@ -323,13 +326,12 @@ public class MainController
 
 
 
-    //bts search when a neutral player claims a country
+    //bfs search when a neutral player claims a country
     //has some lag issues at the moment
     public void determineNeutral(int y, int x,Color color){
             Coordinate clicked = new Coordinate(y, x);  //initialises a coordinate object at the y and x in
             int countryIndex = getCountryIndex(countries.getCountries(), Reader.getCountryName(randomIndex) );
             bfs.startBFS(clicked, grid, color, countries.getCountries(), countryIndex);
-
     }
 
 

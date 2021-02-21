@@ -21,8 +21,6 @@ public class GameState
     private Color[] neutralColours = {Color.YELLOW,Color.ORANGE,Color.YELLOWGREEN,Color.VIOLET};
     private int turn = 0;
     private Dice dice = new Dice();
-
-
     Army[] armies;
 
 
@@ -41,7 +39,6 @@ public class GameState
     boolean waitingPlayer2Name = false;
     boolean waitingPlayer1Deployment = false;
     boolean waitingPlayer2Deployment = false;
-
     boolean waitingPlayer1Roll = false;
     boolean waitingPlayer2Roll = false;
 
@@ -64,7 +61,6 @@ public class GameState
         for(int i=0;i<4;i++) {
             neutrals[i] = new Player(neutralColours[i]);
         }
-
         chatBoxController.textOutput(new TextField("Welcome to Risk!"));
         chatBoxController.textOutput(new TextField("Clicking on a country will print it's name to the console,"));
         chatBoxController.textOutput(new TextField("this feature is for ease of use and eliminates the need of typing!"));
@@ -89,6 +85,9 @@ public class GameState
     //method for retreiving input from the chatbox controller and the processes it appropriately
     public void getTextInput(TextField t){
         chatBoxController.textOutput(new TextField("> "+t.getText()));
+
+        //game logic decides which input we are waiting for from the user, this if else if...
+        //then decides what to do with the received data
         if(waitingPlayer1Name){
             players[0].setName(t.getText());
 
@@ -249,7 +248,7 @@ public class GameState
             chatBoxController.textOutput(new TextField(players[0].getName() + " deploy troops!"));
         }else if(neutrals[0].getTroops()>0){//start neutral deployment logic
                 Thread neutralDeploy = new Thread(() -> {
-                    for(int i=0;i<4;i++){
+                    for(int i=0;i<4;i++){//loops through the 4 neutrals does all their deployment logic
                         Random generator = new Random();
                         Object[] values = neutrals[i].getAssignedCountries().values().toArray();
                         Country randomCountry = (Country) values[generator.nextInt(values.length)];
@@ -259,23 +258,27 @@ public class GameState
                         mainController.updateNode(army);
                         Platform.runLater(() -> chatBoxController.textOutput(new TextField("Neutral deployed a troop to "+randomCountry.getName()+"!")));
                         try {
-                            Thread.sleep(300);
+                            Thread.sleep(300); //this prevents all the countries been claimed instantly
+                                                    //and provides somewhat of an animation
                         } catch(InterruptedException v){System.out.println(v);}
                     }
-                    Platform.runLater(() -> deploymentPhase(1));
+                    Platform.runLater(() -> deploymentPhase(1)); //loops back to the player deployment phase
 
                 });
                 neutralDeploy.start();
             }else if(players[0].getTroops()>0){
-            deploymentPhase(1);
+            deploymentPhase(1);//loops back to player deployment phase if players still have troops to deploy
         }else{
+            //end of deployment phase
             chatBoxController.textOutput(new TextField("Deployment phase over!"));
+            //intiates next piece of game logic
             GameTurns(3);
         }
 
 
     }
 
+    //retrieves the instantiated armies array from mainController
     public void passArmies(Army[] armies)
     {
         this.armies = armies;

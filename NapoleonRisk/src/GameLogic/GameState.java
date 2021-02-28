@@ -2,6 +2,7 @@ package GameLogic;
 
 import Cards.Card;
 import Cards.Deck;
+import Map.Countries;
 import Map.Country;
 import Player.*;
 import javafx.application.Platform;
@@ -9,6 +10,8 @@ import javafx.scene.control.TextField;
 import Controllers.ChatBoxController;
 import Controllers.MainController;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -33,6 +36,8 @@ public class GameState
     Card card = new Card();
 
     int textToPlayerColour = -1;
+    int attackingCountryIndex;
+    int sizeOfAttackingArmy;
 
     //used for the logic implementation of receiving payer names
     boolean waitingPlayer1Name = false;
@@ -41,6 +46,12 @@ public class GameState
     boolean waitingPlayer2Deployment = false;
     boolean waitingPlayer1Roll = false;
     boolean waitingPlayer2Roll = false;
+    boolean waitingPlayer1Option = false;
+    boolean waitingPlayer2Option = false;
+    boolean waitingPlayer1SizeOfAttackingArmy = false;
+    boolean waitingPlayer2SizeOfAttackingArmy = false;
+    boolean waitingPlayer1Attack = false;
+    boolean waitingPlayer2Attack = false;
 
     //stores the value of the players rolls
     private int player1Roll;
@@ -83,52 +94,57 @@ public class GameState
     }
 
     //method for retreiving input from the chatbox controller and the processes it appropriately
-    public void getTextInput(TextField t){
-        chatBoxController.textOutput(new TextField("> "+t.getText()));
+    public void getTextInput(TextField t)
+    {
+        chatBoxController.textOutput(new TextField("> " + t.getText()));
 
         //game logic decides which input we are waiting for from the user, this if else if...
         //then decides what to do with the received data
-        if(waitingPlayer1Name){
+        if (waitingPlayer1Name)
+        {
             players[0].setName(t.getText());
 
             //outputs next message in player 1's colour
             textToPlayerColour = 0;
-            chatBoxController.textOutput(new TextField(players[0].getName()+" you are RED"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " you are RED"));
             textToPlayerColour = -1;
 
             card = deck.draw();
             players[0].getHand().add(card);
-            chatBoxController.textOutput(new TextField(players[0].getName()+" drew the " + card.toString()+" card"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " drew the " + card.toString() + " card"));
 
             waitingPlayer1Name = false;
             waitingPlayer2Name = true;
             setPlayerName(players, 1);
 
-        }else if(waitingPlayer2Name){
+        } else if (waitingPlayer2Name)
+        {
             players[1].setName(t.getText());
 
             //outputs next message in player 2's colour
             textToPlayerColour = 1;
-            chatBoxController.textOutput(new TextField(players[1].getName()+" you are BLUE"));
+            chatBoxController.textOutput(new TextField(players[1].getName() + " you are BLUE"));
 
             textToPlayerColour = -1;
 
             card = deck.draw();
             players[1].getHand().add(card);
-            chatBoxController.textOutput(new TextField(players[1].getName()+" drew the " + card.toString() +" card"));
+            chatBoxController.textOutput(new TextField(players[1].getName() + " drew the " + card.toString() + " card"));
 
             mainController.distributeCountries();
             chatBoxController.setWaitingTextInput(false);
             waitingPlayer2Name = false;
 
-        }else if(waitingPlayer1Deployment)
+        } else if (waitingPlayer1Deployment)
         {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
-            if(countryIndex!=-1) {
+            if (countryIndex != -1)
+            {
                 Army army = armies[countryIndex];
                 chatBoxController.setWaitingTextInput(true);
-                if (army.getPlayer() == players[0]) {
+                if (army.getPlayer() == players[0])
+                {
                     chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
                     players[0].decrementTroops(3);
                     army.incrementSize(3);
@@ -136,81 +152,232 @@ public class GameState
                     waitingPlayer1Deployment = false;
                     waitingPlayer2Deployment = true;
                     chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
-                } else {
+                } else
+                {
                     chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
                 }
-            }else{
+            } else
+            {
                 chatBoxController.textOutput(new TextField("Invalid input! Please try again."));
             }
 
-        }else if(waitingPlayer2Deployment)
+        } else if (waitingPlayer2Deployment)
         {
             String countryName = t.getText();
             int countryIndex = Country.getIndexFromCountryName(countryName);
-            if(countryIndex!=-1) {
+            if (countryIndex != -1)
+            {
                 Army army = armies[countryIndex];
-                if (army.getPlayer() == players[1]) {
+                if (army.getPlayer() == players[1])
+                {
                     chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
                     players[1].decrementTroops(3);
                     army.incrementSize(3);
                     mainController.updateNode(army);
                     waitingPlayer2Deployment = false;
                     deploymentPhase(2);
-                } else {
+                } else
+                {
                     chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
                     chatBoxController.setWaitingTextInput(true);
                 }
-            }else{
+            } else
+            {
                 chatBoxController.textOutput(new TextField("Invalid input! Please try again."));
             }
 
-        }else if(waitingPlayer1Roll)
+        } else if (waitingPlayer1Roll)
         {
-            if(t.getText().equals("roll"))
+            if (t.getText().equals("roll"))
             {
                 player1Roll = dice.throwDice();
-                chatBoxController.textOutput(new TextField(players[0].getName()+" rolled a "+player1Roll));
+                chatBoxController.textOutput(new TextField(players[0].getName() + " rolled a " + player1Roll));
                 waitingPlayer1Roll = false;
                 waitingPlayer2Roll = true;
-                chatBoxController.textOutput(new TextField(players[1].getName()+" roll your dice!"));
-            }else
+                chatBoxController.textOutput(new TextField(players[1].getName() + " roll your dice!"));
+            } else
             {
                 chatBoxController.textOutput(new TextField("Invalid command -> use \"roll\" to roll a dice!"));
             }
 
-        }else if(waitingPlayer2Roll)
+        } else if (waitingPlayer2Roll)
         {
-            if(t.getText().equals("roll"))
+            if (t.getText().equals("roll"))
             {
                 player2Roll = dice.throwDice();
-                chatBoxController.textOutput(new TextField(players[1].getName()+" rolled a "+player2Roll));
-                if(player1Roll == player2Roll)
+                chatBoxController.textOutput(new TextField(players[1].getName() + " rolled a " + player2Roll));
+                if (player1Roll == player2Roll)
                 {
                     waitingPlayer1Roll = true;
                     waitingPlayer2Roll = false;
                     chatBoxController.textOutput(new TextField("It was a tie! Please roll again!"));
-                    chatBoxController.textOutput(new TextField(players[0].getName()+" roll your dice!"));
-                }
-                else if(player2Roll > player1Roll)
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " roll your dice!"));
+                } else if (player2Roll > player1Roll)
                 {
                     Player temp = players[0];
                     players[0] = players[1];
                     players[1] = temp;
                 }
-                if(!(player1Roll == player2Roll))
+                if (!(player1Roll == player2Roll))
                 {
                     waitingPlayer2Roll = false;
-                    chatBoxController.textOutput(new TextField(players[0].getName()+" won !!! They get to go first!"));
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " won !!! They get to go first!"));
                     chatBoxController.setWaitingTextInput(false);
                     chatBoxController.textOutput(new TextField(">>>The Deployment Phase will now being<<<"));
                     GameTurns(2);
                 }
-            }else
+            } else
             {
                 chatBoxController.textOutput(new TextField("Invalid command -> use \"roll\" to roll a dice!"));
             }
+        } else if (waitingPlayer1Option)
+        {
+            int countryIndex = Country.getIndexFromCountryName(t.getText());
+            if (t.getText().equals("skip"))
+            {
+                waitingPlayer2Option = true;
+                waitingPlayer1Option = false;
+                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
+                chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from"));
+
+            } else if (countryIndex != -1)
+            {
+                Army army = armies[countryIndex];
+                if (army.getPlayer() == players[0])
+                {
+                    waitingPlayer1Option = false;
+                    attackingCountryIndex = Country.getIndexFromCountryName(t.getText());
+                    chatBoxController.textOutput(new TextField("Enter how many troops you wish to attack with:"));
+                    waitingPlayer1SizeOfAttackingArmy = true;
+                }else
+                {
+                    chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                }
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid input! choose a country"));
+            }
+
+        } else if (waitingPlayer2Option)
+        {
+            int countryIndex = Country.getIndexFromCountryName(t.getText());
+            //if next is skip or if all armies are 1
+            if (t.getText().equals("skip"))
+            {
+                waitingPlayer2Option = false;
+                GameTurns(4);
+            } else if (countryIndex != -1)
+            {
+                Army army = armies[countryIndex];
+                if (army.getPlayer() == players[1])
+                {
+                    waitingPlayer2Option = false;
+                    attackingCountryIndex = Country.getIndexFromCountryName(t.getText());
+                    chatBoxController.textOutput(new TextField("Enter how many troops you wish to attack with:"));
+                    waitingPlayer2SizeOfAttackingArmy = true;
+                }else
+                {
+                    chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                }
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid input! choose a country"));
+            }
+        } else if (waitingPlayer1Attack)
+        {
+            int defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
+            Country countryAtk = mainController.getCountries().getCountries().get(attackingCountryIndex);
+
+            //include check that it is not the players own country
+            if(countryAtk.isAdjacent(defendingCountryIndex))
+            {
+                determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
+                waitingPlayer1Attack = false;
+                waitingPlayer1Option = true;
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid entry! You can only attack adjacent countries!"));
+                chatBoxController.textOutput(new TextField("Enter country to attack!"));
+            }
+
+
+        } else if (waitingPlayer2Attack)
+        {
+            int defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
+            Country countryAtk = mainController.getCountries().getCountries().get(attackingCountryIndex);
+
+            //include check that it is not the players own country
+            if(countryAtk.isAdjacent(defendingCountryIndex))
+            {
+                determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn"));
+                waitingPlayer2Attack = false;
+                waitingPlayer2Option = true;
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Invalid entry! You can only attack adjacent countries!"));
+                chatBoxController.textOutput(new TextField("Enter country to attack!"));
+            }
+
+
+        } else if (waitingPlayer1SizeOfAttackingArmy)
+        {
+            try
+            {
+                int input = Integer.valueOf(t.getText());
+                if (input >= 3)
+                {
+                    sizeOfAttackingArmy = 3;
+                    waitingPlayer1SizeOfAttackingArmy = false;
+                } else if (input > 0)
+                {
+                    sizeOfAttackingArmy = input;
+                    waitingPlayer1SizeOfAttackingArmy = false;
+                } else
+                {
+                    chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
+                }
+            } catch (NumberFormatException e)
+            {
+                chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
+            }
+
+            if (!waitingPlayer1SizeOfAttackingArmy)
+            {
+                waitingPlayer1Attack = true;
+                chatBoxController.textOutput(new TextField("Enter name of country you wish to attack"));
+            }
+        } else if (waitingPlayer2SizeOfAttackingArmy)
+        {
+            try
+            {
+                int input = Integer.valueOf(t.getText());
+                if (input >= 3)
+                {
+                    sizeOfAttackingArmy = 3;
+                    waitingPlayer2SizeOfAttackingArmy = false;
+                } else if (input > 0)
+                {
+                    sizeOfAttackingArmy = input;
+                    waitingPlayer2SizeOfAttackingArmy = false;
+                } else
+                {
+                    chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
+                }
+            } catch (NumberFormatException e)
+            {
+                chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
+            }
+
+            if (!waitingPlayer2SizeOfAttackingArmy)
+            {
+                waitingPlayer2Attack = true;
+                chatBoxController.textOutput(new TextField("Enter name of country you wish to attack"));
+            }
         }
     }
+
 
 
     //logic implementation for the logic initialisation of claiming countries, the rest of the implementation
@@ -229,11 +396,20 @@ public class GameState
     //method that will call all the phases of the GameState
     public void GameTurns(int phase)
     {
-        if(phase==1) {
+        if (phase == 1)
+        {
             rollForTurnOrder();
-        }else if (phase == 2)
+        } else if (phase == 2)
         {
             deploymentPhase(1);
+        } else if (phase == 3)
+        {
+            chatBoxController.textOutput(new TextField("Type \"skip\" if you have no have no more attacks to make"));
+            chatBoxController.textOutput(new TextField("To attack enter the name of the country you wish to attack from"));
+            chatBoxController.textOutput(new TextField(">>> Combat Phase <<<"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
+            waitingPlayer1Option = true;
         }
     }
 
@@ -297,6 +473,85 @@ public class GameState
         waitingPlayer1Roll = true;
         chatBoxController.setWaitingTextInput(true);
     }
+
+    public void determineRollWinner(Army attackingCountry, Army defendingCountry, int numOfAttackers, int numOfDefenders)
+    {
+        Dice attacker = new Dice();
+        Dice defender = new Dice();
+
+        attacker.rollXDice(numOfAttackers);
+        defender.rollXDice(numOfDefenders);
+
+        ArrayList<Integer> attackerRolls = attacker.getRolls();
+        ArrayList<Integer> defenderRolls = defender.getRolls();
+
+        int attackingLosses = 0;
+        int defendingLosses = 0;
+
+        System.out.println("attacking"+ attackingCountry.getArmySize());
+        for(int num: attackerRolls)
+        {
+            System.out.println(num);
+        }
+        System.out.println("defending"+ defendingCountry.getArmySize());
+        for(int num: defenderRolls)
+        {
+            System.out.println(num);
+        }
+        if(numOfAttackers > numOfDefenders)
+        {
+            for(int i=0;i<numOfDefenders;i++)
+            {
+                if(attackerRolls.get(i) <= defenderRolls.get(i))
+                {
+                    attackingCountry.incrementSize(-1);
+                    attackingLosses++;
+                }else
+                {
+                    //defender losses piece
+                    defendingCountry.incrementSize(-1);
+                    defendingLosses++;
+                }
+            }
+        }else
+        {
+            for(int i=0;i<numOfAttackers;i++)
+            {
+                if(attackerRolls.get(i) <= defenderRolls.get(i))
+                {
+                    //attacker loses piece
+                    attackingCountry.incrementSize(-1);
+                    attackingLosses++;
+                }else
+                {
+                    //defender losses piece
+                    defendingCountry.incrementSize(-1);
+                    defendingLosses++;
+                }
+            }
+        }
+        System.out.println("attacking"+ attackingCountry.getArmySize());
+        System.out.println("defending"+ defendingCountry.getArmySize());
+
+        mainController.updateNode(attackingCountry);
+        mainController.updateNode(defendingCountry);
+
+        if(attackingLosses < defendingLosses)
+        {
+            chatBoxController.textOutput(new TextField(attackingCountry.getPlayer().getName() + " your army in "+attackingCountry.getCountry().getName()+" won the combat!"));
+        }else if(attackingLosses > defendingLosses)
+        {
+            chatBoxController.textOutput(new TextField(attackingCountry.getPlayer().getName() + " your army in "+attackingCountry.getCountry().getName()+" lost the combat!"));
+        }else
+        {
+            chatBoxController.textOutput(new TextField(attackingCountry.getPlayer().getName() + " your army in "+attackingCountry.getCountry().getName()+" tied the combat!"));
+        }
+
+        chatBoxController.textOutput(new TextField("Attacking army lost: " + attackingLosses));
+        chatBoxController.textOutput(new TextField("Defending army lost: " + defendingLosses));
+    }
+
+
 
 
 

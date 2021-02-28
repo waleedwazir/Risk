@@ -164,9 +164,9 @@ public class Country implements Iterable<Coordinate>{
 
     //The two isAdjacent functions determine if a passed country or passed index is adjacent
     //to this country respectively.
-    public boolean isAdjacent(Country country){
+    /*public boolean isAdjacent(Country country){
         return isAdjacent(country.getIndex());
-    }
+    }*/
 
     public boolean isAdjacent(int index){
         for(int i=0;i<adjacencyMatrix[this.getIndex()].length;i++) {

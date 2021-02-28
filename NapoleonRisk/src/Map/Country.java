@@ -15,6 +15,52 @@ public class Country implements Iterable<Coordinate>{
             "Middle East", "India", "China", "Siam", "Mongolia", "Japan", "Afghanistan", "Ural", "Siberia", "Irkutsk", "Yakutsk",
             "Kamchatka"};
 
+    private static final int[][] adjacencyMatrix = {
+            {1, 2, 3, 33},              //0
+            {0, 2, 3},
+            {0, 1, 3},
+            {1, 2},
+            {5, 6, 7, 16, 17, 13},
+            {4, 7, 8},                  //5
+            {4, 7, 17, 30},
+            {4, 5, 6, 8, 9, 30},
+            {5, 7, 9},
+            {7, 8},
+            {12, 13},                   //10
+            {12, 13, 28},
+            {10, 12, 13},
+            {10, 11, 12, 4},
+            {15, 16, 17, 20},
+            {14, 20, 21},               //15
+            {4, 14, 17, 18},
+            {4, 6, 16, 18, 19, 30},
+            {14, 16, 17, 19, 20},
+            {17, 18, 20, 30, 36, 37},
+            {14, 15, 18, 19},           //20
+            {15, 22, 25, 26},
+            {21, 25, 27},
+            {24, 25, 27, 28},
+            {23, 25, 26, 29},
+            {21, 22, 23, 24, 26, 27},   //25
+            {21, 24, 25, 29},
+            {22, 23, 25, 28},
+            {11, 23, 27},
+            {24, 26, 41},
+            {6, 17, 19, 31, 36},        //30
+            {30, 32, 33, 36},
+            {31, 33, 34, 36, 37, 38},
+            {0, 31, 32},
+            {32, 35, 38, 39, 41},
+            {34, 41},                   //35
+            {19, 30, 31, 32, 37},
+            {19, 32, 36, 38},
+            {32, 34, 37, 39, 40},
+            {34, 38, 40, 41},
+            {38, 39, 41},               //40
+            {29, 34, 35, 39, 40}
+    };
+
+
     //adds a coordinate to the country's coordinate arraylist
     public void addCoordinate(Coordinate c){
         coordinates.add(c);
@@ -35,9 +81,7 @@ public class Country implements Iterable<Coordinate>{
         return name;
     }
 
-
-    public int getIndex()
-    {
+    public int getIndex() {
         for(int i=0;i<42;i++)
         {
             if(countryNames[i].equals(name))
@@ -51,7 +95,6 @@ public class Country implements Iterable<Coordinate>{
     public static String getCountryNameFromIndex(int index){
         return countryNames[index];
     }
-
 
     public static int getIndexFromCountryName(String name)
     {
@@ -73,7 +116,6 @@ public class Country implements Iterable<Coordinate>{
         }
         return minChangeIndex;
     }
-
 
     //method to determine the amount of changes you have to make to String x to get String y,
     //this is used to help determine what country a user was trying to type if they make
@@ -120,7 +162,20 @@ public class Country implements Iterable<Coordinate>{
         return Arrays.stream(numbers).min().orElse(Integer.MAX_VALUE);
     }
 
+    //The two isAdjacent functions determine if a passed country or passed index is adjacent
+    //to this country respectively.
+    public boolean isAdjacent(Country country){
+        return isAdjacent(country.getIndex());
+    }
 
+    public boolean isAdjacent(int index){
+        for(int i=0;i<adjacencyMatrix[this.getIndex()].length;i++) {
+            if (adjacencyMatrix[this.getIndex()][i] == index){
+                return true;
+            }
+        }
+        return false;
+    }
 
     //Iterator for iterating through country's coordinates
     private class CountryIterator<Coordinate> implements Iterator<Coordinate>{
@@ -148,4 +203,5 @@ public class Country implements Iterable<Coordinate>{
     public Iterator<Coordinate> iterator() {
         return new CountryIterator<Coordinate>();
     }
+
 }

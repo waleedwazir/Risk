@@ -55,8 +55,6 @@ class PlayerTest {
         assertEquals(army.getTotalArmies(), 90);
     }
 
-
-
     @Test
     void testToString() {
         Player list = new Player();
@@ -71,5 +69,30 @@ class PlayerTest {
 
         assertEquals(list.toString(), output);
 
+    }
+
+    @Test
+    void testCountryRemoveAndAdd(){
+        Player napoleon = new Player();
+        Country corsica = new Country();
+        corsica.setName("Corsica");
+        napoleon.addCountry(corsica);
+        assertEquals(false, napoleon.getAssignedCountries().isEmpty());
+        napoleon.removeCountry("Corsica");
+        assertEquals(true, napoleon.getAssignedCountries().isEmpty());
+        napoleon.addCountry(corsica);
+        napoleon.removeCountry(corsica);
+        assertEquals(true, napoleon.getAssignedCountries().isEmpty());
+    }
+
+    @Test
+    void testIsEliminated(){
+        Player napoleon = new Player();
+        Country corsica = new Country();
+        corsica.setName("Corsica");
+        napoleon.addCountry(corsica);
+        assertEquals(false, napoleon.isEliminated());
+        napoleon.removeCountry("Corsica");
+        assertEquals(true, napoleon.isEliminated());
     }
 }

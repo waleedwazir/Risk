@@ -80,7 +80,6 @@ public class Player {
     /*
     function that adds a captured country to the arraylist
     used hashmap because of string
-
      */
     public void addCountry(Country country){
         getAssignedCountries().put(country.getName(), country);
@@ -93,9 +92,13 @@ public class Player {
         }
     }
 
-    //removes country when a player loses it
+    //removes country when a player loses it, account for when removing a country by two different methods
     public void removeCountry(String Country){
         getAssignedCountries().remove(Country);
+    }
+
+    public void removeCountry(Country country){
+        getAssignedCountries().remove(country.getName());
     }
 
     // toString shows the player and the amount of total assets it has
@@ -125,30 +128,28 @@ public class Player {
 
     //removes cards to from players hand to reflect cards being turned in
     public void removeCards(int[] cardsTurnedInIndex) {
-
         hand.removeCards(cardsTurnedInIndex[0], cardsTurnedInIndex[1], cardsTurnedInIndex[2]);
     }
 
     public int getTurnInCount() {
-
         turnInCount++;
         return turnInCount;
     }
 
     public ArrayList<Card> getHand() {
-
         return hand.getCards();
     }
 
     public Card getHandObject() {
-
         return hand;
     }
 
     public boolean mustTurnInCards() {
-
         return hand.mustTurnIn();
     }
 
+    public boolean isEliminated(){
+        return getAssignedCountries().isEmpty();
+    }
 
 }

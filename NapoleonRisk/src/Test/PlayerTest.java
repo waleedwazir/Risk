@@ -95,4 +95,22 @@ class PlayerTest {
         napoleon.removeCountry("Corsica");
         assertEquals(true, napoleon.isEliminated());
     }
+
+    @Test
+    void testGetExtraTroops(){
+        Player napoleon = new Player();
+        Country indonesia = new Country();
+        Country newGuinea = new Country();
+        Country westernAustralia = new Country();
+        Country easternAustralia = new Country();
+        indonesia.setName("Indonesia");
+        newGuinea.setName("New Guinea");
+        westernAustralia.setName("Western Australia");
+        easternAustralia.setName("Eastern Australia");
+        napoleon.addCountry(indonesia);
+        napoleon.addCountry(newGuinea);
+        napoleon.addCountry(westernAustralia);
+        napoleon.addCountry(easternAustralia);
+        assertEquals(5, napoleon.getExtraTroops());
+    }
 }

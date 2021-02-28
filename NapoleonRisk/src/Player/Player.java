@@ -1,6 +1,7 @@
 package Player;
 
 import Cards.Card;
+import Map.Countries;
 import Map.Country;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
@@ -152,4 +153,32 @@ public class Player {
         return getAssignedCountries().isEmpty();
     }
 
+    public int getExtraTroops(){
+        int sum = 0;
+        int base = (getAssignedCountries().size()/3);
+        if(base < 3){
+            base = 3;
+        }
+        for(int i=0;i<6;i++) {
+            boolean check = true;
+            int[] countries = Countries.getContinentIndexes(i);
+            for(Integer index:countries){
+                if(!getAssignedCountries().containsKey(Country.getCountryNameFromIndex(index))){
+                    check = false;
+                }
+            }
+            if(check){
+                if(i == 0 || i == 2){
+                    sum+=2;
+                }else if(i == 1){
+                    sum+=3;
+                }else if(i == 3 || i == 4){
+                    sum+=5;
+                }else if(i == 5){
+                    sum+=7;
+                }
+            }
+        }
+        return sum + base;
+    }
 }

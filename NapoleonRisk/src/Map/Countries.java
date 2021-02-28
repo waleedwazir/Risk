@@ -34,7 +34,7 @@ public class Countries
         return countries.size();
     }
 
-    public ArrayList<Integer> continentIndex(String continentName)
+    public ArrayList<Integer> getContinentIndexes(String continentName)
     {
         ArrayList<Integer> list = new ArrayList();
 

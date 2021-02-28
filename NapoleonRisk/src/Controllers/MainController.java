@@ -59,7 +59,6 @@ public class MainController
 
     @FXML private void initialize()//allows the program to reference both controls without creating new instances of them
     {
-
         chatBoxController.injectMainController(this);//passes MainController to ChatBoxController
         this.gamestate = new GameState(); //initialises GameState Object
         chatBoxController.setGameState(gamestate);//Outputs instructions to user and starts the game
@@ -73,6 +72,7 @@ public class MainController
         //pulls these panes to front
         names.toFront();
         nodeList.toFront();
+
 
         //passes both controllers to GameState , creating new instances of these will not work!
         gamestate.setController(chatBoxController, this);
@@ -159,8 +159,6 @@ public class MainController
         //incrementNodeValue((0));//increments the value on the Indonesia node by 1
 
     }
-
-
 
     //Determining the country a player clicks on
     public void determineClick(int y, int x){
@@ -323,9 +321,6 @@ public class MainController
         return -1;
     }
 
-
-
-
     //bfs search when a neutral player claims a country
     //has some lag issues at the moment
     public void determineNeutral(int y, int x,Color color){
@@ -334,7 +329,6 @@ public class MainController
             bfs.startBFS(clicked, grid, color, countries.getCountries(), countryIndex);
     }
 
-
     //sets a country's colour without using the bts
     public void setColourCountry(Country country, Color colour){
         for(Coordinate c:country){
@@ -342,9 +336,22 @@ public class MainController
             grid[c.getY()][c.getX()].setStroke(colour);
         }
     }
+
     public Countries getCountries()
     {
         return countries;
     }
 
+    //function to determine if a player can attack
+    public boolean canAttack(Player player){
+        for(Army army:armies){
+            if(army.getPlayer() == player){
+                if(army.getArmySize()>1){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
 }

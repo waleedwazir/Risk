@@ -2,7 +2,6 @@ package GameLogic;
 
 import Cards.Card;
 import Cards.Deck;
-import Map.Countries;
 import Map.Country;
 import Player.*;
 import javafx.application.Platform;
@@ -37,6 +36,7 @@ public class GameState
 
     int textToPlayerColour = -1;
     int attackingCountryIndex;
+    int defendingCountryIndex;
     int sizeOfAttackingArmy;
 
     //used for the logic implementation of receiving payer names
@@ -52,6 +52,8 @@ public class GameState
     boolean waitingPlayer2SizeOfAttackingArmy = false;
     boolean waitingPlayer1Attack = false;
     boolean waitingPlayer2Attack = false;
+    boolean waitingPlayer1Reinforce = false;
+    boolean waitingPlayer2Reinforce = false;
 
     //stores the value of the players rolls
     private int player1Roll;
@@ -303,17 +305,25 @@ public class GameState
             }
         } else if (waitingPlayer1Attack)
         {
-            int defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
+            defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
             Country countryAtk = mainController.getCountries().getCountries().get(attackingCountryIndex);
 
             //include check that it is not the players own country
             if(countryAtk.isAdjacent(defendingCountryIndex) && armies[defendingCountryIndex].getPlayer()!=armies[attackingCountryIndex].getPlayer())
             {
-                determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
-                chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
-                waitingPlayer1Attack = false;
-                waitingPlayer1Option = true;
-                chatBoxController.setWaitingTextInput(true);
+                boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                if(won){
+                    chatBoxController.textOutput(new TextField(players[0].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
+                    chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
+                    waitingPlayer1Attack = false;
+                    waitingPlayer1Reinforce = true;
+                    chatBoxController.setWaitingTextInput(true);
+                }else {
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
+                    waitingPlayer1Attack = false;
+                    waitingPlayer1Option = true;
+                    chatBoxController.setWaitingTextInput(true);
+                }
             }else
             {
                 if(armies[defendingCountryIndex].getPlayer()==armies[attackingCountryIndex].getPlayer()){
@@ -328,17 +338,25 @@ public class GameState
 
         } else if (waitingPlayer2Attack)
         {
-            int defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
+            defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
             Country countryAtk = mainController.getCountries().getCountries().get(attackingCountryIndex);
 
             //include check that it is not the players own country
             if(countryAtk.isAdjacent(defendingCountryIndex) && armies[defendingCountryIndex].getPlayer()!=armies[attackingCountryIndex].getPlayer())
             {
-                determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
-                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn"));
-                waitingPlayer2Attack = false;
-                waitingPlayer2Option = true;
-                chatBoxController.setWaitingTextInput(true);
+                boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                if(won){
+                    chatBoxController.textOutput(new TextField(players[1].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
+                    chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
+                    waitingPlayer2Attack = false;
+                    waitingPlayer2Reinforce = true;
+                    chatBoxController.setWaitingTextInput(true);
+                }else {
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn"));
+                    waitingPlayer2Attack = false;
+                    waitingPlayer2Option = true;
+                    chatBoxController.setWaitingTextInput(true);
+                }
             }else
             {
                 if(armies[defendingCountryIndex].getPlayer()==armies[attackingCountryIndex].getPlayer()){
@@ -410,6 +428,36 @@ public class GameState
             {
                 waitingPlayer2Attack = true;
                 chatBoxController.textOutput(new TextField("Enter name of country you wish to attack"));
+                chatBoxController.setWaitingTextInput(true);
+            }
+        }else if(waitingPlayer1Reinforce){
+            int numTroops = Integer.parseInt(t.getText());
+                if(armies[attackingCountryIndex].getArmySize()>numTroops) {
+                    armies[attackingCountryIndex].incrementSize(-numTroops);
+                    armies[defendingCountryIndex].incrementSize(numTroops);
+                    waitingPlayer1Reinforce = false;
+                    waitingPlayer1Option = true;
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn, enter a country to attack from or \"skip\"."));
+                    chatBoxController.setWaitingTextInput(true);
+                    mainController.updateNode(armies[attackingCountryIndex]);
+                    mainController.updateNode(armies[defendingCountryIndex]);
+                }else{
+                    chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
+                    chatBoxController.setWaitingTextInput(true);
+                }
+        }else if(waitingPlayer2Reinforce){
+            int numTroops = Integer.parseInt(t.getText());
+            if(armies[attackingCountryIndex].getArmySize()>numTroops) {
+                armies[attackingCountryIndex].incrementSize(-numTroops);
+                armies[defendingCountryIndex].incrementSize(numTroops);
+                waitingPlayer2Reinforce = false;
+                waitingPlayer2Option = true;
+                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn, enter a country to attack from or \"skip\"."));
+                chatBoxController.setWaitingTextInput(true);
+                mainController.updateNode(armies[attackingCountryIndex]);
+                mainController.updateNode(armies[defendingCountryIndex]);
+            }else{
+                chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
                 chatBoxController.setWaitingTextInput(true);
             }
         }
@@ -512,8 +560,10 @@ public class GameState
         chatBoxController.setWaitingTextInput(true);
     }
 
-    public void determineRollWinner(Army attackingCountry, Army defendingCountry, int numOfAttackers, int numOfDefenders)
+    public boolean determineRollWinner(Army attackingCountry, Army defendingCountry, int numOfAttackers, int numOfDefenders)
     {
+        boolean won = false;
+
         Dice attacker = new Dice();
         Dice defender = new Dice();
 
@@ -568,6 +618,11 @@ public class GameState
                 }
             }
         }
+        if(defendingCountry.getArmySize()==0){
+            won = true;
+            defendingCountry.setPlayer(attackingCountry.getPlayer());
+            mainController.conquer(attackingCountry, defendingCountry);
+        }
         System.out.println("attacking"+ attackingCountry.getArmySize());
         System.out.println("defending"+ defendingCountry.getArmySize());
 
@@ -587,8 +642,8 @@ public class GameState
 
         chatBoxController.textOutput(new TextField("Attacking army lost: " + attackingLosses));
         chatBoxController.textOutput(new TextField("Defending army lost: " + defendingLosses));
+        return won;
     }
-
 
 
 

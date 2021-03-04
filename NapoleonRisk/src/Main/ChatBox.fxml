@@ -14,6 +14,6 @@
          </content>
       </ScrollPane>
       <TextField fx:id="textInput" layoutX="10.0" layoutY="759.0" onKeyPressed="#sendMessageEnter" prefHeight="27.0" prefWidth="927.0" />
-      <Button layoutX="943.0" layoutY="759.0" mnemonicParsing="false" onAction="#sendMessageButton" text="Send" />
+      <Button fx:id="button" layoutX="943.0" layoutY="759.0" mnemonicParsing="false" onAction="#sendMessageButton" text="Send" />
    </children>
 </AnchorPane>

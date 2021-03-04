@@ -2,6 +2,7 @@ package Controllers;
 
 import GameLogic.GameState;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -19,6 +20,7 @@ public class ChatBoxController
     public TextField textInput;
     public ScrollPane scrollPane;
     public VBox vBox;
+    public Button button;
     private MainController mainController;
     private boolean waitingTextInput = false;
     GameState gamestate;

@@ -313,11 +313,16 @@ public class GameState
             {
                 boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
                 if(won){
+                    if(true)
+                    {
+                        endGame(players[0]);
+                    }
                     chatBoxController.textOutput(new TextField(players[0].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
                     waitingPlayer1Attack = false;
                     waitingPlayer1Reinforce = true;
                     chatBoxController.setWaitingTextInput(true);
+
                 }else {
                     chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
                     waitingPlayer1Attack = false;
@@ -346,6 +351,10 @@ public class GameState
             {
                 boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
                 if(won){
+                    if(players[0].isEliminated())
+                    {
+                        endGame(players[1]);
+                    }
                     chatBoxController.textOutput(new TextField(players[1].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
                     waitingPlayer2Attack = false;
@@ -651,6 +660,11 @@ public class GameState
         chatBoxController.textOutput(new TextField("Attacking army lost: " + attackingLosses));
         chatBoxController.textOutput(new TextField("Defending army lost: " + defendingLosses));
         return won;
+    }
+    public void endGame(Player player)
+    {
+        chatBoxController.textOutput(new TextField(player.getName() +" wins!!!"));
+        chatBoxController.textOutput(new TextField("Game Over"));
     }
 
 

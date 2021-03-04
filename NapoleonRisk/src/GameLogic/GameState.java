@@ -285,8 +285,11 @@ public class GameState
             //if next is skip or if all armies are 1
             if (t.getText().equals("skip"))
             {
+                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your chance to fortify!"));
+                chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to move troops from or \"skip\"!"));
+                chatBoxController.setWaitingTextInput(true);
                 waitingPlayer2Option = false;
-                GameTurns(4);
+                waitingPlayer2Fortify = true;
             } else if (countryIndex != -1)
             {
                 Army army = armies[countryIndex];
@@ -515,7 +518,7 @@ public class GameState
             if (t.getText().equals("skip"))
             {
                 waitingPlayer2Option = true;
-                waitingPlayer1Option = false;
+                waitingPlayer1Fortify = false;
                 chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
                 chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
                 chatBoxController.setWaitingTextInput(true);
@@ -532,7 +535,7 @@ public class GameState
                 }else
                 {
                     if (army.getPlayer() == players[0] && army.getArmySize() == 1){
-                        chatBoxController.textOutput(new TextField("Invalid selection, can not attack with this country!"));
+                        chatBoxController.textOutput(new TextField("Invalid selection, can not select this country!"));
                     }else {
                         chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
                     }
@@ -582,8 +585,10 @@ public class GameState
                     armies[attackingCountryIndex].incrementSize(-input);
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
+                    chatBoxController.textOutput(new TextField("Send to player deployment"));
                     waitingPlayer1FortifyAmount = false;
                     waitingPlayer2Option = true;
+                    chatBoxController.setWaitingTextInput(true);
                 }  else
                 {
                     chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
@@ -617,7 +622,7 @@ public class GameState
                 }else
                 {
                     if (army.getPlayer() == players[1] && army.getArmySize() == 1){
-                        chatBoxController.textOutput(new TextField("Invalid selection, can not attack with this country!"));
+                        chatBoxController.textOutput(new TextField("Invalid selection, can not select with this country!"));
                     }else {
                         chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
                     }
@@ -874,23 +879,33 @@ public class GameState
 
     boolean isConnected(Army origin, Army destination){
         Queue<Army> queue = new LinkedList<Army>();
+        ArrayList<Army> visitedCountries = new ArrayList<Army>();
         queue.add(origin);
         while(!queue.isEmpty()){
             Army visiting = queue.remove();
             if(visiting == destination){
                 return true;
             }
-            addNeighbours(visiting, queue);
+            addNeighbours(visiting, queue, visitedCountries);
         }
         return false;
     }
 
-    void addNeighbours(Army visited, Queue<Army> queue){
+    void addNeighbours(Army visited, Queue<Army> queue, ArrayList<Army> visitedCountries){
         int[] adjacentIndices = visited.getCountry().getAdjacentIndices();
+        visitedCountries.add(visited);
         for(Integer i:adjacentIndices){
-            if(armies[i].getPlayer() == visited.getPlayer()) {
+            if(armies[i].getPlayer() == visited.getPlayer() && !isVisited(visitedCountries, armies[i])) {
                 queue.add(armies[i]);
             }
+        }
+    }
+
+    boolean isVisited(ArrayList<Army> visitedCountries, Army visiting){
+        if(visitedCountries.contains(visiting)){
+            return true;
+        }else{
+            return false;
         }
     }
 

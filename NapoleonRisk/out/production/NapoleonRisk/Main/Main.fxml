@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorOnClick" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
    <children>
@@ -137,7 +133,7 @@
                   <Font name="PT Serif" size="11.0" />
                </font>
             </Text>
-            <Text fill="#0d0202" layoutX="698.0" layoutY="304.0" stroke="WHITE" strokeType="OUTSIDE" text="INDINA">
+            <Text fill="#0d0202" layoutX="698.0" layoutY="304.0" stroke="WHITE" strokeType="OUTSIDE" text="INDIA">
                <font>
                   <Font name="PT Serif" size="11.0" />
                </font>
@@ -192,7 +188,7 @@
                   <Font name="PT Serif" size="11.0" />
                </font>
             </Text>
-            <Text fill="#0d0202" layoutX="353.0" layoutY="166.0" stroke="WHITE" strokeType="OUTSIDE" text="IRELAND AND UK">
+            <Text fill="#0d0202" layoutX="353.0" layoutY="166.0" stroke="WHITE" strokeType="OUTSIDE" text="UK &amp; IRELAND">
                <font>
                   <Font name="PT Serif" size="11.0" />
                </font>

@@ -11,6 +11,8 @@ import Controllers.MainController;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 
@@ -661,12 +663,34 @@ public class GameState
         chatBoxController.textOutput(new TextField("Defending army lost: " + defendingLosses));
         return won;
     }
+    
     public void endGame(Player player)
     {
         chatBoxController.textOutput(new TextField(player.getName() +" wins!!!"));
         chatBoxController.textOutput(new TextField("Game Over"));
     }
 
+    boolean isConnected(Army origin, Army destination){
+        Queue<Army> queue = new LinkedList<Army>();
+        queue.add(origin);
+        while(!queue.isEmpty()){
+            Army visiting = queue.remove();
+            if(visiting == destination){
+                return true;
+            }
+            addNeighbours(visiting, queue);
+        }
+        return false;
+    }
+
+    void addNeighbours(Army visited, Queue<Army> queue){
+        int[] adjacentIndices = visited.getCountry().getAdjacentIndices();
+        for(Integer i:adjacentIndices){
+            if(armies[i].getPlayer() == visited.getPlayer()) {
+                queue.add(armies[i]);
+            }
+        }
+    }
 
 
 

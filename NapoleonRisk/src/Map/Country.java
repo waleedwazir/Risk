@@ -177,6 +177,10 @@ public class Country implements Iterable<Coordinate>{
         return false;
     }
 
+    public int[] getAdjacentIndices(){
+        return adjacencyMatrix[this.getIndex()];
+    }
+
     //Iterator for iterating through country's coordinates
     private class CountryIterator<Coordinate> implements Iterator<Coordinate>{
         int index = 0;

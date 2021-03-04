@@ -432,7 +432,7 @@ public class GameState
             }
         }else if(waitingPlayer1Reinforce){
             int numTroops = Integer.parseInt(t.getText());
-                if(armies[attackingCountryIndex].getArmySize()>numTroops) {
+                if(armies[attackingCountryIndex].getArmySize()>numTroops || numTroops<1) {
                     armies[attackingCountryIndex].incrementSize(-numTroops);
                     armies[defendingCountryIndex].incrementSize(numTroops);
                     waitingPlayer1Reinforce = false;
@@ -442,12 +442,16 @@ public class GameState
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
                 }else{
-                    chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
+                    if(numTroops<1){
+                        chatBoxController.textOutput(new TextField("Must move atleast one troop"));
+                    }else {
+                        chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
+                    }
                     chatBoxController.setWaitingTextInput(true);
                 }
         }else if(waitingPlayer2Reinforce){
             int numTroops = Integer.parseInt(t.getText());
-            if(armies[attackingCountryIndex].getArmySize()>numTroops) {
+            if(armies[attackingCountryIndex].getArmySize()>numTroops || numTroops<1) {
                 armies[attackingCountryIndex].incrementSize(-numTroops);
                 armies[defendingCountryIndex].incrementSize(numTroops);
                 waitingPlayer2Reinforce = false;
@@ -457,7 +461,11 @@ public class GameState
                 mainController.updateNode(armies[attackingCountryIndex]);
                 mainController.updateNode(armies[defendingCountryIndex]);
             }else{
-                chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
+                if(numTroops<1){
+                    chatBoxController.textOutput(new TextField("Must move atleast one troop"));
+                }else {
+                    chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
+                }
                 chatBoxController.setWaitingTextInput(true);
             }
         }

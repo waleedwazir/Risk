@@ -112,38 +112,54 @@ public class GameState
         //then decides what to do with the received data
         if (waitingPlayer1Name)
         {
-            players[0].setName(t.getText());
+            if(!(t.getText().equals("")))
+            {
+                players[0].setName(t.getText());
 
-            //outputs next message in player 1's colour
-            textToPlayerColour = 0;
-            chatBoxController.textOutput(new TextField(players[0].getName() + " you are RED"));
-            textToPlayerColour = -1;
+                //outputs next message in player 1's colour
+                textToPlayerColour = 0;
+                chatBoxController.textOutput(new TextField(players[0].getName() + " you are RED"));
+                textToPlayerColour = -1;
 
-            card = deck.draw();
-            players[0].getHand().add(card);
-            chatBoxController.textOutput(new TextField(players[0].getName() + " drew the " + card.toString() + " card"));
+                card = deck.draw();
+                players[0].getHand().add(card);
+                chatBoxController.textOutput(new TextField(players[0].getName() + " drew the " + card.toString() + " card"));
 
-            waitingPlayer1Name = false;
-            waitingPlayer2Name = true;
-            setPlayerName(players, 1);
+                waitingPlayer1Name = false;
+                waitingPlayer2Name = true;
+                setPlayerName(players, 1);
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Player name cannot be empty!"));
+                setPlayerName(players,0);
+            }
+
 
         } else if (waitingPlayer2Name)
         {
-            players[1].setName(t.getText());
+            if(!(t.getText().equals("")))
+            {
+                players[1].setName(t.getText());
 
-            //outputs next message in player 2's colour
-            textToPlayerColour = 1;
-            chatBoxController.textOutput(new TextField(players[1].getName() + " you are BLUE"));
+                //outputs next message in player 2's colour
+                textToPlayerColour = 1;
+                chatBoxController.textOutput(new TextField(players[1].getName() + " you are BLUE"));
 
-            textToPlayerColour = -1;
+                textToPlayerColour = -1;
 
-            card = deck.draw();
-            players[1].getHand().add(card);
-            chatBoxController.textOutput(new TextField(players[1].getName() + " drew the " + card.toString() + " card"));
+                card = deck.draw();
+                players[1].getHand().add(card);
+                chatBoxController.textOutput(new TextField(players[1].getName() + " drew the " + card.toString() + " card"));
 
-            mainController.distributeCountries();
-            chatBoxController.setWaitingTextInput(false);
-            waitingPlayer2Name = false;
+                mainController.distributeCountries();
+                chatBoxController.setWaitingTextInput(false);
+                waitingPlayer2Name = false;
+            }else
+            {
+                chatBoxController.textOutput(new TextField("Player name cannot be empty!"));
+                setPlayerName(players,1);
+            }
+
 
         } else if (waitingPlayer1Deployment)
         {
@@ -674,7 +690,8 @@ public class GameState
                     mainController.updateNode(armies[defendingCountryIndex]);
                     waitingPlayer2FortifyAmount = false;
                     waitingPlayer1Option = true;
-                    chatBoxController.textOutput(new TextField("Send to player deployment"));
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn!"));
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from or \"skip\"!"));
                 }  else
                 {
                     chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
@@ -717,8 +734,8 @@ public class GameState
             chatBoxController.textOutput(new TextField("Type \"skip\" if you have no more attacks to make"));
             chatBoxController.textOutput(new TextField("To attack enter the name of the country you wish to attack from"));
             chatBoxController.textOutput(new TextField(">>> Combat Phase <<<"));
-            chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn"));
-            chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn!"));
+            chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from or \"skip\"!"));
             chatBoxController.setWaitingTextInput(true);
             waitingPlayer1Option = true;
         }

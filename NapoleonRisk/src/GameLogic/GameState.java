@@ -172,12 +172,21 @@ public class GameState
                 if (army.getPlayer() == players[0])
                 {
                     chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
-                    players[0].decrementTroops(3);
-                    army.incrementSize(3);
+                    if(players[0].getTroops()>=3) {
+                        players[0].decrementTroops(3);
+                        army.incrementSize(3);
+                    }else{
+                        players[0].decrementTroops(players[0].getTroops());
+                        army.incrementSize(players[0].getTroops());
+                    }
                     mainController.updateNode(army);
                     waitingPlayer1Deployment = false;
-                    waitingPlayer2Deployment = true;
-                    chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+                    if(players[1].getTroops()>0) {
+                        waitingPlayer2Deployment = true;
+                        chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+                    }else{
+                        deploymentPhase(2);
+                    }
                 } else
                 {
                     chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
@@ -198,8 +207,13 @@ public class GameState
                 if (army.getPlayer() == players[1])
                 {
                     chatBoxController.textOutput(new TextField("Troops deployed to " + Country.getCountryNameFromIndex(countryIndex) + "!"));
-                    players[1].decrementTroops(3);
-                    army.incrementSize(3);
+                    if(players[1].getTroops()>=3) {
+                        players[1].decrementTroops(3);
+                        army.incrementSize(3);
+                    }else{
+                        players[1].decrementTroops(players[1].getTroops());
+                        army.incrementSize(players[1].getTroops());
+                    }
                     mainController.updateNode(army);
                     waitingPlayer2Deployment = false;
                     deploymentPhase(2);
@@ -349,6 +363,9 @@ public class GameState
                     }
                     chatBoxController.textOutput(new TextField(players[0].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
+                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
+                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
+                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     waitingPlayer1Attack = false;
                     waitingPlayer1Reinforce = true;
                     chatBoxController.setWaitingTextInput(true);
@@ -390,6 +407,9 @@ public class GameState
                     }
                     chatBoxController.textOutput(new TextField(players[1].getName() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
+                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
+                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
+                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     waitingPlayer2Attack = false;
                     waitingPlayer2Reinforce = true;
                     chatBoxController.setWaitingTextInput(true);
@@ -477,7 +497,7 @@ public class GameState
             try
             {
                 int numTroops = Integer.parseInt(t.getText());
-                if(armies[attackingCountryIndex].getArmySize()>numTroops || numTroops<1) {
+                if(armies[attackingCountryIndex].getArmySize()>numTroops && numTroops>0) {
                     armies[attackingCountryIndex].incrementSize(-numTroops);
                     armies[defendingCountryIndex].incrementSize(numTroops);
                     waitingPlayer1Reinforce = false;
@@ -488,7 +508,7 @@ public class GameState
                     mainController.updateNode(armies[defendingCountryIndex]);
                 }else{
                     if(numTroops<1){
-                        chatBoxController.textOutput(new TextField("Must move atleast one troop"));
+                        chatBoxController.textOutput(new TextField("You must move at least one troop"));
                     }else {
                         chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
                     }
@@ -504,7 +524,7 @@ public class GameState
             try
             {
                 int numTroops = Integer.parseInt(t.getText());
-                if(armies[attackingCountryIndex].getArmySize()>numTroops || numTroops<1) {
+                if(armies[attackingCountryIndex].getArmySize()>numTroops && numTroops>0) {
                     armies[attackingCountryIndex].incrementSize(-numTroops);
                     armies[defendingCountryIndex].incrementSize(numTroops);
                     waitingPlayer2Reinforce = false;
@@ -515,7 +535,7 @@ public class GameState
                     mainController.updateNode(armies[defendingCountryIndex]);
                 }else{
                     if(numTroops<1){
-                        chatBoxController.textOutput(new TextField("Must move atleast one troop"));
+                        chatBoxController.textOutput(new TextField("You must move at least one troop!"));
                     }else {
                         chatBoxController.textOutput(new TextField("You cannot move that many troops!"));
                     }
@@ -601,9 +621,10 @@ public class GameState
                     armies[attackingCountryIndex].incrementSize(-input);
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
-                    chatBoxController.textOutput(new TextField("Send to player deployment"));
-                    waitingPlayer1FortifyAmount = false;
                     waitingPlayer2Option = true;
+                    waitingPlayer1FortifyAmount = false;
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
                     chatBoxController.setWaitingTextInput(true);
                 }  else
                 {
@@ -621,10 +642,8 @@ public class GameState
             int countryIndex = Country.getIndexFromCountryName(t.getText());
             if (t.getText().equals("skip"))
             {
-                waitingPlayer1Option = true;
-                waitingPlayer2Option = false;
-                chatBoxController.textOutput(new TextField("Send to player deployment"));
-                chatBoxController.setWaitingTextInput(true);
+                waitingPlayer2Fortify = false;
+                GameTurns(4);
             } else if (countryIndex != -1)
             {
                 Army army = armies[countryIndex];
@@ -689,9 +708,7 @@ public class GameState
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
                     waitingPlayer2FortifyAmount = false;
-                    waitingPlayer1Option = true;
-                    chatBoxController.textOutput(new TextField(players[0].getName() + " it is your turn!"));
-                    chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from or \"skip\"!"));
+                    GameTurns(4);
                 }  else
                 {
                     chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
@@ -738,6 +755,17 @@ public class GameState
             chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from or \"skip\"!"));
             chatBoxController.setWaitingTextInput(true);
             waitingPlayer1Option = true;
+        }else if (phase == 4){
+            players[0].setTroops(players[0].getExtraTroops());
+            chatBoxController.textOutput(new TextField(players[0].getName()+", you get "+players[0].getExtraTroops()+" extra troops!"));
+            players[1].setTroops(players[1].getExtraTroops());
+            chatBoxController.textOutput(new TextField(players[1].getName()+", you get "+players[1].getExtraTroops()+" extra troops!"));
+            for(int i=0;i<4;i++){
+                chatBoxController.textOutput(new TextField("Neutral player "+(i+1)+" got "+neutrals[i].getExtraTroops()+" extra troops!"));
+                neutrals[i].setTroops(neutrals[i].getExtraTroops());
+            }
+            chatBoxController.textOutput(new TextField(">>>Deployment Phase<<<"));
+            deploymentPhase(1);
         }
     }
 
@@ -770,9 +798,15 @@ public class GameState
 
                 });
                 neutralDeploy.start();
-            }else if(players[0].getTroops()>0){
+        }else if(players[0].getTroops()>0){
             deploymentPhase(1);//loops back to player deployment phase if players still have troops to deploy
-        }else{
+        }else if(players[0].getTroops()==0 && players[1].getTroops()>0) {
+            waitingPlayer2Deployment = true;
+            chatBoxController.setWaitingTextInput(true);
+            chatBoxController.textOutput(new TextField("Input the name of the country you want to deploy troops on!"));
+            chatBoxController.textOutput(new TextField(players[1].getName() + " deploy troops!"));
+        }else
+        {
             //end of deployment phase
             chatBoxController.textOutput(new TextField("Deployment phase over!"));
             //initiates next piece of game logic

@@ -155,7 +155,7 @@ public class Player {
 
     public int getExtraTroops(){
         int sum = 0;
-        int base = (getAssignedCountries().size()/3);
+        int base = Math.floorDiv(getAssignedCountries().size(), 3);
         if(base < 3){
             base = 3;
         }

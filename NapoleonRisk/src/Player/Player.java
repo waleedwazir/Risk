@@ -14,7 +14,7 @@ public class Player {
     private int totalCards;
     private int totalArmies;
     private Color PlayerColor;
-    private HashMap<String, Country> AssignedCountries = new HashMap<String, Country>();
+    private HashMap<Integer, Country> AssignedCountries = new HashMap<>();
     private int troops;
     private Card hand;
     private int turnInCount;
@@ -52,11 +52,11 @@ public class Player {
         return name;
     }
 
-    public void setAssignedCountries(HashMap<String, Country>AssignedCountries){
+    public void setAssignedCountries(HashMap<Integer, Country>AssignedCountries){
         this.AssignedCountries = AssignedCountries;
     }
 
-    public HashMap<String, Country> getAssignedCountries() {
+    public HashMap<Integer, Country> getAssignedCountries() {
         return AssignedCountries;
     }
 
@@ -83,23 +83,19 @@ public class Player {
     used hashmap because of string
      */
     public void addCountry(Country country){
-        getAssignedCountries().put(country.getName(), country);
+        getAssignedCountries().put(country.getIndex(), country);
     }
 
     //similar to the function above but can add multiple countries at once
     public void addCountry(ArrayList<Country> countryList){
         for(int i = 0; i < countryList.size(); i++){
-            getAssignedCountries().put(countryList.get(i).getName(), countryList.get(i));
+            getAssignedCountries().put(countryList.get(i).getIndex(), countryList.get(i));
         }
     }
 
     //removes country when a player loses it, account for when removing a country by two different methods
-    public void removeCountry(String Country){
-        getAssignedCountries().remove(Country);
-    }
-
     public void removeCountry(Country country){
-        getAssignedCountries().remove(country.getName());
+        AssignedCountries.remove(country.getIndex());
     }
 
     // toString shows the player and the amount of total assets it has

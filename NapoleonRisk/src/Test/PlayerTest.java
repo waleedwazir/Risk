@@ -30,10 +30,10 @@ class PlayerTest {
     @Test
     void getAssignedCountries() {
         Player Assigned = new Player();
-        HashMap<String, Country> test = new HashMap<String, Country>();
+        HashMap<Integer, Country> test = new HashMap<Integer, Country>();
         Country Ireland = new Country();
 
-        test.put("aye", Ireland);
+        test.put(1, Ireland);
         Assigned.setAssignedCountries(test);
 
         assertEquals(Assigned.getAssignedCountries(), test);
@@ -63,7 +63,7 @@ class PlayerTest {
         list.setTotalCards(10);
         list.setColors(Color.GREEN);
 
-        HashMap<String, Country> man = new HashMap<String, Country>() ;
+        HashMap<Integer, Country> man = new HashMap<Integer, Country>() ;
         list.setAssignedCountries(man);
         String output = list.getName() + "Owns: " + list.getAssignedCountries() + " Color is: " + list.getColour() + " Total Cards: " + list.getTotalCards() + " Total Armies: " +  list.getTotalArmies();
 
@@ -78,9 +78,6 @@ class PlayerTest {
         corsica.setName("Corsica");
         napoleon.addCountry(corsica);
         assertEquals(false, napoleon.getAssignedCountries().isEmpty());
-        napoleon.removeCountry("Corsica");
-        assertEquals(true, napoleon.getAssignedCountries().isEmpty());
-        napoleon.addCountry(corsica);
         napoleon.removeCountry(corsica);
         assertEquals(true, napoleon.getAssignedCountries().isEmpty());
     }
@@ -92,7 +89,7 @@ class PlayerTest {
         corsica.setName("Corsica");
         napoleon.addCountry(corsica);
         assertEquals(false, napoleon.isEliminated());
-        napoleon.removeCountry("Corsica");
+        napoleon.removeCountry(corsica);
         assertEquals(true, napoleon.isEliminated());
     }
 

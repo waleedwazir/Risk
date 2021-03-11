@@ -355,6 +355,6 @@ public class MainController
     }
 
     public void conquer(Army attacker, Army defender){
-        bfs.startBFS(defender.getCountry().getCoordinates().get(0), grid, attacker.getPlayer().getColour(), countries.getCountries(), attacker.getCountry().getIndex());
+        bfs.startBFS(defender.getCountry().getCoordinates().get(0), grid, attacker.getPlayer().getColour(), countries.getCountries(), defender.getCountry().getIndex());
     }
 }

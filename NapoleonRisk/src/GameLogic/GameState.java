@@ -918,7 +918,6 @@ public class GameState
         }
         if(defendingCountry.getArmySize()==0){
             won = true;
-            defendingCountry.setPlayer(attackingCountry.getPlayer());
             mainController.conquer(attackingCountry, defendingCountry);
         }
         System.out.println("attacking"+ attackingCountry.getArmySize());

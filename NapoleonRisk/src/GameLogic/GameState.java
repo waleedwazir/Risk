@@ -352,7 +352,14 @@ public class GameState
             //include check that it is not the players own country
             if(countryAtk.isAdjacent(defendingCountryIndex) && armies[defendingCountryIndex].getPlayer()!=armies[attackingCountryIndex].getPlayer())
             {
-                boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                boolean won;
+                if(armies[defendingCountryIndex].getArmySize() > 1 && sizeOfAttackingArmy > 1)
+                {
+                    won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 2);
+                }else
+                {
+                    won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                }
                 if(won){
                     if(players[1].isEliminated())
                     {
@@ -396,7 +403,14 @@ public class GameState
             //include check that it is not the players own country
             if(countryAtk.isAdjacent(defendingCountryIndex) && armies[defendingCountryIndex].getPlayer()!=armies[attackingCountryIndex].getPlayer())
             {
-                boolean won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                boolean won;
+                if(armies[defendingCountryIndex].getArmySize() > 1 && sizeOfAttackingArmy > 1)
+                {
+                    won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 2);
+                }else
+                {
+                    won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
+                }
                 if(won){
                     if(players[0].isEliminated())
                     {

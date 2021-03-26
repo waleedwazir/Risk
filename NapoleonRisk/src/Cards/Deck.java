@@ -17,7 +17,6 @@ public class Deck
 
     /*
     create 42 cards, one for each country
-
     each country will have a one of each infantry, Cavalry and Artillery
      */
     public Deck(Countries countries) {

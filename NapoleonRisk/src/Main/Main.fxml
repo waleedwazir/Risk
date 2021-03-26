@@ -516,7 +516,7 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="10" />
                </children>
             </StackPane>
-            <Pane fx:id="keyPane" layoutX="19.0" layoutY="378.0" prefHeight="141.0" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: black;">
+            <Pane fx:id="keyPane" layoutX="19.0" layoutY="315.0" prefHeight="141.0" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: black;">
                <children>
                   <Text layoutX="5.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Europe" />
                   <Text layoutX="5.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="North America" />
@@ -530,6 +530,38 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fff01f" height="10.0" layoutX="91.0" layoutY="71.0" stroke="#fff01f" strokeType="INSIDE" width="10.0" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="10.0" layoutX="50.0" layoutY="31.0" stroke="DODGERBLUE" strokeType="INSIDE" width="10.0" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff801f" height="10.0" layoutX="91.0" layoutY="51.0" stroke="#ff801f" strokeType="INSIDE" width="10.0" />
+               </children>
+            </Pane>
+            <Pane layoutX="20.0" layoutY="475.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Circle centerX="22.0" centerY="40.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="22.0" centerY="65.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="22.0" centerY="90.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="62.0" centerY="90.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="62.0" centerY="65.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="62.0" centerY="40.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="102.0" centerY="90.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="102.0" centerY="40.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="102.0" centerY="65.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="142.0" centerY="65.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="142.0" centerY="40.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="102.0" centerY="15.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="142.0" centerY="15.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Circle centerX="62.0" centerY="15.0" fill="WHITE" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4" wrappingWidth="32.505859375" x="18.0" y="44.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6" wrappingWidth="32.505859375" x="18.0" y="69.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="8" wrappingWidth="32.505859375" x="18.0" y="94.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="25" wrappingWidth="32.505859375" x="58.0" y="94.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="45" wrappingWidth="32.505859375" x="98.0" y="94.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="20" wrappingWidth="32.505859375" x="58.0" y="69.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="40" wrappingWidth="32.505859375" x="98.0" y="69.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="60" wrappingWidth="32.505859375" x="138.0" y="69.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" wrappingWidth="32.505859375" x="58.0" y="44.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="35" wrappingWidth="32.505859375" x="98.0" y="44.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="55" wrappingWidth="32.505859375" x="138.0" y="44.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" wrappingWidth="32.505859375" x="58.0" y="19.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="30" wrappingWidth="32.505859375" x="98.0" y="19.0" />
+                  <Text layoutX="-3.0" strokeType="OUTSIDE" strokeWidth="0.0" text="50" wrappingWidth="32.505859375" x="138.0" y="19.0" />
                </children>
             </Pane>
          </children>

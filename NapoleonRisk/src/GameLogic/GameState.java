@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import Controllers.ChatBoxController;
 import Controllers.MainController;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -62,6 +61,8 @@ public class GameState
     boolean waitingPlayer2FortifyDestination = false;
     boolean waitingPlayer1FortifyAmount = false;
     boolean waitingPlayer2FortifyAmount = false;
+    boolean territoryConqueredPlayer1 = false;
+    boolean territoryConqueredPlayer2 = false;
 
     //stores the value of the players rolls
     private int player1Roll;
@@ -120,11 +121,6 @@ public class GameState
                 textToPlayerColour = 0;
                 chatBoxController.textOutput(new TextField(players[0].getName() + " you are RED"));
                 textToPlayerColour = -1;
-
-                card = deck.draw();
-                players[0].getHand().add(card);
-                chatBoxController.textOutput(new TextField(players[0].getName() + " drew the " + card.toString() + " card"));
-
                 waitingPlayer1Name = false;
                 waitingPlayer2Name = true;
                 setPlayerName(players, 1);
@@ -144,13 +140,7 @@ public class GameState
                 //outputs next message in player 2's colour
                 textToPlayerColour = 1;
                 chatBoxController.textOutput(new TextField(players[1].getName() + " you are BLUE"));
-
                 textToPlayerColour = -1;
-
-                card = deck.draw();
-                players[1].getHand().add(card);
-                chatBoxController.textOutput(new TextField(players[1].getName() + " drew the " + card.toString() + " card"));
-
                 mainController.distributeCountries();
                 chatBoxController.setWaitingTextInput(false);
                 waitingPlayer2Name = false;
@@ -159,7 +149,6 @@ public class GameState
                 chatBoxController.textOutput(new TextField("Player name cannot be empty!"));
                 setPlayerName(players,1);
             }
-
 
         } else if (waitingPlayer1Deployment)
         {
@@ -363,6 +352,7 @@ public class GameState
                     won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
                 }
                 if(won){
+                    territoryConqueredPlayer1 = true;
                     if(players[1].isEliminated())
                     {
                         endGame(players[0]);
@@ -414,6 +404,7 @@ public class GameState
                     won = determineRollWinner(armies[attackingCountryIndex], armies[defendingCountryIndex], sizeOfAttackingArmy, 1);
                 }
                 if(won){
+                    territoryConqueredPlayer2 = true;
                     if(players[0].isEliminated())
                     {
                         endGame(players[1]);
@@ -569,6 +560,9 @@ public class GameState
             int countryIndex = Country.getIndexFromCountryName(t.getText());
             if (t.getText().equals("skip"))
             {
+                if(territoryConqueredPlayer1){
+                    drawCard(0);
+                }
                 waitingPlayer2Option = true;
                 waitingPlayer1Fortify = false;
                 chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
@@ -639,6 +633,9 @@ public class GameState
                     mainController.updateNode(armies[defendingCountryIndex]);
                     waitingPlayer2Option = true;
                     waitingPlayer1FortifyAmount = false;
+                    if(territoryConqueredPlayer1){
+                        drawCard(0);
+                    }
                     chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
                     chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
                     chatBoxController.setWaitingTextInput(true);
@@ -658,6 +655,9 @@ public class GameState
             int countryIndex = Country.getIndexFromCountryName(t.getText());
             if (t.getText().equals("skip"))
             {
+                if(territoryConqueredPlayer2){
+                    drawCard(1);
+                }
                 waitingPlayer2Fortify = false;
                 GameTurns(4);
             } else if (countryIndex != -1)
@@ -724,6 +724,9 @@ public class GameState
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
                     waitingPlayer2FortifyAmount = false;
+                    if(territoryConqueredPlayer2){
+                        drawCard(1);
+                    }
                     GameTurns(4);
                 }  else
                 {
@@ -854,6 +857,16 @@ public class GameState
         chatBoxController.textOutput(new TextField(players[0].getName() +" roll your dice!"));
         waitingPlayer1Roll = true;
         chatBoxController.setWaitingTextInput(true);
+    }
+
+    void drawCard(int playerIndex){
+        if(playerIndex==0)
+            territoryConqueredPlayer1 = false;
+        else
+            territoryConqueredPlayer2 = false;
+        card = deck.draw();
+        players[playerIndex].getHand().add(card);
+        chatBoxController.textOutput(new TextField(players[playerIndex].getName() + " drew the " + card.toString() + " card"));
     }
 
     public boolean determineRollWinner(Army attackingCountry, Army defendingCountry, int numOfAttackers, int numOfDefenders)

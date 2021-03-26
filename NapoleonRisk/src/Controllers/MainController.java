@@ -128,12 +128,26 @@ public class MainController
         for (int y = 0; y < 120; y++){
             for (int x = 0; x < 200; x++){
                 Rectangle rect = new Rectangle(x * 5, (5 * y), 5, 5);
-                rect.setFill(Color.CYAN);
-                rect.setStroke(Color.CYAN);
+                if(y>=95 && y<=115 && x>=4 && x<=36){
+                    int xCheck = x-4;
+                    Color colour = Color.GRAY;
+                    if(y%5==0 || xCheck%8==0){
+                        colour = Color.BLACK;
+                    }
+                    if((y>=111 && x>=29) || (y<=99 && x<=11)){
+                        colour = Color.CYAN;
+                    }
+                    rect.setFill(colour);
+                    rect.setStroke(colour);
+                }else {
+                    rect.setFill(Color.CYAN);
+                    rect.setStroke(Color.CYAN);
+                }
                 anchor.getChildren().add(rect);
                 grid[y][x] = rect;
             }
         }
+        goldGrid(0);
         int index = 0;//index to notify when the border coordinates are reached
         int numberOfCountries = 41;
 
@@ -306,6 +320,7 @@ public class MainController
         //grid
         int y = (int) mouseEvent.getY()/5;
         int x = (int) mouseEvent.getX()/5;
+        System.out.println(y+"\t"+x);
         if(!(y>119)) {
             determineClick(y, x);
         }
@@ -356,5 +371,30 @@ public class MainController
 
     public void conquer(Army attacker, Army defender){
         bfs.startBFS(defender.getCountry().getCoordinates().get(0), grid, attacker.getPlayer().getColour(), countries.getCountries(), defender.getCountry().getIndex());
+    }
+
+    Coordinate[] goldGridCoordinates = {new Coordinate(102, 8),
+            new Coordinate(107, 8),
+            new Coordinate(112, 8),
+            new Coordinate(98, 16),
+            new Coordinate(102, 16),
+            new Coordinate(107, 16),
+            new Coordinate(112, 16),
+            new Coordinate(98, 24),
+            new Coordinate(102, 24),
+            new Coordinate(107, 24),
+            new Coordinate(112, 24),
+            new Coordinate(98, 32),
+            new Coordinate(102, 32),
+            new Coordinate(107, 32)};
+
+    public void goldGrid(int gridIndex){
+        if(gridIndex>13){
+            gridIndex = 13;
+        }
+        if(gridIndex<0){
+            gridIndex = 0;
+        }
+        bfs.startBFS(goldGridCoordinates[gridIndex], grid, Color.GOLD, countries.getCountries(), 42);
     }
 }

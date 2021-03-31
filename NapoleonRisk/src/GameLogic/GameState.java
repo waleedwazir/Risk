@@ -278,7 +278,7 @@ public class GameState
                 chatBoxController.textOutput(new TextField(players[0].getName() + " it is your chance to fortify!"));
                 chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to move troops from or \"skip\"!"));
                 chatBoxController.setWaitingTextInput(true);
-            } else if (countryIndex != -1)
+            } else if (countryIndex != -1 && !allAdjacentAllies(countryIndex,players[0]))
             {
                 Army army = armies[countryIndex];
                 if (army.getPlayer() == players[0] && army.getArmySize()>1)
@@ -293,11 +293,18 @@ public class GameState
                     if (army.getPlayer() == players[0] && army.getArmySize() == 1){
                         chatBoxController.textOutput(new TextField("Invalid selection, can not attack with this country!"));
                     }else {
-                        chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                        chatBoxController.textOutput(new TextField("Invalid selection, cannot choose a country you don't own!"));
                     }
+                    chatBoxController.textOutput(new TextField("Choose a different country:"));
                     chatBoxController.setWaitingTextInput(true);
                 }
-            }else
+            }else if(allAdjacentAllies(countryIndex,players[0]))
+            {
+                chatBoxController.textOutput(new TextField("Invalid input! There are no enemy territories to attack from this country!"));
+                chatBoxController.textOutput(new TextField("Choose a different country or skip:"));
+                chatBoxController.setWaitingTextInput(true);
+            }
+            else
             {
                 chatBoxController.textOutput(new TextField("Invalid input! choose a country"));
                 chatBoxController.setWaitingTextInput(true);
@@ -314,7 +321,7 @@ public class GameState
                 chatBoxController.setWaitingTextInput(true);
                 waitingPlayer2Option = false;
                 waitingPlayer2Fortify = true;
-            } else if (countryIndex != -1)
+            } else if (countryIndex != -1 && !allAdjacentAllies(countryIndex,players[1]))
             {
                 Army army = armies[countryIndex];
                 if (army.getPlayer() == players[1]  && army.getArmySize()>1)
@@ -329,17 +336,28 @@ public class GameState
                     if (army.getPlayer() == players[1] && army.getArmySize() == 1){
                         chatBoxController.textOutput(new TextField("Invalid selection, can not attack with this country!"));
                     }else {
-                        chatBoxController.textOutput(new TextField("Invalid selection, choose a country you own!"));
+                        chatBoxController.textOutput(new TextField("Invalid selection, cannot choose a country you don't own!"));
                     }
+                    chatBoxController.textOutput(new TextField("Choose a different country:"));
                     chatBoxController.setWaitingTextInput(true);
                 }
-            }else
+            }else if(allAdjacentAllies(countryIndex,players[1]))
+            {
+                chatBoxController.textOutput(new TextField("Invalid input! There are no enemy territories to attack from this country!"));
+                chatBoxController.textOutput(new TextField("Choose a different country or skip:"));
+                chatBoxController.setWaitingTextInput(true);
+            }
+            else
             {
                 chatBoxController.textOutput(new TextField("Invalid input! choose a country"));
                 chatBoxController.setWaitingTextInput(true);
             }
         } else if (waitingPlayer1Attack)
         {
+            if(t.getText().equals("skip"))
+            {
+
+            }
             defendingCountryIndex = Country.getIndexFromCountryName(t.getText());
             Country countryAtk = mainController.getCountries().getCountries().get(attackingCountryIndex);
 
@@ -382,7 +400,7 @@ public class GameState
             {
                 if(armies[defendingCountryIndex].getPlayer()==armies[attackingCountryIndex].getPlayer()){
                     chatBoxController.textOutput(new TextField("Invalid entry! You cannot attack yourself!"));
-                }else {
+                } else {
                     chatBoxController.textOutput(new TextField("Invalid entry! You can only attack adjacent countries!"));
                 }
                 chatBoxController.textOutput(new TextField(players[0].getName() + " enter country you wish to attack from or \"skip\"!"));
@@ -870,8 +888,6 @@ public class GameState
             //initiates next piece of game logic
             GameTurns(3);
         }
-
-
     }
 
     //retrieves the instantiated armies array from mainController
@@ -1075,6 +1091,21 @@ public class GameState
             chatBoxController.setWaitingTextInput(true);
             GameTurns(4);
         }
+    }
+
+    boolean allAdjacentAllies(int index,Player player)
+    {
+        boolean surrounded = true;
+        Country country = mainController.getCountries().getCountries().get(index);
+        int[] adjacent = country.getAdjacentIndices();
+        for(int indexOfAdjacent: adjacent)
+        {
+           if(!player.getAssignedCountries().containsKey(indexOfAdjacent))
+           {
+               surrounded = false;
+           }
+        }
+        return surrounded;
     }
 
     int getExchangeTroops(){

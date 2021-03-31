@@ -18,7 +18,7 @@ public class Player {
     private int totalCards;
     private int totalArmies;
     private Color PlayerColor;
-    private HashMap<Integer, Country> AssignedCountries = new HashMap<>();
+    private HashMap<Integer, Country> AssignedCountries;
     private int troops;
     private Hand hand;
     private int turnInCount;
@@ -31,12 +31,14 @@ public class Player {
         this.PlayerColor = colour;
         this.troops = 24;
         hand = new Hand();
+        AssignedCountries = new HashMap<>();
     }
 
     public Player(Color colour, int num){
         this.PlayerColor = colour;
         troops = num;
         hand = new Hand();
+        AssignedCountries = new HashMap<>();
     }
 
     public void setColors (Color PlayerColor){
@@ -158,7 +160,7 @@ public class Player {
             boolean check = true;
             int[] countries = Countries.getContinentIndexes(i);
             for(Integer index:countries){
-                if(!getAssignedCountries().containsKey(Country.getCountryNameFromIndex(index))){
+                if(!getAssignedCountries().containsKey(index)){
                     check = false;
                 }
             }

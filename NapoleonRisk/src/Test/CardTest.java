@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CardTest
 {
-    @Test
+    /*@Test
     void testExchange()
     {
         Country country = new Country();
@@ -43,5 +43,5 @@ public class CardTest
         assertEquals(true,cardTest4.exchangeCards("aic"));
         assertEquals(false,cardTest4.exchangeCards("garbage"));
 
-    }
+    }*/
 }

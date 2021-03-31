@@ -31,14 +31,15 @@ public class GameState
     ChatBoxController chatBoxController;
     MainController mainController;
 
-    //this needs to be changed
+    //declare deck
     Deck deck;
-    Card card = new Card();
 
     int textToPlayerColour = -1;
     int attackingCountryIndex;
     int defendingCountryIndex;
     int sizeOfAttackingArmy;
+    int goldenGrid = 1;
+    int goldenHorse = 4;
 
     //used for the logic implementation of receiving payer names
     boolean waitingPlayer1Name = false;
@@ -63,6 +64,8 @@ public class GameState
     boolean waitingPlayer2FortifyAmount = false;
     boolean territoryConqueredPlayer1 = false;
     boolean territoryConqueredPlayer2 = false;
+    boolean waitingPlayer1CardOption = false;
+    boolean waitingPlayer2CardOption = false;
 
     //stores the value of the players rolls
     private int player1Roll;
@@ -165,8 +168,8 @@ public class GameState
                         players[0].decrementTroops(3);
                         army.incrementSize(3);
                     }else{
-                        players[0].decrementTroops(players[0].getTroops());
                         army.incrementSize(players[0].getTroops());
+                        players[0].decrementTroops(players[0].getTroops());
                     }
                     mainController.updateNode(army);
                     waitingPlayer1Deployment = false;
@@ -200,8 +203,8 @@ public class GameState
                         players[1].decrementTroops(3);
                         army.incrementSize(3);
                     }else{
-                        players[1].decrementTroops(players[1].getTroops());
                         army.incrementSize(players[1].getTroops());
+                        players[1].decrementTroops(players[1].getTroops());
                     }
                     mainController.updateNode(army);
                     waitingPlayer2Deployment = false;
@@ -560,14 +563,8 @@ public class GameState
             int countryIndex = Country.getIndexFromCountryName(t.getText());
             if (t.getText().equals("skip"))
             {
-                if(territoryConqueredPlayer1){
-                    drawCard(0);
-                }
-                waitingPlayer2Option = true;
                 waitingPlayer1Fortify = false;
-                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
-                chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
-                chatBoxController.setWaitingTextInput(true);
+                cardExchangePlayer1();
             } else if (countryIndex != -1)
             {
                 Army army = armies[countryIndex];
@@ -627,18 +624,12 @@ public class GameState
                 int input = Integer.parseInt(t.getText());
                 if (input > 0 && input <= maxTroops)
                 {
+                    waitingPlayer1FortifyAmount = false;
                     armies[defendingCountryIndex].incrementSize(input);
                     armies[attackingCountryIndex].incrementSize(-input);
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
-                    waitingPlayer2Option = true;
-                    waitingPlayer1FortifyAmount = false;
-                    if(territoryConqueredPlayer1){
-                        drawCard(0);
-                    }
-                    chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
-                    chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
-                    chatBoxController.setWaitingTextInput(true);
+                    cardExchangePlayer1();
                 }  else
                 {
                     chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
@@ -655,11 +646,8 @@ public class GameState
             int countryIndex = Country.getIndexFromCountryName(t.getText());
             if (t.getText().equals("skip"))
             {
-                if(territoryConqueredPlayer2){
-                    drawCard(1);
-                }
                 waitingPlayer2Fortify = false;
-                GameTurns(4);
+                cardExchangePlayer2();
             } else if (countryIndex != -1)
             {
                 Army army = armies[countryIndex];
@@ -724,10 +712,7 @@ public class GameState
                     mainController.updateNode(armies[attackingCountryIndex]);
                     mainController.updateNode(armies[defendingCountryIndex]);
                     waitingPlayer2FortifyAmount = false;
-                    if(territoryConqueredPlayer2){
-                        drawCard(1);
-                    }
-                    GameTurns(4);
+                    cardExchangePlayer2();
                 }  else
                 {
                     chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
@@ -736,6 +721,56 @@ public class GameState
             } catch (NumberFormatException e)
             {
                 chatBoxController.textOutput(new TextField("Invalid! Please enter a valid input"));
+                chatBoxController.setWaitingTextInput(true);
+            }
+        }else if(waitingPlayer1CardOption){
+            if(t.getText().equalsIgnoreCase("skip")){
+                waitingPlayer2Option = true;
+                waitingPlayer1CardOption = false;
+                chatBoxController.setWaitingTextInput(true);
+                chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
+                chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
+            }else if(players[0].getHandObject().validExchangeCommand(t.getText())){
+                if(players[0].getHandObject().exchangeCards(t.getText()) == true) {
+                    int newTroops = getExchangeTroops();
+                    players[0].addTroops(newTroops);
+                    chatBoxController.textOutput(new TextField(players[0].getName() + " you have received " + newTroops + " extra troops!"));
+                    chatBoxController.textOutput(new TextField(" "));
+                    waitingPlayer2Option = true;
+                    waitingPlayer1CardOption = false;
+                    chatBoxController.setWaitingTextInput(true);
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
+                }else{
+                    chatBoxController.textOutput(new TextField("You don't own those cards! Enter a set that you do own or \"skip\"."));
+                    chatBoxController.setWaitingTextInput(true);
+                }
+            }else{
+                chatBoxController.textOutput(new TextField("Invalid command!"));
+                chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
+                chatBoxController.setWaitingTextInput(true);
+            }
+        }else if(waitingPlayer2CardOption){
+            if(t.getText().equalsIgnoreCase("skip")){
+                waitingPlayer2CardOption = false;
+                chatBoxController.setWaitingTextInput(true);
+                GameTurns(4);
+            }else if(players[1].getHandObject().exchangeCards(t.getText())){
+                if(players[1].getHandObject().exchangeCards(t.getText()) == true) {
+                    int newTroops = getExchangeTroops();
+                    players[1].addTroops(newTroops);
+                    chatBoxController.textOutput(new TextField(players[1].getName() + " you have received " + newTroops + " extra troops!"));
+                    chatBoxController.textOutput(new TextField(" "));
+                    waitingPlayer2CardOption = false;
+                    chatBoxController.setWaitingTextInput(true);
+                    GameTurns(4);
+                }else{
+                    chatBoxController.textOutput(new TextField("You don't own those cards! Enter a set that you do own or \"skip\"."));
+                    chatBoxController.setWaitingTextInput(true);
+                }
+            }else{
+                chatBoxController.textOutput(new TextField("Invalid command!"));
+                chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
                 chatBoxController.setWaitingTextInput(true);
             }
         }
@@ -777,9 +812,9 @@ public class GameState
             chatBoxController.setWaitingTextInput(true);
             waitingPlayer1Option = true;
         }else if (phase == 4){
-            players[0].setTroops(players[0].getExtraTroops());
+            players[0].setTroops(players[0].getTroops() + players[0].getExtraTroops());
             chatBoxController.textOutput(new TextField(players[0].getName()+", you get "+players[0].getExtraTroops()+" extra troops!"));
-            players[1].setTroops(players[1].getExtraTroops());
+            players[1].setTroops(players[1].getTroops() + players[1].getExtraTroops());
             chatBoxController.textOutput(new TextField(players[1].getName()+", you get "+players[1].getExtraTroops()+" extra troops!"));
             for(int i=0;i<4;i++){
                 chatBoxController.textOutput(new TextField("Neutral player "+(i+1)+" got "+neutrals[i].getExtraTroops()+" extra troops!"));
@@ -864,9 +899,9 @@ public class GameState
             territoryConqueredPlayer1 = false;
         else
             territoryConqueredPlayer2 = false;
-        card = deck.draw();
-        players[playerIndex].getHand().add(card);
-        chatBoxController.textOutput(new TextField(players[playerIndex].getName() + " drew the " + card.toString() + " card"));
+        Card drawCard = deck.draw();
+        players[playerIndex].addCard(drawCard);
+        chatBoxController.textOutput(new TextField(players[playerIndex].getName() + " drew the " + drawCard.toString() + " card"));
     }
 
     public boolean determineRollWinner(Army attackingCountry, Army defendingCountry, int numOfAttackers, int numOfDefenders)
@@ -994,6 +1029,65 @@ public class GameState
         }
     }
 
+    void printHand(Player player){
+        chatBoxController.textOutput(new TextField(player.getName()+"'s Hand:"));
+        for(Card card:player.getHand()){
+            chatBoxController.textOutput(new TextField(card.toString()));
+        }
+    }
 
+    void cardExchangePlayer1(){
+        chatBoxController.textOutput(new TextField(" "));
+        chatBoxController.textOutput(new TextField(">>>Card Exchange Phase<<<"));
+        if(territoryConqueredPlayer1){
+            drawCard(0);
+        }
+        printHand(players[0]);
+        if(players[0].getHandObject().canExchange()){
+            chatBoxController.textOutput(new TextField("Enter the types of cards you would like to exchange (ex. \"iii\", \"ica\" etc.) or \"skip\"!"));
+            waitingPlayer1CardOption = true;
+        }else {
+            chatBoxController.textOutput(new TextField("Unfortunately you have no valid exchanges currently."));
+            chatBoxController.textOutput(new TextField(" "));
+            waitingPlayer2Option = true;
+            waitingPlayer1Fortify = false;
+            chatBoxController.textOutput(new TextField(players[1].getName() + " it is your turn!"));
+            chatBoxController.textOutput(new TextField(players[1].getName() + " enter country you wish to attack from or \"skip\"!"));
+        }
+        chatBoxController.setWaitingTextInput(true);
+    }
 
+    void cardExchangePlayer2(){
+        chatBoxController.textOutput(new TextField(" "));
+        chatBoxController.textOutput(new TextField(">>>Card Exchange Phase<<<"));
+        if(territoryConqueredPlayer2){
+            drawCard(1);
+        }
+        printHand(players[1]);
+        if(players[1].getHandObject().canExchange()){
+            chatBoxController.textOutput(new TextField("Enter the types of cards you would like to exchange (ex. \"iii\", \"ica\" etc.) or \"skip\"!"));
+            waitingPlayer2CardOption = true;
+            chatBoxController.setWaitingTextInput(true);
+        }else {
+            chatBoxController.textOutput(new TextField("Unfortunately you have no valid exchanges currently."));
+            chatBoxController.textOutput(new TextField(" "));
+            waitingPlayer2Fortify = false;
+            chatBoxController.setWaitingTextInput(true);
+            GameTurns(4);
+        }
+    }
+
+    int getExchangeTroops(){
+        int ret = goldenHorse;
+        if (goldenHorse>=10)
+            goldenHorse+=5;
+        else
+            goldenHorse+=2;
+        if (goldenHorse>60)
+            goldenHorse = 60;
+        mainController.goldGrid(goldenGrid);
+        goldenGrid++;
+        return ret;
+        }
+        
 }

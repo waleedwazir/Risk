@@ -1,10 +1,14 @@
 package Player;
 
 import Cards.Card;
+import Cards.Hand;
 import Map.Countries;
 import Map.Country;
 import javafx.scene.paint.Color;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -16,7 +20,7 @@ public class Player {
     private Color PlayerColor;
     private HashMap<Integer, Country> AssignedCountries = new HashMap<>();
     private int troops;
-    private Card hand;
+    private Hand hand;
     private int turnInCount;
 
     public Player(){
@@ -26,13 +30,13 @@ public class Player {
     public Player(Color colour){
         this.PlayerColor = colour;
         this.troops = 24;
-        hand = new Card();
+        hand = new Hand();
     }
 
     public Player(Color colour, int num){
         this.PlayerColor = colour;
         troops = num;
-        hand = new Card();
+        hand = new Hand();
     }
 
     public void setColors (Color PlayerColor){
@@ -123,11 +127,6 @@ public class Player {
         hand.add(card);
     }
 
-    //removes cards to from players hand to reflect cards being turned in
-    public void removeCards(int[] cardsTurnedInIndex) {
-        hand.removeCards(cardsTurnedInIndex[0], cardsTurnedInIndex[1], cardsTurnedInIndex[2]);
-    }
-
     public int getTurnInCount() {
         turnInCount++;
         return turnInCount;
@@ -137,7 +136,7 @@ public class Player {
         return hand.getCards();
     }
 
-    public Card getHandObject() {
+    public Hand getHandObject() {
         return hand;
     }
 
@@ -177,5 +176,6 @@ public class Player {
         }
         return sum + base;
     }
+
 
 }

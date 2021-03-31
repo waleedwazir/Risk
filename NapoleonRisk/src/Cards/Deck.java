@@ -38,8 +38,6 @@ public class Deck
         Collections.shuffle(stack);
     }
 
-
-
     //removes a card from the deck and return it
     public Card draw() {
 

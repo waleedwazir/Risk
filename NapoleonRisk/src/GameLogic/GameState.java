@@ -742,7 +742,7 @@ public class GameState
                 chatBoxController.setWaitingTextInput(true);
             }
         }else if(waitingPlayer1CardOption){
-            if(t.getText().equalsIgnoreCase("skip")){
+            if(t.getText().equalsIgnoreCase("skip") && !(players[0].getHandObject().mustTurnIn())){
                 waitingPlayer2Option = true;
                 waitingPlayer1CardOption = false;
                 chatBoxController.setWaitingTextInput(true);
@@ -764,16 +764,20 @@ public class GameState
                     chatBoxController.setWaitingTextInput(true);
                 }
             }else{
-                chatBoxController.textOutput(new TextField("Invalid command!"));
-                chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
+                if(players[0].getHandObject().mustTurnIn())
+                    chatBoxController.textOutput(new TextField("You must turn in a set of cards!"));
+                else {
+                    chatBoxController.textOutput(new TextField("Invalid command!"));
+                    chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
+                }
                 chatBoxController.setWaitingTextInput(true);
             }
         }else if(waitingPlayer2CardOption){
-            if(t.getText().equalsIgnoreCase("skip")){
+            if(t.getText().equalsIgnoreCase("skip") && !players[1].getHandObject().mustTurnIn()){
                 waitingPlayer2CardOption = false;
                 chatBoxController.setWaitingTextInput(true);
                 GameTurns(4);
-            }else if(players[1].getHandObject().exchangeCards(t.getText())){
+            }else if(players[1].getHandObject().validExchangeCommand(t.getText())){
                 if(players[1].getHandObject().exchangeCards(t.getText()) == true) {
                     int newTroops = getExchangeTroops();
                     players[1].addTroops(newTroops);
@@ -787,8 +791,12 @@ public class GameState
                     chatBoxController.setWaitingTextInput(true);
                 }
             }else{
-                chatBoxController.textOutput(new TextField("Invalid command!"));
-                chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
+                if(players[1].getHandObject().mustTurnIn())
+                    chatBoxController.textOutput(new TextField("You must turn in a set of cards!"));
+                else {
+                    chatBoxController.textOutput(new TextField("Invalid command!"));
+                    chatBoxController.textOutput(new TextField("Invalid input, either \"skip\" or choose an exchange of types you can do"));
+                }
                 chatBoxController.setWaitingTextInput(true);
             }
         }

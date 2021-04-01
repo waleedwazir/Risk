@@ -141,7 +141,7 @@ public class BreathFirstSearch
     //returns true if the index of the clicked country
     //is one such country
     public boolean isBadIndex(int index){
-        int[] badIndices = {0, 14, 17, 19, 28};
+        int[] badIndices = {0, 8, 14, 17, 19, 28};
         for(Integer badIndex:badIndices){
             if(badIndex==index){
                 return true;

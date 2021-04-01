@@ -298,7 +298,7 @@ public class GameState
                     chatBoxController.textOutput(new TextField("Choose a different country:"));
                     chatBoxController.setWaitingTextInput(true);
                 }
-            }else if(allAdjacentAllies(countryIndex,players[0]))
+            }else if(countryIndex != -1 && allAdjacentAllies(countryIndex,players[0]))
             {
                 chatBoxController.textOutput(new TextField("Invalid input! There are no enemy territories to attack from this country!"));
                 chatBoxController.textOutput(new TextField("Choose a different country or skip:"));
@@ -341,7 +341,7 @@ public class GameState
                     chatBoxController.textOutput(new TextField("Choose a different country:"));
                     chatBoxController.setWaitingTextInput(true);
                 }
-            }else if(allAdjacentAllies(countryIndex,players[1]))
+            }else if(countryIndex != -1 && allAdjacentAllies(countryIndex,players[1]))
             {
                 chatBoxController.textOutput(new TextField("Invalid input! There are no enemy territories to attack from this country!"));
                 chatBoxController.textOutput(new TextField("Choose a different country or skip:"));

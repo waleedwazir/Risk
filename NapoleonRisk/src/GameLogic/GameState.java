@@ -354,7 +354,6 @@ public class GameState
             }
         } else if (waitingPlayer1Attack)
         {
-            endGame(players[0]);
             if(t.getText().equals("skip"))
             {
 

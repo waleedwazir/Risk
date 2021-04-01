@@ -58,6 +58,19 @@ public class Player {
         return name;
     }
 
+    public String getNameWithColour()
+    {
+        if(PlayerColor.equals(Color.TOMATO))
+        {
+            return this.name + "<RED>";
+        }else if(PlayerColor.equals(Color.ROYALBLUE))
+        {
+            return this.name + "<BLUE>";
+        }
+        return getName();
+    }
+
+
     public void setAssignedCountries(HashMap<Integer, Country>AssignedCountries){
         this.AssignedCountries = AssignedCountries;
     }

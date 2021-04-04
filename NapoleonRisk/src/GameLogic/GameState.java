@@ -374,6 +374,9 @@ public class GameState
                 }
                 if(won){
                     territoryConqueredPlayer1 = true;
+                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
+                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
+                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     if(players[1].isEliminated())
                     {
                         endGame(players[0]);
@@ -383,9 +386,6 @@ public class GameState
                     }
                     chatBoxController.textOutput(new TextField(players[0].getNameWithColour() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
-                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
-                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
-                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     waitingPlayer1Attack = false;
                     waitingPlayer1Reinforce = true;
                     chatBoxController.setWaitingTextInput(true);
@@ -426,6 +426,9 @@ public class GameState
                 }
                 if(won){
                     territoryConqueredPlayer2 = true;
+                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
+                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
+                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     if(players[0].isEliminated())
                     {
                         endGame(players[1]);
@@ -435,9 +438,6 @@ public class GameState
                     }
                     chatBoxController.textOutput(new TextField(players[1].getNameWithColour() + ", you conquered "+armies[defendingCountryIndex].getCountry().getName()+"!"));
                     chatBoxController.textOutput(new TextField("Enter how many troops you would like to move there."));
-                    armies[defendingCountryIndex].getPlayer().removeCountry(armies[defendingCountryIndex].getCountry());
-                    armies[defendingCountryIndex].setPlayer(armies[attackingCountryIndex].getPlayer());
-                    armies[attackingCountryIndex].getPlayer().addCountry(armies[defendingCountryIndex].getCountry());
                     waitingPlayer2Attack = false;
                     waitingPlayer2Reinforce = true;
                     chatBoxController.setWaitingTextInput(true);

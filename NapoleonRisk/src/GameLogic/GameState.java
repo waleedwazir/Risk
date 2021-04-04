@@ -843,8 +843,11 @@ public class GameState
             players[1].setTroops(players[1].getTroops() + players[1].getExtraTroops());
             chatBoxController.textOutput(new TextField(players[1].getNameWithColour()+", you get "+players[1].getExtraTroops()+" extra troops!"));
             for(int i=0;i<4;i++){
-                chatBoxController.textOutput(new TextField("Neutral player "+(i+1)+" got "+neutrals[i].getExtraTroops()+" extra troops!"));
-                neutrals[i].setTroops(neutrals[i].getExtraTroops());
+                if(!neutrals[i].isEliminated())
+                {
+                    chatBoxController.textOutput(new TextField("Neutral player "+(i+1)+" got "+neutrals[i].getExtraTroops()+" extra troops!"));
+                    neutrals[i].setTroops(neutrals[i].getExtraTroops());
+                }
             }
             chatBoxController.textOutput(new TextField(" "));
             chatBoxController.textOutput(new TextField(">>>Deployment Phase<<<"));
@@ -865,18 +868,21 @@ public class GameState
         }else if(neutrals[0].getTroops()>0){//start neutral deployment logic
                 Thread neutralDeploy = new Thread(() -> {
                     for(int i=0;i<4;i++){//loops through the 4 neutrals does all their deployment logic
-                        Random generator = new Random();
-                        Object[] values = neutrals[i].getAssignedCountries().values().toArray();
-                        Country randomCountry = (Country) values[generator.nextInt(values.length)];
-                        Army army = armies[randomCountry.getIndex()];
-                        neutrals[i].decrementTroops(1);
-                        army.incrementSize(1);
-                        mainController.updateNode(army);
-                        Platform.runLater(() -> chatBoxController.textOutput(new TextField("Neutral deployed a troop to "+randomCountry.getName()+"!")));
-                        try {
-                            Thread.sleep(300); //this prevents all the countries been claimed instantly
-                                                    //and provides somewhat of an animation
-                        } catch(InterruptedException v){System.out.println(v);}
+                        if(!neutrals[i].isEliminated())
+                        {
+                            Random generator = new Random();
+                            Object[] values = neutrals[i].getAssignedCountries().values().toArray();
+                            Country randomCountry = (Country) values[generator.nextInt(values.length)];
+                            Army army = armies[randomCountry.getIndex()];
+                            neutrals[i].decrementTroops(1);
+                            army.incrementSize(1);
+                            mainController.updateNode(army);
+                            Platform.runLater(() -> chatBoxController.textOutput(new TextField("Neutral deployed a troop to "+randomCountry.getName()+"!")));
+                            try {
+                                Thread.sleep(300); //this prevents all the countries been claimed instantly
+                                //and provides somewhat of an animation
+                            } catch(InterruptedException v){System.out.println(v);}
+                        }
                     }
                     Platform.runLater(() -> deploymentPhase(1)); //loops back to the player deployment phase
 

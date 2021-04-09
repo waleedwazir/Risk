@@ -1,5 +1,7 @@
 // put your code here
 
+import java.util.ArrayList;
+
 public class Napoleon implements Bot {
 	// The public API of YourTeamName must not change
 	// You cannot change any other classes
@@ -49,6 +51,7 @@ public class Napoleon implements Bot {
 	}
 
 	public String getBattle () {
+
 		String command = "";
 		// put your code here
 		command = "skip";
@@ -83,7 +86,7 @@ public class Napoleon implements Bot {
 		return(command);
 	}
 
-	public boolean completesContinent(int playerId,int countryId, Board board)
+	public boolean completesContinent(int countryId)
 	{
 		//returns index of continent country is in
 		//returns -1 if it cannot be found
@@ -96,7 +99,7 @@ public class Napoleon implements Bot {
 			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
 			for(int i=0;i<continentIds.length;i++)
 			{
-				if(board.getOccupier(continentIds[i]) == playerId)
+				if(board.getOccupier(continentIds[i]) == player.getId())
 				{
 					conquered++;
 				}
@@ -126,6 +129,23 @@ public class Napoleon implements Bot {
 			}
 		}
 		return -1;
+	}
+	public ArrayList<Integer> getPlayerOwnedCountryIndexes()
+	{
+		ArrayList<Integer> playerCountryIndexes = new ArrayList<>();
+		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
+			for(int j = 0;j<continentIds.length;j++)
+			{
+				if(player.getId() == board.getOccupier(continentIds[j]))
+				{
+					playerCountryIndexes.add(continentIds[j]);
+				}
+
+			}
+		}
+		return playerCountryIndexes;
 	}
 
 }

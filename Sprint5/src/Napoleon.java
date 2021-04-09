@@ -1,6 +1,10 @@
 // put your code here
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.Scanner;
+
 
 public class Napoleon implements Bot {
 	// The public API of YourTeamName must not change
@@ -51,7 +55,6 @@ public class Napoleon implements Bot {
 	}
 
 	public String getBattle () {
-
 		String command = "";
 		// put your code here
 		command = "skip";
@@ -86,7 +89,12 @@ public class Napoleon implements Bot {
 		return(command);
 	}
 
-	public boolean completesContinent(int countryId)
+
+
+
+	/*Auxiliary methods*/
+
+	private boolean completesContinent(int playerId, int countryId, Board board)
 	{
 		//returns index of continent country is in
 		//returns -1 if it cannot be found
@@ -99,7 +107,7 @@ public class Napoleon implements Bot {
 			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
 			for(int i=0;i<continentIds.length;i++)
 			{
-				if(board.getOccupier(continentIds[i]) == player.getId())
+				if(board.getOccupier(continentIds[i]) == playerId)
 				{
 					conquered++;
 				}
@@ -115,7 +123,7 @@ public class Napoleon implements Bot {
 		return false;
 	}
 
-	public int countryContinentIndex(int countryId)
+	private int countryContinentIndex(int countryId)
 	{
 		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
 		{
@@ -130,22 +138,19 @@ public class Napoleon implements Bot {
 		}
 		return -1;
 	}
-	public ArrayList<Integer> getPlayerOwnedCountryIndexes()
-	{
-		ArrayList<Integer> playerCountryIndexes = new ArrayList<>();
-		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
-		{
-			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
-			for(int j = 0;j<continentIds.length;j++)
-			{
-				if(player.getId() == board.getOccupier(continentIds[j]))
-				{
-					playerCountryIndexes.add(continentIds[j]);
-				}
 
-			}
+	public double winChance(int attackingTroops, int defendingTroops) throws FileNotFoundException {
+		int row = ((attackingTroops-1)*30)+defendingTroops;
+		Scanner scanner = new Scanner(new File("./src/napoleonData.csv"));
+		scanner.useDelimiter(",");
+		int i = 1;
+		while (scanner.hasNext()){
+			if(i == row)
+				return scanner.nextDouble();
+			scanner.nextLine();
+			i++;
 		}
-		return playerCountryIndexes;
+		return 0;
 	}
 
 }

@@ -2,8 +2,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Napoleon implements Bot {
@@ -33,10 +32,12 @@ public class Napoleon implements Bot {
 		return(command);
 	}
 
-	public String getReinforcement () {
+	public String getReinforcement (){
 		String command = "";
 		// put your code here
-		command = GameData.COUNTRY_NAMES[(int)(Math.random() * GameData.NUM_COUNTRIES)];
+		try {
+			command = GameData.COUNTRY_NAMES[getReinforceCountry()];
+		}catch (FileNotFoundException ex){ }
 		command = command.replaceAll("\\s", "");
 		command += " 1";
 		return(command);
@@ -154,6 +155,8 @@ public class Napoleon implements Bot {
 		}
 		return playerCountryIndexes;
 	}
+
+
 	public int calcNumberAttackingTroops()
 	{
 		if(board.getNumUnits(indexOfAttacker) >= 3)
@@ -223,6 +226,52 @@ public class Napoleon implements Bot {
 			i++;
 		}
 		return 0;
+	}
+
+	private int getReinforceCountry() throws FileNotFoundException {
+		int total = 0;
+		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
+		ArrayList<Integer> countries = getPlayerOwnedCountryIndexes();
+		for(int i = 0;i<countries.size();i++){
+			raffle.put(countries.get(i), getCountryPriority(countries.get(i)));
+		}
+
+		double max = 0;
+		int ret = 0;
+		for(Map.Entry<Integer,Double> entry:raffle.entrySet()){
+			if(entry.getValue()>max){
+				max = entry.getValue();
+				ret = entry.getKey();
+			}
+		}
+		return ret;
+	}
+
+	private double getCountryPriority(int countryId) throws FileNotFoundException{
+		double priority = 1/getPlayerOwnedCountryIndexes().size();
+
+		for(int checkId:GameData.ADJACENT[countryId]) {
+			if(board.getOccupier(checkId) != board.getOccupier(countryId)) {
+				priority *= 1+(winChance(board.getNumUnits(checkId), board.getNumUnits(countryId)));
+			}
+		}
+
+		if(board.getNumUnits(countryId)>12)
+			priority*=0.3;
+		if(encapsulated(countryId))
+			priority*=0;
+		return priority;
+	}
+
+
+	private boolean encapsulated(int countryId){
+		boolean ret = true;
+		for(int checkId:GameData.ADJACENT[countryId]){
+			if(board.getOccupier(checkId)!=board.getOccupier(countryId)){
+				ret = false;
+			}
+		}
+		return ret;
 	}
 
 }

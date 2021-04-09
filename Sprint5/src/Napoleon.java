@@ -2,7 +2,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -15,6 +15,9 @@ public class Napoleon implements Bot {
 	
 	private BoardAPI board;
 	private PlayerAPI player;
+	int botAttacks = 5;
+	int indexOfTarget;
+	int indexOfAttacker;
 	
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
@@ -55,9 +58,19 @@ public class Napoleon implements Bot {
 	}
 
 	public String getBattle () {
-		String command = "";
-		// put your code here
-		command = "skip";
+
+		String command;
+		getTarget();
+		if(botAttacks > 0)
+		{
+
+			 command = GameData.COUNTRY_NAMES[indexOfAttacker].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[indexOfTarget].replaceAll(" ","")+" "+calcNumberAttackingTroops();
+			 botAttacks--;
+		}else
+		{
+			command = "skip";
+			botAttacks = 5;
+		}
 		return(command);
 	}
 
@@ -94,7 +107,66 @@ public class Napoleon implements Bot {
 
 	/*Auxiliary methods*/
 
-	private boolean completesContinent(int playerId, int countryId, Board board)
+	private void getTarget()
+	{
+		try
+		{
+			double highestWinChance = -1;
+			ArrayList<Integer> playerCountries = getPlayerOwnedCountryIndexes();
+			for(int i=0;i<playerCountries.size();i++)
+			{
+				int playerCountryIndex = playerCountries.get(i);
+				int [] adjacentCountries = GameData.ADJACENT[playerCountryIndex];
+				for(int j=0;j<adjacentCountries.length;j++)
+				{
+					if(player.getId() != board.getOccupier(adjacentCountries[j]))
+					{
+						double winChance = winChance(board.getNumUnits(playerCountryIndex), board.getNumUnits(adjacentCountries[j]));
+						if(highestWinChance < winChance)
+						{
+							highestWinChance = winChance;
+							indexOfTarget = adjacentCountries[j];
+							indexOfAttacker = playerCountryIndex;
+						}
+					}
+				}
+			}
+		}catch (FileNotFoundException e)
+		{
+			System.out.println("File not found");
+		}
+	}
+
+	public ArrayList<Integer> getPlayerOwnedCountryIndexes()
+	{
+		ArrayList<Integer> playerCountryIndexes = new ArrayList<>();
+		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
+			for(int j = 0;j<continentIds.length;j++)
+			{
+				if(player.getId() == board.getOccupier(continentIds[j]))
+				{
+					playerCountryIndexes.add(continentIds[j]);
+				}
+
+			}
+		}
+		return playerCountryIndexes;
+	}
+	public int calcNumberAttackingTroops()
+	{
+		if(board.getNumUnits(indexOfAttacker) >= 3)
+		{
+			return 3;
+		}else
+		{
+			return board.getNumUnits(indexOfAttacker);
+		}
+	}
+
+
+	private boolean completesContinent(int countryId)
 	{
 		//returns index of continent country is in
 		//returns -1 if it cannot be found
@@ -107,7 +179,7 @@ public class Napoleon implements Bot {
 			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
 			for(int i=0;i<continentIds.length;i++)
 			{
-				if(board.getOccupier(continentIds[i]) == playerId)
+				if(board.getOccupier(continentIds[i]) == player.getId())
 				{
 					conquered++;
 				}

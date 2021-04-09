@@ -10,7 +10,7 @@
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="YourTeamName" project="Sprint5" file="/Sprint5/src/YourTeamName.java" 
+  <class id="2" language="java" name="Napoleon" project="Sprint5" file="/Sprint5/src/Napoleon.java"
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="943" y="398"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

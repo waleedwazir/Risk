@@ -58,7 +58,14 @@ public class Napoleon implements Bot {
 	public String getDefence (int countryId) {
 		String command = "";
 		// put your code here
-		command = "1";
+		if(board.getNumUnits(countryId) > 1)
+		{
+			command = "2";
+		}else
+		{
+			command = "1";
+		}
+
 		return(command);
 	}
 
@@ -74,6 +81,51 @@ public class Napoleon implements Bot {
 		// put code here
 		command = "skip";
 		return(command);
+	}
+
+	public boolean completesContinent(int playerId,int countryId, Board board)
+	{
+		//returns index of continent country is in
+		//returns -1 if it cannot be found
+		int continentIndex = countryContinentIndex(countryId);
+		//increments for every country within a continent owned by the player
+		int conquered = 0;
+
+		if(continentIndex != -1)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
+			for(int i=0;i<continentIds.length;i++)
+			{
+				if(board.getOccupier(continentIds[i]) == playerId)
+				{
+					conquered++;
+				}
+			}
+
+			//conquering the territory on this country will complete the continent
+			if(conquered == continentIds.length-1)
+			{
+				return true;
+			}
+		}
+		//false or invalid selection
+		return false;
+	}
+
+	public int countryContinentIndex(int countryId)
+	{
+		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
+			for(int j = 0;j<continentIds.length;j++)
+			{
+				if(countryId == continentIds[j])
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
 	}
 
 }

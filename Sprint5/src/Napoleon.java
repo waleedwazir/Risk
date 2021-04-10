@@ -198,6 +198,7 @@ public class Napoleon implements Bot {
 		return false;
 	}
 
+
 	private int countryContinentIndex(int countryId)
 	{
 		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
@@ -229,7 +230,7 @@ public class Napoleon implements Bot {
 	}
 
 	private int getReinforceCountry() throws FileNotFoundException {
-		int total = 0;
+		double total = 0;
 		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
 		ArrayList<Integer> countries = getPlayerOwnedCountryIndexes();
 		for(int i = 0;i<countries.size();i++){
@@ -248,21 +249,57 @@ public class Napoleon implements Bot {
 	}
 
 	private double getCountryPriority(int countryId) throws FileNotFoundException{
-		double priority = 1/getPlayerOwnedCountryIndexes().size();
+		double priority = 1, defScale = 1;
 
 		for(int checkId:GameData.ADJACENT[countryId]) {
 			if(board.getOccupier(checkId) != board.getOccupier(countryId)) {
-				priority *= 1+(winChance(board.getNumUnits(checkId), board.getNumUnits(countryId)));
+				double defChance = 1+((winChance(board.getNumUnits(checkId), board.getNumUnits(countryId)))/500);
+				if(defScale<defChance)
+					defScale = defChance;
+			}
+			if(board.getOccupier(checkId) == player.getId()){
+				priority *= 1.1;
 			}
 		}
+		priority *= defScale;
 
-		if(board.getNumUnits(countryId)>12)
-			priority*=0.3;
+		priority *= 1+(getClusterValue(countryId)/10);
 		if(encapsulated(countryId))
 			priority*=0;
 		return priority;
 	}
 
+	private int getClusterValue(int countryId){
+		int sum = 0;
+		ArrayList<Integer> visited = new ArrayList<>();
+		Queue<Integer> queue = new LinkedList<Integer>();
+		queue.add(countryId);
+		while(!queue.isEmpty()){
+			int check = queue.remove();
+			if(board.getOccupier(check) == player.getId()){
+				sum++;
+				visitNeighbours(check, visited, queue);
+			}
+		}
+		return sum;
+	}
+
+	private void visitNeighbours(int countryId, ArrayList<Integer> visited, Queue<Integer> queue){
+		visited.add(countryId);
+		for(Integer num:GameData.ADJACENT[countryId]){
+			if(!isVisited(visited, num))
+				queue.add(num);
+		}
+	}
+
+	private boolean isVisited(ArrayList<Integer> visited, int check){
+		boolean ret = false;
+		for(Integer num:visited){
+			if(check == num)
+				ret = true;
+		}
+		return ret;
+	}
 
 	private boolean encapsulated(int countryId){
 		boolean ret = true;

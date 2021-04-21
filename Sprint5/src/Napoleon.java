@@ -53,8 +53,14 @@ public class Napoleon implements Bot {
 	
 	public String getCardExchange () {
 		String command = "";
-		// put your code here
-		command = "skip";
+		if(player.isForcedExchange())
+		{
+			command = convertInsignia(getValidInsigniaIds());
+
+		}else
+		{
+			command = "skip";
+		}
 		return(command);
 	}
 
@@ -104,9 +110,45 @@ public class Napoleon implements Bot {
 	}
 
 
-
-
 	/*Auxiliary methods*/
+
+	private String convertInsignia(int[] insignia)
+	{
+		String command = "";
+		for(int i=0;i<insignia.length;i++)
+		{
+			if (insignia[i] == 0)
+			{
+				command += "i";
+			} else if (insignia[i] == 1)
+			{
+				command += "c";
+			} else if (insignia[i] == 2)
+			{
+				command += "a";
+			} else if (insignia[i] == 3)
+			{
+				command += "w";
+			} else
+			{
+				command += "";
+			}
+		}
+		return command;
+		}
+
+	private int[] getValidInsigniaIds()
+	{
+		for(int i=0;i<Deck.SETS.length;i++)
+		{
+			if(player.isCardsAvailable(Deck.SETS[i]))
+			{
+					return Deck.SETS[i];
+			}
+		}
+
+		return null;
+	}
 
 	private void getTarget()
 	{

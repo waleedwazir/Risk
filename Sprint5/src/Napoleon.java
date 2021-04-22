@@ -20,9 +20,15 @@ public class Napoleon implements Bot {
 
 	/**Weightings**/
 	double nearCompleteContinentWeight = 1.3;
-	double completesContinentWeight = 15;
-	double attackThreshHoldWeight = 60;
+	double completesContinentWeight = 20;
+	double attackThreshHoldWeight = 50;
 	double borderWeight = 1.1;
+	double neutralDeterrentWeight = 0;
+	double moveInWeight = 0.6;
+	double moveInRefinedWeight = 0.2;
+	double enemyTargetWeight = 10;
+	double enemyWinChanceWeight = 55;
+	double defendingScaleWeight = 100;
 	
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
@@ -63,10 +69,10 @@ public class Napoleon implements Bot {
 		for(int countryId:neutralCountries){
 			for(Integer adjacentId:getAdjacentCountry(countryId)){
 				if(adjacentId == getEnemyId()){
-					if(getClusterValue(adjacentId) > biggestCluster){
-						biggestCluster = getClusterValue(adjacentId);
-						if(board.getNumUnits(countryId) < leastProtected)
-							leastProtected = board.getNumUnits(countryId);
+					if(board.getNumUnits(countryId) < leastProtected){
+						leastProtected = board.getNumUnits(countryId);
+						if(getClusterValue(adjacentId) > biggestCluster)
+							biggestCluster = getClusterValue(adjacentId);
 							chosenId = countryId;
 					}
 				}
@@ -128,7 +134,11 @@ public class Napoleon implements Bot {
 		if(encapsulated(indexOfTarget)){
 			command = "0";
 		}else {
-			double units = board.getNumUnits(attackCountryId)*0.6;
+			if(encapsulated(attackCountryId))
+				moveInWeight += moveInRefinedWeight;
+			double units = board.getNumUnits(attackCountryId)*moveInWeight;
+			if(encapsulated(attackCountryId))
+				moveInWeight -= moveInRefinedWeight;
 			units--;
 			command = String.valueOf((int)Math.floor(units));
 		}
@@ -209,8 +219,13 @@ public class Napoleon implements Bot {
 					if(player.getId() != board.getOccupier(adjacentCountries[j]))
 					{
 						double winChance = winChance(board.getNumUnits(playerCountryIndex), board.getNumUnits(adjacentCountries[j]));
-						if(completesContinent(adjacentCountries[j], player.getId())){
+						if(completesContinent(adjacentCountries[j], player.getId()) && winChance==45){
 							winChance+=completesContinentWeight;
+						}
+						if(board.getOccupier(indexOfTarget) != getEnemyId())
+							winChance -= neutralDeterrentWeight;
+						if(board.getOccupier(indexOfTarget) == getEnemyId() && winChance>enemyWinChanceWeight){
+							winChance += enemyTargetWeight;
 						}
 						if(highestWinChance < winChance)
 						{
@@ -378,18 +393,18 @@ public class Napoleon implements Bot {
 	private double getCountryPriority(int countryId) throws FileNotFoundException{
 		double priority = 1, defScale = 1;
 		double completesContinent = 0;
-
+		int sumEnemyTroops = 0;
 		for(int checkId:GameData.ADJACENT[countryId]) {
 			if(board.getOccupier(checkId) != board.getOccupier(countryId)) {
-				double defChance = 1+((winChance(board.getNumUnits(checkId), board.getNumUnits(countryId)))/500);
-				if(defScale<defChance)
-					defScale = defChance;
+				sumEnemyTroops += board.getNumUnits(checkId)-1;
 			}
 			if(board.getOccupier(checkId) == player.getId()){
 				priority *= borderWeight;
 			}
 		}
-		priority *= defScale;
+		double defChance = 1-(winChance(sumEnemyTroops, board.getNumUnits(countryId)));
+
+		priority *= defScale+(defChance/defendingScaleWeight);
 
 		if(isNearCompleteContinent(countryId))
 			completesContinent = nearCompleteContinentWeight;

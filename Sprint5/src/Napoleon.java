@@ -50,6 +50,8 @@ public class Napoleon implements Bot {
 	public String getPlacement (int forPlayer) {
 		String command = "";
 		// put your code here
+		//getPlayerOwnedCountryIndexes()
+
 		command = GameData.COUNTRY_NAMES[(int)(Math.random() * GameData.NUM_COUNTRIES)];
 		command = command.replaceAll("\\s", "");
 		return(command);
@@ -178,7 +180,7 @@ public class Napoleon implements Bot {
 		try
 		{
 			double highestWinChance = -1;
-			ArrayList<Integer> playerCountries = getPlayerOwnedCountryIndexes();
+			ArrayList<Integer> playerCountries = getPlayerOwnedCountryIndexes(player.getId());
 			for(int i=0;i<playerCountries.size();i++)
 			{
 				int playerCountryIndex = playerCountries.get(i);
@@ -295,7 +297,7 @@ public class Napoleon implements Bot {
 
 
 	//returns arraylist of countryids that player owns
-	public ArrayList<Integer> getPlayerOwnedCountryIndexes()
+	public ArrayList<Integer> getPlayerOwnedCountryIndexes(int playerId)
 	{
 		ArrayList<Integer> playerCountryIndexes = new ArrayList<>();
 		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
@@ -303,7 +305,7 @@ public class Napoleon implements Bot {
 			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
 			for(int j = 0;j<continentIds.length;j++)
 			{
-				if(player.getId() == board.getOccupier(continentIds[j]))
+				if(playerId == board.getOccupier(continentIds[j]))
 				{
 					playerCountryIndexes.add(continentIds[j]);
 				}
@@ -323,7 +325,7 @@ public class Napoleon implements Bot {
 	private int getReinforceCountry() throws FileNotFoundException {
 		double total = 0;
 		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
-		ArrayList<Integer> countries = getPlayerOwnedCountryIndexes();
+		ArrayList<Integer> countries = getPlayerOwnedCountryIndexes(player.getId());
 		for(int i = 0;i<countries.size();i++){
 			raffle.put(countries.get(i), getCountryPriority(countries.get(i)));
 		}
@@ -426,7 +428,7 @@ public class Napoleon implements Bot {
 	private HashMap<Integer,Integer> encapsulatedCountries()
 	{
 		HashMap<Integer,Integer> encapsulatedCountries = new HashMap<>();
-		for(int countryId:getPlayerOwnedCountryIndexes())
+		for(int countryId:getPlayerOwnedCountryIndexes(player.getId()))
 		{
 			int numTroops = board.getNumUnits(countryId);
 			if(encapsulated(countryId) && numTroops > 1)
@@ -441,7 +443,7 @@ public class Napoleon implements Bot {
 	private ArrayList<Integer> connectedCountries(int countryId)
 	{
 		ArrayList<Integer> connected = new ArrayList<>();
-		for(int connectedId:getPlayerOwnedCountryIndexes())
+		for(int connectedId:getPlayerOwnedCountryIndexes(player.getId()))
 		{
 			if(board.isConnected(countryId,connectedId) && countryId != connectedId)
 			{

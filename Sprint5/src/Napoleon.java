@@ -14,7 +14,7 @@ public class Napoleon implements Bot {
 	
 	private BoardAPI board;
 	private PlayerAPI player;
-	int botAttacks = 5;
+	int botAttacks = 8;
 	int indexOfTarget;
 	int indexOfAttacker;
 	
@@ -97,8 +97,9 @@ public class Napoleon implements Bot {
 
 	public String getMoveIn (int attackCountryId) {
 		String command = "";
-		// put your code here
-		command = "0";
+		int units = board.getNumUnits(attackCountryId);
+		units--;
+		command = String.valueOf(units);
 		return(command);
 	}
 
@@ -278,7 +279,6 @@ public class Napoleon implements Bot {
 		for(int i = 0;i<countries.size();i++){
 			raffle.put(countries.get(i), getCountryPriority(countries.get(i)));
 		}
-
 		double max = 0;
 		int ret = 0;
 		for(Map.Entry<Integer,Double> entry:raffle.entrySet()){

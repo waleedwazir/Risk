@@ -107,8 +107,15 @@ public class Napoleon implements Bot {
 
 	public String getFortify () {
 		String command = "";
-		// put code here
-		command = "skip";
+		int gifterId = getGifterCountry();
+		if(gifterId != -1)
+		{
+			command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+(board.getNumUnits(gifterId)-1);
+		}else
+		{
+			command = "skip";
+		}
+
 		return(command);
 	}
 
@@ -380,6 +387,73 @@ public class Napoleon implements Bot {
 			}
 		}
 		return ret;
+	}
+	//returns the countryId of the country that will gift units to fortify
+	private int getGifterCountry()
+	{
+		HashMap<Integer,Integer> encapsulatedCountries = encapsulatedCountries();
+		if(encapsulatedCountries.isEmpty())
+		{
+			return -1;
+		}
+		int max = -1;
+		int giftCountryId = -1;
+		for(int key:encapsulatedCountries.keySet())
+		{
+			int troops = encapsulatedCountries.get(key);
+			if(troops > max)
+			{
+				max = troops;
+				giftCountryId = key;
+			}
+		}
+		return giftCountryId;
+	}
+
+	//returns a hashmap of encapsulated countryIds and their troop sizes
+	private HashMap<Integer,Integer> encapsulatedCountries()
+	{
+		HashMap<Integer,Integer> encapsulatedCountries = new HashMap<>();
+		for(int countryId:getPlayerOwnedCountryIndexes())
+		{
+			int numTroops = board.getNumUnits(countryId);
+			if(encapsulated(countryId) && numTroops > 1)
+			{
+				encapsulatedCountries.put(countryId,numTroops);
+			}
+		}
+		return encapsulatedCountries;
+	}
+
+	//returns an arraylist of countryIds of countries connected to the argument ID
+	private ArrayList<Integer> connectedCountries(int countryId)
+	{
+		ArrayList<Integer> connected = new ArrayList<>();
+		for(int connectedId:getPlayerOwnedCountryIndexes())
+		{
+			if(board.isConnected(countryId,connectedId) && countryId != connectedId)
+			{
+				connected.add(connectedId);
+			}
+		}
+		return connected;
+	}
+
+	//returns the ID of the connected country with the largest number of troops
+	private int receiverId(int countryId)
+	{
+		int max = -1;
+		int receiverId = -1;
+		for(int connectedId:connectedCountries(countryId))
+		{
+			int troops = board.getNumUnits(connectedId);
+			if(troops > max)
+			{
+				max = troops;
+				receiverId = connectedId;
+			}
+		}
+		return receiverId;
 	}
 	/**
 	 * END of Placement Methods

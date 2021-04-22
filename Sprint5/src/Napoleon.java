@@ -503,7 +503,7 @@ public class Napoleon implements Bot {
 		for(int connectedId:connectedCountries(countryId))
 		{
 			int troops = board.getNumUnits(connectedId);
-			if(troops > max)
+			if(troops > max && !encapsulated(connectedId))
 			{
 				max = troops;
 				receiverId = connectedId;

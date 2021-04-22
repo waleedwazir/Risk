@@ -18,9 +18,6 @@ public class Sprint5 {
 		ui.displayMap();
 		for (playerId=0; playerId<GameData.NUM_PLAYERS_PLUS_NEUTRALS; playerId++) {
 			players[playerId] = new Player (playerId);
-			if (playerId == 0) {
-				players[playerId].setBot(new SuckyBeigeFish(board,players[playerId]));
-			}
 			if (playerId == 1) {
 				players[playerId].setBot(new Napoleon(board,players[playerId]));
 			}

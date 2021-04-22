@@ -50,9 +50,28 @@ public class Napoleon implements Bot {
 	public String getPlacement (int forPlayer) {
 		String command = "";
 		// put your code here
-		//getPlayerOwnedCountryIndexes()
-
-		command = GameData.COUNTRY_NAMES[(int)(Math.random() * GameData.NUM_COUNTRIES)];
+		int chosenId = -1;
+		int biggestCluster = 0;
+		int leastProtected = 1000;
+		ArrayList<Integer> neutralCountries = getPlayerOwnedCountryIndexes(forPlayer);
+		for(int countryId:neutralCountries){
+			for(Integer adjacentId:getAdjacentCountry(countryId)){
+				if(adjacentId == getEnemyId()){
+					if(getClusterValue(adjacentId) > biggestCluster){
+						biggestCluster = getClusterValue(adjacentId);
+						if(board.getNumUnits(countryId) < leastProtected)
+							leastProtected = board.getNumUnits(countryId);
+							chosenId = countryId;
+					}
+				}
+			}
+		}
+		if(chosenId == -1){
+			Collections.shuffle(neutralCountries);
+			command = GameData.COUNTRY_NAMES[neutralCountries.get(0)];
+		}else{
+			command = GameData.COUNTRY_NAMES[chosenId];
+		}
 		command = command.replaceAll("\\s", "");
 		return(command);
 	}
@@ -248,6 +267,15 @@ public class Napoleon implements Bot {
 	/**
 	 * Auxillary Method
 	 * */
+	private ArrayList<Integer> getAdjacentCountry(int countryId){
+		ArrayList<Integer> countries = new ArrayList<>();
+		for(Integer country:GameData.ADJACENT[countryId]){
+			countries.add(country);
+		}
+		return countries;
+	}
+
+
 	//returns true if a country completes a continent
 	private boolean completesContinent(int countryId, int playerId)
 	{
@@ -314,6 +342,13 @@ public class Napoleon implements Bot {
 		}
 		return playerCountryIndexes;
 	}
+
+	private int getEnemyId(){
+		if(player.getId() == 0)
+			return 1;
+		else
+			return 0;
+	}
 	/**
 	 * -----END of Auxillary methods-----
 	 */
@@ -363,12 +398,13 @@ public class Napoleon implements Bot {
 
 	private int getClusterValue(int countryId){
 		int sum = 0;
+		int occupierId = board.getOccupier(countryId);
 		ArrayList<Integer> visited = new ArrayList<>();
 		Queue<Integer> queue = new LinkedList<Integer>();
 		queue.add(countryId);
 		while(!queue.isEmpty()){
 			int check = queue.remove();
-			if(board.getOccupier(check) == player.getId()){
+			if(board.getOccupier(check) == occupierId){
 				sum++;
 				visitNeighbours(check, visited, queue);
 			}

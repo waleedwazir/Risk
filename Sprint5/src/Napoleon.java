@@ -15,6 +15,7 @@ public class Napoleon implements Bot {
 	private BoardAPI board;
 	private PlayerAPI player;
 	int botAttacks = 8;
+	double attackThreshHold;
 	int indexOfTarget;
 	int indexOfAttacker;
 	
@@ -68,15 +69,13 @@ public class Napoleon implements Bot {
 
 		String command;
 		getTarget();
-		if(botAttacks > 0)
+		if(attackThreshHold > 51.00)
 		{
 
 			 command = GameData.COUNTRY_NAMES[indexOfAttacker].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[indexOfTarget].replaceAll(" ","")+" "+calcNumberAttackingTroops();
-			 botAttacks--;
 		}else
 		{
 			command = "skip";
-			botAttacks = 5;
 		}
 		return(command);
 	}
@@ -169,6 +168,7 @@ public class Napoleon implements Bot {
 						if(highestWinChance < winChance)
 						{
 							highestWinChance = winChance;
+							attackThreshHold = highestWinChance;
 							indexOfTarget = adjacentCountries[j];
 							indexOfAttacker = playerCountryIndex;
 						}
@@ -202,12 +202,16 @@ public class Napoleon implements Bot {
 
 	public int calcNumberAttackingTroops()
 	{
-		if(board.getNumUnits(indexOfAttacker) >= 3)
+		int troops = board.getNumUnits(indexOfAttacker);
+		if( troops > 3)
 		{
 			return 3;
+		}else if(troops == 3)
+		{
+			return 2;
 		}else
 		{
-			return board.getNumUnits(indexOfAttacker);
+			return 1;
 		}
 	}
 

@@ -24,7 +24,11 @@ public class Napoleon implements Bot {
 		// put your code here
 		return;
 	}
-	
+
+
+	/**
+	 * -----Public API-----
+	 * **/
 	public String getName () {
 		String command = "";
 		// put your code here
@@ -109,8 +113,13 @@ public class Napoleon implements Bot {
 	}
 
 
-	/*Auxiliary methods*/
+	/**
+	 * -----Auxiliary methods-----
+	 * */
 
+	/**Card Methods*/
+
+	//Changes card set ids into appropriate command
 	private String convertInsignia(int[] insignia)
 	{
 		String command = "";
@@ -134,8 +143,9 @@ public class Napoleon implements Bot {
 			}
 		}
 		return command;
-		}
+	}
 
+	//returns valid card set ids in Napoleon's hand
 	private int[] getValidInsigniaIds()
 	{
 		for(int i=0;i<Deck.SETS.length;i++)
@@ -148,7 +158,11 @@ public class Napoleon implements Bot {
 
 		return null;
 	}
+	/**End of card methods*/
 
+	/**Attacking Methods*/
+	//Sets country id of attacking and defending countries wit highest win chance.
+	//determines if bot will attack
 	private void getTarget()
 	{
 		try
@@ -180,6 +194,88 @@ public class Napoleon implements Bot {
 		}
 	}
 
+
+	//determines best number of attacking troops
+	public int calcNumberAttackingTroops()
+	{
+		int troops = board.getNumUnits(indexOfAttacker);
+		if(troops > 3)
+		{
+			return 3;
+		}else if(troops == 3)
+		{
+			return 2;
+		}else
+		{
+			return 1;
+		}
+	}
+
+	//Determines the chance of winning based on parsed number of troops
+	public double winChance(int attackingTroops, int defendingTroops) throws FileNotFoundException {
+		int row = ((attackingTroops-1)*30)+defendingTroops;
+		Scanner scanner = new Scanner(new File("./src/napoleonData.csv"));
+		scanner.useDelimiter(",");
+		int i = 1;
+		while (scanner.hasNext()){
+			if(i == row)
+				return scanner.nextDouble();
+			scanner.nextLine();
+			i++;
+		}
+		return 0;
+	}
+
+	/**Auxillary Method*/
+	//returns true if a country completes a continent
+	private boolean completesContinent(int countryId, int playerId)
+	{
+		//returns index of continent country is in
+		//returns -1 if it cannot be found
+		int continentIndex = countryContinentIndex(countryId);
+		//increments for every country within a continent owned by the player
+		int conquered = 0;
+
+		if(continentIndex != -1)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
+			for(int i=0;i<continentIds.length;i++)
+			{
+				if(board.getOccupier(continentIds[i]) == playerId)
+				{
+					conquered++;
+				}
+			}
+
+			//conquering the territory on this country will complete the continent
+			if(conquered >= continentIds.length-1)
+			{
+				return true;
+			}
+		}
+		//false or invalid selection
+		return false;
+	}
+
+	//returns continent id that the countryId is in.
+	private int countryContinentIndex(int countryId)
+	{
+		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
+		{
+			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
+			for(int j = 0;j<continentIds.length;j++)
+			{
+				if(countryId == continentIds[j])
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+
+	//returns arraylist of countryids that player owns
 	public ArrayList<Integer> getPlayerOwnedCountryIndexes()
 	{
 		ArrayList<Integer> playerCountryIndexes = new ArrayList<>();
@@ -197,84 +293,14 @@ public class Napoleon implements Bot {
 		}
 		return playerCountryIndexes;
 	}
+	/**
+	 * -----END of Auxillary methods-----
+	 */
 
 
-	public int calcNumberAttackingTroops()
-	{
-		int troops = board.getNumUnits(indexOfAttacker);
-		if(troops > 3)
-		{
-			return 3;
-		}else if(troops == 3)
-		{
-			return 2;
-		}else
-		{
-			return 1;
-		}
-	}
-
-
-	private boolean completesContinent(int countryId)
-	{
-		//returns index of continent country is in
-		//returns -1 if it cannot be found
-		int continentIndex = countryContinentIndex(countryId);
-		//increments for every country within a continent owned by the player
-		int conquered = 0;
-
-		if(continentIndex != -1)
-		{
-			int[] continentIds = GameData.CONTINENT_COUNTRIES[continentIndex];
-			for(int i=0;i<continentIds.length;i++)
-			{
-				if(board.getOccupier(continentIds[i]) == player.getId())
-				{
-					conquered++;
-				}
-			}
-
-			//conquering the territory on this country will complete the continent
-			if(conquered == continentIds.length-1)
-			{
-				return true;
-			}
-		}
-		//false or invalid selection
-		return false;
-	}
-
-
-	private int countryContinentIndex(int countryId)
-	{
-		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
-		{
-			int[] continentIds = GameData.CONTINENT_COUNTRIES[i];
-			for(int j = 0;j<continentIds.length;j++)
-			{
-				if(countryId == continentIds[j])
-				{
-					return i;
-				}
-			}
-		}
-		return -1;
-	}
-
-	public double winChance(int attackingTroops, int defendingTroops) throws FileNotFoundException {
-		int row = ((attackingTroops-1)*30)+defendingTroops;
-		Scanner scanner = new Scanner(new File("./src/napoleonData.csv"));
-		scanner.useDelimiter(",");
-		int i = 1;
-		while (scanner.hasNext()){
-			if(i == row)
-				return scanner.nextDouble();
-			scanner.nextLine();
-			i++;
-		}
-		return 0;
-	}
-
+	/**
+	 * -----Placement Methods-----
+	 */
 	private int getReinforceCountry() throws FileNotFoundException {
 		double total = 0;
 		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
@@ -355,5 +381,8 @@ public class Napoleon implements Bot {
 		}
 		return ret;
 	}
+	/**
+	 * END of Placement Methods
+	 * */
 
 }

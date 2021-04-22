@@ -72,9 +72,8 @@ public class Napoleon implements Bot {
 
 		String command;
 		getTarget();
-		if(attackThreshHold >= 51)
+		if(attackThreshHold >= 60)
 		{
-
 			 command = GameData.COUNTRY_NAMES[indexOfAttacker].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[indexOfTarget].replaceAll(" ","")+" "+calcNumberAttackingTroops();
 		}else
 		{
@@ -99,9 +98,13 @@ public class Napoleon implements Bot {
 
 	public String getMoveIn (int attackCountryId) {
 		String command = "";
-		int units = board.getNumUnits(attackCountryId);
-		units--;
-		command = String.valueOf(units);
+		if(encapsulated(indexOfTarget)){
+			command = "0";
+		}else {
+			double units = board.getNumUnits(attackCountryId)*0.6;
+			units--;
+			command = String.valueOf((int)Math.floor(units));
+		}
 		return(command);
 	}
 
@@ -185,6 +188,9 @@ public class Napoleon implements Bot {
 					if(player.getId() != board.getOccupier(adjacentCountries[j]))
 					{
 						double winChance = winChance(board.getNumUnits(playerCountryIndex), board.getNumUnits(adjacentCountries[j]));
+						if(completesContinent(adjacentCountries[j], player.getId())){
+							winChance+=15;
+						}
 						if(highestWinChance < winChance)
 						{
 							highestWinChance = winChance;
@@ -220,20 +226,26 @@ public class Napoleon implements Bot {
 
 	//Determines the chance of winning based on parsed number of troops
 	public double winChance(int attackingTroops, int defendingTroops) throws FileNotFoundException {
-		int row = ((attackingTroops-1)*30)+defendingTroops;
-		Scanner scanner = new Scanner(new File("./src/napoleonData.csv"));
-		scanner.useDelimiter(",");
-		int i = 1;
-		while (scanner.hasNext()){
-			if(i == row)
-				return scanner.nextDouble();
-			scanner.nextLine();
-			i++;
+		if(attackingTroops<31) {
+			int row = ((attackingTroops - 1) * 30) + defendingTroops;
+			Scanner scanner = new Scanner(new File("./src/napoleonData.csv"));
+			scanner.useDelimiter(",");
+			int i = 1;
+			while (scanner.hasNext()) {
+				if (i == row)
+					return scanner.nextDouble();
+				scanner.nextLine();
+				i++;
+			}
+		}else if(attackingTroops>defendingTroops){
+			return 60;
 		}
 		return 0;
 	}
 
-	/**Auxillary Method*/
+	/**
+	 * Auxillary Method
+	 * */
 	//returns true if a country completes a continent
 	private boolean completesContinent(int countryId, int playerId)
 	{

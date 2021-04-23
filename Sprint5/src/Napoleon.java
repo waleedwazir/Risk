@@ -17,6 +17,10 @@ public class Napoleon implements Bot {
 	double attackThreshHold;
 	int indexOfTarget;
 	int indexOfAttacker;
+	int turn = 1;
+	int startingTroops;
+	boolean stopAttacking = false;
+	boolean startOfCombat = true;
 
 	/**Weightings**/
 	double nearCompleteContinentWeight = 1.3;
@@ -32,6 +36,7 @@ public class Napoleon implements Bot {
 	double weakContinentBorderWeight = 1.1;
 	double safeContinentWeight = 2;
 	double troopsToSafeContinentWeight = 2;
+	double troopThresholdWeight = 4;
 	
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
@@ -106,13 +111,24 @@ public class Napoleon implements Bot {
 
 	public String getBattle () {
 
+		if(startOfCombat)
+		{
+			startingTroops = getTotalUnits(player.getId());
+			startOfCombat = false;
+		}else
+		{
+			checkLossesInEarlyGame(getTotalUnits(player.getId()));
+		}
+
 		String command;
 		getTarget();
-		if(attackThreshHold >= attackThreshHoldWeight)
+		if(!stopAttacking && attackThreshHold >= attackThreshHoldWeight)
 		{
 			 command = GameData.COUNTRY_NAMES[indexOfAttacker].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[indexOfTarget].replaceAll(" ","")+" "+calcNumberAttackingTroops();
 		}else
 		{
+			stopAttacking = false;
+			startOfCombat = true;
 			command = "skip";
 		}
 		return(command);
@@ -160,6 +176,7 @@ public class Napoleon implements Bot {
 				command = "skip";
 			}
 		}catch (FileNotFoundException ex){ }
+		turn ++;
 		return(command);
 	}
 
@@ -349,19 +366,34 @@ public class Napoleon implements Bot {
 	private boolean isWeakContinentBorder(int countryId)
 	{
 		int continentId = getCountryContinentIndex(countryId);
-		for(int adjacent:GameData.ADJACENT[countryId])
+		if(ownsContinent(continentId,player.getId()))
 		{
-			if(getCountryContinentIndex(adjacent) != continentId)
+			for(int adjacent:GameData.ADJACENT[countryId])
 			{
-				if(board.getOccupier(adjacent) == getEnemyId() && board.getNumUnits(countryId) < board.getNumUnits(adjacent))
+				if(getCountryContinentIndex(adjacent) != continentId)
 				{
-					return true;
+					if(board.getOccupier(adjacent) == getEnemyId() && board.getNumUnits(countryId) < board.getNumUnits(adjacent))
+					{
+						return true;
+					}
 				}
 			}
 		}
 		return false;
 	}
 
+	private boolean ownsContinent(int continentId,int playerId)
+	{
+		boolean ret = true;
+		for(int countryId:GameData.CONTINENT_COUNTRIES[continentId])
+		{
+			if(board.getOccupier(countryId) != playerId)
+			{
+				ret = false;
+			}
+		}
+		return ret;
+	}
 
 	//returns continent id that the countryId is in.
 	private int getCountryContinentIndex(int countryId)
@@ -405,6 +437,66 @@ public class Napoleon implements Bot {
 			return 1;
 		else
 			return 0;
+	}
+
+	//temp method
+	private boolean isWinning()
+	{
+		if(turn > 2)
+		{
+			if(getExtraReinforcements(player.getId()) > getExtraReinforcements(getEnemyId()))
+				return true;
+			else
+				return false;
+		}
+		return true;
+	}
+
+	//changes a boolean to stop Napoleon attacking if too many troops are lost in early combat
+	private void checkLossesInEarlyGame(int currentTroops)
+	{
+		if(turn < 3)
+		{
+			int troopThreshHold = startingTroops/(int)troopThresholdWeight;
+			int troopsLost = (startingTroops - currentTroops);
+			if( troopsLost >= troopThreshHold)
+			{
+				stopAttacking = true;
+			}else
+			{
+				stopAttacking = false;
+			}
+		}
+	}
+	//returns total units owned by a player
+	private int getTotalUnits(int playerId)
+	{
+		int total = 0;
+		for(int countryId:getPlayerOwnedCountryIndexes(playerId))
+		{
+			total += board.getNumUnits(countryId);
+		}
+		return total;
+	}
+	//returns how many extra reinforcements a player gets
+	private int getExtraReinforcements(int playerId)
+	{
+		int ret = (int) getPlayerOwnedCountryIndexes(getEnemyId()).size()/3;
+
+		if(ownsContinent(0,playerId))
+			ret += 5;
+		if(ownsContinent(1,playerId))
+			ret += 5;
+		if(ownsContinent(2,playerId))
+			ret += 7;
+		if(ownsContinent(3,playerId))
+			ret += 2;
+		if(ownsContinent(4,playerId))
+			ret += 2;
+		if(ownsContinent(5,playerId))
+			ret += 3;
+
+		return ret;
 	}
 	/**
 	 * -----END of Auxillary methods-----

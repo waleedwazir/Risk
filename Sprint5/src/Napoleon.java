@@ -151,14 +151,15 @@ public class Napoleon implements Bot {
 	public String getFortify () {
 		String command = "";
 		int gifterId = getGifterCountry();
-		if(gifterId != -1)
-		{
-			command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+(board.getNumUnits(gifterId)-1);
-		}else
-		{
-			command = "skip";
-		}
-
+		try {
+			if(gifterId != -1)
+			{
+				command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+(board.getNumUnits(gifterId)-1);
+			}else
+			{
+				command = "skip";
+			}
+		}catch (FileNotFoundException ex){ }
 		return(command);
 	}
 
@@ -560,19 +561,20 @@ public class Napoleon implements Bot {
 	}
 
 	//returns the ID of the connected country with the largest number of troops
-	private int receiverId(int countryId)
+	private int receiverId(int countryId) throws FileNotFoundException
 	{
-		int max = -1;
+		double max = 0;
 		int receiverId = -1;
-		for(int connectedId:connectedCountries(countryId))
-		{
-			int troops = board.getNumUnits(connectedId);
-			if(troops > max && !encapsulated(connectedId))
+		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
+		for (int connectedId : connectedCountries(countryId))
+			raffle.put(connectedId, getCountryPriority(connectedId));
+
+		for (Map.Entry<Integer, Double> entry : raffle.entrySet())
+			if (entry.getValue() > max)
 			{
-				max = troops;
-				receiverId = connectedId;
+				max = entry.getValue();
+				receiverId = entry.getKey();
 			}
-		}
 		return receiverId;
 	}
 

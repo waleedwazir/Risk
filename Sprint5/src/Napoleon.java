@@ -23,20 +23,23 @@ public class Napoleon implements Bot {
 	boolean startOfCombat = true;
 
 	/**Weightings**/
-	double nearCompleteContinentWeight = 1.3;
-	double completesContinentWeight = 20;
-	double attackThreshHoldWeight = 50;
+	int depthCutoffWeight = 10;
+	double depthScalerWeight = 1.5;
+	double nearCompleteContinentWeight = 1.1;
+	double completesContinentWeight = 10;
+	double attackThreshHoldWeight = 67;
 	double borderWeight = 1.1;
-	double neutralDeterrentWeight = 0;
-	double moveInWeight = 0.6;
-	double moveInRefinedWeight = 0.2;
-	double enemyTargetWeight = 10;
+	double neutralDeterrentWeight = 5;
+	double moveInWeight = 0.5;
+	double moveInRefinedWeight = 0.1;
+	double enemyTargetWeight = 8;
 	double enemyWinChanceWeight = 55;
 	double defendingScaleWeight = 100;
 	double weakContinentBorderWeight = 1.1;
 	double safeContinentWeight = 2;
 	double troopsToSafeContinentWeight = 2;
 	double troopThresholdWeight = 4;
+	double largeAccumulationDeterrent = 0.8;
 	
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
@@ -98,7 +101,7 @@ public class Napoleon implements Bot {
 	
 	public String getCardExchange () {
 		String command = "";
-		if(player.isForcedExchange())
+		if(player.isForcedExchange() || isWinning())
 		{
 			command = convertInsignia(getValidInsigniaIds());
 
@@ -151,7 +154,10 @@ public class Napoleon implements Bot {
 	public String getMoveIn (int attackCountryId) {
 		String command = "";
 		if(encapsulated(indexOfTarget)){
-			command = "0";
+			moveInWeight -= moveInRefinedWeight;
+			double units = board.getNumUnits(attackCountryId)*moveInWeight;
+			moveInWeight += moveInRefinedWeight;
+			command = String.valueOf((int) Math.floor(units));
 		}else {
 			if(encapsulated(attackCountryId))
 				moveInWeight += moveInRefinedWeight;
@@ -229,6 +235,11 @@ public class Napoleon implements Bot {
 	{
 		try
 		{
+			if(isWinning()){
+				enemyTargetWeight = 8;
+			}else{
+				enemyTargetWeight = 5;
+			}
 			double highestWinChance = -1;
 			ArrayList<Integer> playerCountries = getPlayerOwnedCountryIndexes(player.getId());
 			for(int i=0;i<playerCountries.size();i++)
@@ -240,13 +251,16 @@ public class Napoleon implements Bot {
 					if(player.getId() != board.getOccupier(adjacentCountries[j]))
 					{
 						double winChance = winChance(board.getNumUnits(playerCountryIndex), board.getNumUnits(adjacentCountries[j]));
-						if(completesContinent(adjacentCountries[j], player.getId()) && winChance==45){
+						if(completesContinent(adjacentCountries[j], player.getId()) && winChance >= 45){
 							winChance+=completesContinentWeight;
 						}
 						if(board.getOccupier(indexOfTarget) != getEnemyId())
 							winChance -= neutralDeterrentWeight;
 						if(board.getOccupier(indexOfTarget) == getEnemyId() && winChance>enemyWinChanceWeight){
 							winChance += enemyTargetWeight;
+						}
+						if(winChance>=90){
+							winChance += (depthOfAttack(adjacentCountries[j])*depthScalerWeight);
 						}
 						if(highestWinChance < winChance)
 						{
@@ -258,15 +272,57 @@ public class Napoleon implements Bot {
 					}
 				}
 			}
-		}catch (FileNotFoundException e)
+		}catch (FileNotFoundException | InterruptedException e)
 		{
 			System.out.println("File not found");
 		}
 	}
 
+	private int depthOfAttack(int targetId) throws InterruptedException {
+		ArrayList<Integer> neighbours = getAdjacentCountry(targetId);
+		ArrayList<Integer> visited = new ArrayList<>();
+		visited.add(targetId);
+		int sum = 1;
+		for(Integer neighbourId:neighbours){
+			if(board.getOccupier(neighbourId) != player.getId() && !isVisited(neighbourId, visited)){
+				sum = Math.max(sum, 1 + depthOfAttackHelper(neighbourId, visited, sum));
+			}
+		}
+
+		return sum;
+	}
+
+	private int depthOfAttackHelper(int targetId, ArrayList<Integer> visited, int sum){
+		if(sum >= depthCutoffWeight){
+			return sum;
+		}
+		ArrayList<Integer> neighbours = getAdjacentCountry(targetId);
+		visited.add(targetId);
+		ArrayList<Integer> neighbourSums = new ArrayList<>();
+		for(Integer neighbourId:neighbours){
+			if(board.getOccupier(neighbourId) != player.getId() && !isVisited(neighbourId, visited)){
+				ArrayList<Integer> visitedParse = new ArrayList<>();
+				visitedParse.addAll(visited);
+				neighbourSums.add(Math.max(sum, depthOfAttackHelper(neighbourId, visitedParse, sum+1)));
+			}
+		}
+
+		for(Integer neighbourSum:neighbourSums){
+			sum = Math.max(sum, neighbourSum);
+		}
+		return sum;
+	}
+
+	private boolean isVisited(int targetId, ArrayList<Integer> visited){
+		if(visited.contains(targetId))
+			return true;
+		else
+			return false;
+	}
+
 
 	//determines best number of attacking troops
-	public int calcNumberAttackingTroops()
+	private int calcNumberAttackingTroops()
 	{
 		int troops = board.getNumUnits(indexOfAttacker);
 		if(troops > 3)
@@ -295,7 +351,7 @@ public class Napoleon implements Bot {
 				i++;
 			}
 		}else if(attackingTroops>defendingTroops){
-			return attackThreshHoldWeight;
+			return 100;
 		}
 		return 0;
 	}
@@ -534,12 +590,23 @@ public class Napoleon implements Bot {
 		for(int checkId:GameData.ADJACENT[countryId]) {
 			if(board.getOccupier(checkId) != board.getOccupier(countryId)) {
 				sumEnemyTroops += board.getNumUnits(checkId)-1;
+				for(int adjacent:GameData.ADJACENT[checkId]){
+					if(board.getOccupier(adjacent) == player.getId() && adjacent != countryId && board.getNumUnits(adjacent) == 31){
+						priority = 0;
+					}
+				}
 			}
 			if(board.getOccupier(checkId) == player.getId()){
-				priority *= borderWeight;
+				if(board.getNumUnits(checkId) > 15){
+					priority *= largeAccumulationDeterrent;
+				}else {
+					priority *= borderWeight;
+				}
 			}
 		}
 		double defChance = 1-(winChance(sumEnemyTroops, board.getNumUnits(countryId)));
+
+
 
 		priority *= defScale+(defChance/defendingScaleWeight);
 
@@ -550,8 +617,7 @@ public class Napoleon implements Bot {
 			completesContinent = nearCompleteContinentWeight + safeContinent;
 		if(isWeakContinentBorder(countryId))
 			weakContinentBorder = weakContinentBorderWeight;
-		priority *= 1+(getClusterValue(countryId)/10) + completesContinent + weakContinentBorder;
-
+		priority *= 1+(getClusterValue(countryId)/100) + completesContinent + weakContinentBorder;
 
 		if(encapsulated(countryId))
 			priority*=0;

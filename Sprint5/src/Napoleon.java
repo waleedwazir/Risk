@@ -29,6 +29,9 @@ public class Napoleon implements Bot {
 	double enemyTargetWeight = 10;
 	double enemyWinChanceWeight = 55;
 	double defendingScaleWeight = 100;
+	double weakContinentBorderWeight = 1.1;
+	double safeContinentWeight = 2;
+	double troopsToSafeContinentWeight = 2;
 	
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
@@ -296,7 +299,7 @@ public class Napoleon implements Bot {
 	{
 		//returns index of continent country is in
 		//returns -1 if it cannot be found
-		int continentIndex = countryContinentIndex(countryId);
+		int continentIndex = getCountryContinentIndex(countryId);
 		//increments for every country within a continent owned by the player
 		int conquered = 0;
 
@@ -321,8 +324,46 @@ public class Napoleon implements Bot {
 		return false;
 	}
 
+	//returns true if the borders of the continent are surrounded by non enemy territories
+	private boolean isContinentSafe(int continentId)
+	{
+		boolean safe = true;
+		for(int countryId:GameData.CONTINENT_COUNTRIES[continentId])
+		{
+			for(int adjacent:GameData.ADJACENT[countryId])
+			{
+				if(getCountryContinentIndex(adjacent) != continentId)
+				{
+					 if(board.getOccupier(adjacent) == getEnemyId())
+					 {
+					 	safe = false;
+					 }
+				}
+			}
+		}
+		return safe;
+	}
+
+	//returns true if the country is a continent border and it has less troops than an adjacent territory from another continent that is owned by an enemy
+	private boolean isWeakContinentBorder(int countryId)
+	{
+		int continentId = getCountryContinentIndex(countryId);
+		for(int adjacent:GameData.ADJACENT[countryId])
+		{
+			if(getCountryContinentIndex(adjacent) != continentId)
+			{
+				if(board.getOccupier(adjacent) == getEnemyId() && board.getNumUnits(countryId) < board.getNumUnits(adjacent))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 	//returns continent id that the countryId is in.
-	private int countryContinentIndex(int countryId)
+	private int getCountryContinentIndex(int countryId)
 	{
 		for(int i=0;i<GameData.NUM_CONTINENTS;i++)
 		{
@@ -393,7 +434,10 @@ public class Napoleon implements Bot {
 	private double getCountryPriority(int countryId) throws FileNotFoundException{
 		double priority = 1, defScale = 1;
 		double completesContinent = 0;
+		double weakContinentBorder = 0;
+		double safeContinent = 0;
 		int sumEnemyTroops = 0;
+
 		for(int checkId:GameData.ADJACENT[countryId]) {
 			if(board.getOccupier(checkId) != board.getOccupier(countryId)) {
 				sumEnemyTroops += board.getNumUnits(checkId)-1;
@@ -406,9 +450,14 @@ public class Napoleon implements Bot {
 
 		priority *= defScale+(defChance/defendingScaleWeight);
 
-		if(isNearCompleteContinent(countryId))
-			completesContinent = nearCompleteContinentWeight;
-		priority *= 1+(getClusterValue(countryId)/10) + completesContinent;
+		int countryCompletesContinent = isNearCompleteContinent(countryId);
+		if(countryCompletesContinent != -1)
+			if(isContinentSafe(getCountryContinentIndex(countryId)) && numAllyTroopsSurrounding(countryCompletesContinent) <= (board.getNumUnits(countryCompletesContinent)*troopsToSafeContinentWeight))
+				safeContinent = safeContinentWeight;
+			completesContinent = nearCompleteContinentWeight + safeContinent;
+		if(isWeakContinentBorder(countryId))
+			weakContinentBorder = weakContinentBorderWeight;
+		priority *= 1+(getClusterValue(countryId)/10) + completesContinent + weakContinentBorder;
 
 
 		if(encapsulated(countryId))
@@ -529,13 +578,28 @@ public class Napoleon implements Bot {
 
 	/*returns true isthere is a country adjacent to the countryId passed as an argument
 	that would complete a continent*/
-	private boolean isNearCompleteContinent(int countryId)
+	private int isNearCompleteContinent(int countryId)
 	{
 		for(int adjacent: GameData.ADJACENT[countryId])
 			if(completesContinent(adjacent,player.getId()) && board.getOccupier(adjacent) != player.getId())
-				return true;
-		return false;
+				return adjacent;
+		return -1;
 	}
+
+	//returns the number of possible attacking troops from ally countries surrounding an enemy territory
+	private int numAllyTroopsSurrounding(int enemyId)
+	{
+		int troops = 0;
+		for(int adjacent: GameData.ADJACENT[enemyId])
+		{
+			if(board.getOccupier(adjacent) == player.getId())
+			{
+				troops += board.getNumUnits(adjacent) - 1;
+			}
+		}
+		return troops;
+	}
+
 	/**
 	 * END of Placement Methods
 	 * */

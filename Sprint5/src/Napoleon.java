@@ -23,6 +23,9 @@ public class Napoleon implements Bot {
 	boolean startOfCombat = true;
 
 	/**Weightings**/
+	int safeContinentWeight = 2;
+	int troopsToSafeContinentWeight = 2;
+	int troopThresholdWeight = 4;
 	int depthCutoffWeight = 10;
 	double depthScalerWeight = 1.5;
 	double nearCompleteContinentWeight = 1.1;
@@ -36,9 +39,6 @@ public class Napoleon implements Bot {
 	double enemyWinChanceWeight = 55;
 	double defendingScaleWeight = 100;
 	double weakContinentBorderWeight = 1.1;
-	double safeContinentWeight = 2;
-	double troopsToSafeContinentWeight = 2;
-	int troopThresholdWeight = 4;
 	double largeAccumulationDeterrent = 0.8;
 
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {

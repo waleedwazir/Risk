@@ -101,7 +101,7 @@ public class Napoleon implements Bot {
 	
 	public String getCardExchange () {
 		String command = "";
-		if(player.isForcedExchange() || isWinning())
+		if(player.isForcedExchange() || !isWinning())
 		{
 			command = convertInsignia(getValidInsigniaIds());
 
@@ -123,6 +123,7 @@ public class Napoleon implements Bot {
 			checkLossesInEarlyGame(getTotalUnits(player.getId()));
 		}
 
+		attackThreshHold = 0;
 		String command;
 		getTarget();
 		if(!stopAttacking && attackThreshHold >= attackThreshHoldWeight)
@@ -176,7 +177,8 @@ public class Napoleon implements Bot {
 		try {
 			if(gifterId != -1)
 			{
-				command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+(board.getNumUnits(gifterId)-1);
+				int units = board.getNumUnits(gifterId) > 4 ? board.getNumUnits(gifterId) - 2: board.getNumUnits(gifterId) - 1;
+				command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+units;
 			}else
 			{
 				command = "skip";

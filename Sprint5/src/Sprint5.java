@@ -5,26 +5,68 @@ public class Sprint5 {
 
 	public static void main (String args[]) throws FileNotFoundException {
 		double napoleon1Wins = 0, napoleon2Wins = 0, napoleon3Wins = 0, napoleon4Wins = 0;
-		int numGames = 1;
+		int numGames = 10;
 		ParameterHandler handler = new ParameterHandler();
-		handler.read();
-		for(int i=0;i<numGames;i++) {
-			napoleon1Wins += gameStart(handler.getNapoleon_1());
+		for(int j = 0; j < 2;j++) {
+			handler.read();
+			double wins[] = new double[4];
+			for (int i = 0; i < numGames; i++) {
+				napoleon1Wins += gameStart(handler.getNapoleon_1());
+				wins[0] = napoleon1Wins;
+			}
+			for (int i = 0; i < numGames; i++) {
+				napoleon2Wins += gameStart(handler.getNapoleon_2());
+				wins[1] = napoleon2Wins;
+			}
+			for (int i = 0; i < numGames; i++) {
+				napoleon3Wins += gameStart(handler.getNapoleon_3());
+				wins[2] = napoleon3Wins;
+			}
+			for (int i = 0; i < numGames; i++) {
+				napoleon4Wins += gameStart(handler.getNapoleon_4());
+				wins[3] = napoleon4Wins;
+			}
+			System.out.println("Winrate 1: " + (napoleon1Wins / numGames) * 100);
+			System.out.println("Winrate 2: " + (napoleon2Wins / numGames) * 100);
+			System.out.println("Winrate 3: " + (napoleon3Wins / numGames) * 100);
+			System.out.println("Winrate 4: " + (napoleon4Wins / numGames) * 100);
+			double best = -1, good = -1;
+			int bestIndex = 0, goodIndex = 1;
+			for(int i = 0;i<4;i++){
+				if(wins[i] > best){
+					best = wins[i];
+					bestIndex = i;
+				}
+			}
+			wins[bestIndex] = 0;
+			for(int i = 0;i<4;i++){
+				if(wins[i] > good){
+					good = wins[i];
+					goodIndex = i;
+				}
+			}
+			String winner1 = "";
+			if(bestIndex == 0)
+				winner1 = handler.getNapoleon_1();
+			else if(bestIndex == 1)
+				winner1 = handler.getNapoleon_2();
+			else if(bestIndex == 2)
+				winner1 = handler.getNapoleon_3();
+			else if(bestIndex == 3)
+				winner1 = handler.getNapoleon_4();
+
+			String winner2 = "";
+			if(goodIndex == 0)
+				winner2 = handler.getNapoleon_1();
+			else if(goodIndex == 1)
+				winner2 = handler.getNapoleon_2();
+			else if(goodIndex == 2)
+				winner2 = handler.getNapoleon_3();
+			else if(goodIndex == 3)
+				winner2 = handler.getNapoleon_4();
+
+			handler.write(winner1, winner2);
 		}
-		for(int i=0;i<numGames;i++) {
-			napoleon1Wins += gameStart(handler.getNapoleon_2());
-		}
-		for(int i=0;i<numGames;i++) {
-			napoleon1Wins += gameStart(handler.getNapoleon_3());
-		}
-		for(int i=0;i<numGames;i++) {
-			napoleon1Wins += gameStart(handler.getNapoleon_4());
-		}
-		System.out.println("Winrate 1: "+(napoleon1Wins/numGames)*100);
-		System.out.println("Winrate 2: "+(napoleon2Wins/numGames)*100);
-		System.out.println("Winrate 3: "+(napoleon3Wins/numGames)*100);
-		System.out.println("Winrate 4: "+(napoleon4Wins/numGames)*100);
-		
 		return;
 	}
 
@@ -45,7 +87,7 @@ public class Sprint5 {
 		for (playerId=0; playerId<GameData.NUM_PLAYERS_PLUS_NEUTRALS; playerId++) {
 			players[playerId] = new Player (playerId);
 			if (playerId == 0) {
-				players[playerId].setBot(new nullptr(board,players[playerId]));
+				players[playerId].setBot(new SuckyBeigeFish(board,players[playerId]));
 			}
 			if (playerId == 1) {
 				players[playerId].setBot(new Napoleon(board,players[playerId],input));

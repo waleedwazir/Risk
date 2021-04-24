@@ -201,13 +201,16 @@ public class Napoleon implements Bot {
 
 	public String getFortify () {
 		String command = "";
-		getContinentBalance(player.getId());
 		int gifterId = getGifterCountry();
 		try {
 			if(gifterId != -1)
 			{
-				int units = board.getNumUnits(gifterId) > 4 ? board.getNumUnits(gifterId) - 2: board.getNumUnits(gifterId) - 1;
-				command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ","") +" "+GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ","")+" "+units;
+				try {
+					int units = board.getNumUnits(gifterId) > 4 ? board.getNumUnits(gifterId) - 2 : board.getNumUnits(gifterId) - 1;
+					command = GameData.COUNTRY_NAMES[gifterId].replaceAll(" ", "") + " " + GameData.COUNTRY_NAMES[receiverId(gifterId)].replaceAll(" ", "") + " " + units;
+				}catch(ArrayIndexOutOfBoundsException ex){
+					command = "skip";
+				}
 			}else
 			{
 				command = "skip";
@@ -617,10 +620,10 @@ public class Napoleon implements Bot {
 		for(int i = 0;i<countries.size();i++){
 			raffle.put(countries.get(i), getCountryPriority(countries.get(i)));
 		}
-		double max = 0;
+		double max = -1;
 		int ret = 0;
 		for(Map.Entry<Integer,Double> entry:raffle.entrySet()){
-			if(entry.getValue()>max){
+			if(entry.getValue() >= max){
 				max = entry.getValue();
 				ret = entry.getKey();
 			}
@@ -652,7 +655,7 @@ public class Napoleon implements Bot {
 				}
 			}
 		}
-		double defChance = 1-(winChance(sumEnemyTroops, board.getNumUnits(countryId)));
+		double defChance = (winChance(sumEnemyTroops, board.getNumUnits(countryId)));
 
 
 
@@ -769,7 +772,7 @@ public class Napoleon implements Bot {
 	//returns the ID of the connected country with the largest number of troops
 	private int receiverId(int countryId) throws FileNotFoundException
 	{
-		double max = 0;
+		double max = -1;
 		int receiverId = -1;
 		HashMap<Integer, Double> raffle = new HashMap<Integer, Double>();
 		for (int connectedId : connectedCountries(countryId))

@@ -38,9 +38,9 @@ public class Napoleon implements Bot {
 	double weakContinentBorderWeight = 1.1;
 	double safeContinentWeight = 2;
 	double troopsToSafeContinentWeight = 2;
-	double troopThresholdWeight = 4;
+	int troopThresholdWeight = 4;
 	double largeAccumulationDeterrent = 0.8;
-	
+
 	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer) {
 		board = inBoard;	
 		player = inPlayer;
@@ -173,6 +173,7 @@ public class Napoleon implements Bot {
 
 	public String getFortify () {
 		String command = "";
+		getContinentBalance(player.getId());
 		int gifterId = getGifterCountry();
 		try {
 			if(gifterId != -1)
@@ -369,6 +370,23 @@ public class Napoleon implements Bot {
 		return countries;
 	}
 
+	private HashMap<Integer,Double> getContinentBalance(int playerId)
+	{
+		HashMap<Integer,Double> balances = new HashMap<>();
+		double countriesInContinent = 0;
+		for(int i=0;i<6;i++)
+		{
+			for(int countryId:getPlayerOwnedCountryIndexes(playerId))
+			{
+				if(getCountryContinentIndex(countryId) == i)
+				{
+					countriesInContinent++;
+				}
+			}
+			balances.put(i,countriesInContinent/GameData.CONTINENT_COUNTRIES[i].length);
+		}
+		return balances;
+	}
 
 	//returns true if a country completes a continent
 	private boolean completesContinent(int countryId, int playerId)
@@ -515,7 +533,7 @@ public class Napoleon implements Bot {
 	{
 		if(turn < 3)
 		{
-			int troopThreshHold = startingTroops/(int)troopThresholdWeight;
+			int troopThreshHold = startingTroops/troopThresholdWeight;
 			int troopsLost = (startingTroops - currentTroops);
 			if( troopsLost >= troopThreshHold)
 			{

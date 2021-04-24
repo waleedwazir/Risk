@@ -1,8 +1,34 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Sprint5 {
-	
-	public static void main (String args[]) {	   
+
+	public static void main (String args[]) throws FileNotFoundException {
+		double napoleon1Wins = 0, napoleon2Wins = 0, napoleon3Wins = 0, napoleon4Wins = 0;
+		int numGames = 1;
+		ParameterHandler handler = new ParameterHandler();
+		handler.read();
+		for(int i=0;i<numGames;i++) {
+			napoleon1Wins += gameStart(handler.getNapoleon_1());
+		}
+		for(int i=0;i<numGames;i++) {
+			napoleon1Wins += gameStart(handler.getNapoleon_2());
+		}
+		for(int i=0;i<numGames;i++) {
+			napoleon1Wins += gameStart(handler.getNapoleon_3());
+		}
+		for(int i=0;i<numGames;i++) {
+			napoleon1Wins += gameStart(handler.getNapoleon_4());
+		}
+		System.out.println("Winrate 1: "+(napoleon1Wins/numGames)*100);
+		System.out.println("Winrate 2: "+(napoleon2Wins/numGames)*100);
+		System.out.println("Winrate 3: "+(napoleon3Wins/numGames)*100);
+		System.out.println("Winrate 4: "+(napoleon4Wins/numGames)*100);
+		
+		return;
+	}
+
+	public static int gameStart(String input){
 		Board board = new Board();
 		UI ui = new UI(board);
 		Player[] players = new Player[GameData.NUM_PLAYERS_PLUS_NEUTRALS];
@@ -13,13 +39,16 @@ public class Sprint5 {
 		int playerId, otherPlayerId, numUnits, numCards, attackUnits, defenceUnits;
 		int countryId, attackCountryId, defenceCountryId, countriesInvaded;
 		String name;
-		
+
 		ui.displayString("ENTER PLAYER NAMES");
 		ui.displayMap();
 		for (playerId=0; playerId<GameData.NUM_PLAYERS_PLUS_NEUTRALS; playerId++) {
 			players[playerId] = new Player (playerId);
+			if (playerId == 0) {
+				players[playerId].setBot(new nullptr(board,players[playerId]));
+			}
 			if (playerId == 1) {
-				players[playerId].setBot(new Napoleon(board,players[playerId]));
+				players[playerId].setBot(new Napoleon(board,players[playerId],input));
 			}
 			if (playerId < GameData.NUM_PLAYERS) {
 				name = ui.inputName(players[playerId]);
@@ -30,7 +59,7 @@ public class Sprint5 {
 				players[playerId].setName(name);
 			}
 		}
-		
+
 		ui.displayString("\nDRAW TERRITORY CARDS FOR STARTING COUNTRIES");
 		deck = new Deck(Deck.NO_WILD_CARD_DECK);
 		for (playerId=0; playerId<GameData.NUM_PLAYERS_PLUS_NEUTRALS; playerId++) {
@@ -48,14 +77,14 @@ public class Sprint5 {
 			}
 		}
 		ui.displayMap();
-		
+
 		ui.displayString("\nROLL DICE TO SEE WHO REINFORCES THEIR COUNTRIES FIRST");
 		do {
 			for (int i=0; i<GameData.NUM_PLAYERS; i++) {
 				players[i].rollDice(1);
 				ui.displayDice(players[i]);
 			}
-		} while (players[0].getDie(0) == players[1].getDie(0)); 
+		} while (players[0].getDie(0) == players[1].getDie(0));
 		if (players[0].getDie(0) > players[1].getDie(0)) {
 			playerId = 0;
 		} else {
@@ -63,7 +92,7 @@ public class Sprint5 {
 		}
 		currPlayer = players[playerId];
 		ui.displayRollWinner(currPlayer);
-		
+
 		ui.displayString("\nREINFORCE INITIAL COUNTRIES");
 		for (int r=0; r<2*GameData.NUM_REINFORCE_ROUNDS; r++) {
 			currPlayer.addUnits(3);
@@ -78,20 +107,20 @@ public class Sprint5 {
 			for (int p=GameData.NUM_PLAYERS; p<GameData.NUM_PLAYERS_PLUS_NEUTRALS; p++) {
 				ui.inputPlacement(currPlayer, players[p]);
 				countryId = ui.getCountryId();
-				board.addUnits(countryId, 1);	
+				board.addUnits(countryId, 1);
 				ui.displayMap();
 			}
 			playerId = (++playerId)%GameData.NUM_PLAYERS;
 			currPlayer = players[playerId];
 		}
-			
+
 		ui.displayString("\nROLL DICE TO SEE WHO TAKES THE FIRST TURN");
 		do {
 			for (int i=0; i<GameData.NUM_PLAYERS; i++) {
 				players[i].rollDice(1);
 				ui.displayDice(players[i]);
 			}
-		} while (players[0].getDie(0) == players[1].getDie(0)); 
+		} while (players[0].getDie(0) == players[1].getDie(0));
 		if (players[0].getDie(0) > players[1].getDie(0)) {
 			playerId = 0;
 		} else {
@@ -99,9 +128,9 @@ public class Sprint5 {
 		}
 		currPlayer = players[playerId];
 		ui.displayRollWinner(currPlayer);
-		
-		deck = new Deck(Deck.WILD_CARD_DECK);		
-		
+
+		deck = new Deck(Deck.WILD_CARD_DECK);
+
 		// TEST CODE TO GIVE PLAYERS 6 CARDS TO START WITH
 //		for (int i=0; i<GameData.NUM_PLAYERS; i++) {
 //			for (int j=0; j<6; j++) {
@@ -110,24 +139,24 @@ public class Sprint5 {
 //				ui.displayCardDraw(players[i],card);
 //			}
 //		}
-		
+
 		ui.displayString("\nSTART TURNS");
 		do {
 			otherPlayerId = (playerId+1)%GameData.NUM_PLAYERS;
 			otherPlayer = players[otherPlayerId];
-			
+
 			// 1. Reinforcements from occupied countries & continents
 			numUnits = board.calcReinforcements(currPlayer);
 			currPlayer.addUnits(numUnits);
 			ui.displayReinforcements(currPlayer);
 			// 1. Reinforcements from cards
-			if (!currPlayer.isOptionalExchange()) {	
+			if (!currPlayer.isOptionalExchange()) {
 				ui.displayCards(currPlayer);
 				ui.displayCannotExchange(currPlayer);
 			} else {
 				do {
 					ui.displayCards(currPlayer);
-					ui.inputCardExchange(currPlayer);		
+					ui.inputCardExchange(currPlayer);
 					if (!ui.isTurnEnded()) {
 						board.calcCardExchange(currPlayer);
 						cards = currPlayer.subtractCards(ui.getInsigniaIds());
@@ -136,14 +165,14 @@ public class Sprint5 {
 					}
 				} while (currPlayer.isOptionalExchange() && !ui.isTurnEnded());
 				if (!currPlayer.isOptionalExchange() && !ui.isTurnEnded()) {
-					ui.displayCannotExchange(currPlayer);					
+					ui.displayCannotExchange(currPlayer);
 				}
-			} 
+			}
 			do {
 				ui.displayReinforcements(currPlayer);
 				ui.inputReinforcement(currPlayer);
 				currPlayer.subtractUnits(ui.getNumUnits());
-				board.addUnits(ui.getCountryId(),ui.getNumUnits());	
+				board.addUnits(ui.getCountryId(),ui.getNumUnits());
 				ui.displayMap();
 			} while (currPlayer.getNumUnits() > 0);
 
@@ -166,7 +195,7 @@ public class Sprint5 {
 					ui.displayBattle(currPlayer,defencePlayer);
 					ui.displayMap();
 					if (board.isInvasionSuccess()) {
-						countriesInvaded++;						
+						countriesInvaded++;
 					}
 					if ( board.isInvasionSuccess() && (board.getNumUnits(attackCountryId) > 1) ) {
 						ui.inputMoveIn(currPlayer,attackCountryId);
@@ -187,8 +216,8 @@ public class Sprint5 {
 							ui.displayReinforcements(currPlayer);
 						}
 					}
-				} 
-				
+				}
+
 			} while (!ui.isTurnEnded() && !board.isGameOver());
 
 			// 3. Fortify
@@ -199,8 +228,8 @@ public class Sprint5 {
 					board.addUnits(ui.getToCountryId(), ui.getNumUnits());
 					ui.displayMap();
 				}
-			}			
-			
+			}
+
 			// 4. Territory Card
 			if (countriesInvaded > 0) {
 				card = deck.getCard();
@@ -209,14 +238,18 @@ public class Sprint5 {
 			}
 
 			playerId = (playerId+1)%GameData.NUM_PLAYERS;
-			currPlayer = players[playerId];			
+			currPlayer = players[playerId];
 
 		} while (!board.isGameOver());
-		
+		System.out.println("Winner: "+players[board.getWinner()].getName());
 		ui.displayWinner(players[board.getWinner()]);
 		ui.displayString("GAME OVER");
-		
-		return;
+		ui.exit();
+		if(players[board.getWinner()].getId() == 1){
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 
 }

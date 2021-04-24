@@ -337,6 +337,10 @@ public class UI {
 		} while (!responseOK);
 		return;		
 	}
+
+	public void exit(){
+		frame.dispose();
+	}
 	
 	public void inputCardExchange (Player player) {
 		String response, message;

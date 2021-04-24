@@ -47,8 +47,36 @@ public class Napoleon implements Bot {
 		// put your code here
 		return;
 	}
+	Napoleon(BoardAPI inBoard, PlayerAPI inPlayer, String input) {
+		board = inBoard;
+		player = inPlayer;
+		setParameters(input);
+		// put your code here
+		return;
+	}
 
 
+	private void setParameters(String input)
+	{
+		String[] parameter = input.split(",");
+		safeContinentWeight = Integer.valueOf(parameter[0]);
+		troopsToSafeContinentWeight = Integer.valueOf(parameter[1]);
+		troopThresholdWeight = Integer.valueOf(parameter[2]);
+		depthCutoffWeight = Integer.valueOf(parameter[3]);
+		depthScalerWeight = Double.valueOf(parameter[4]);
+		nearCompleteContinentWeight = Double.valueOf(parameter[5]);
+		completesContinentWeight = Double.valueOf(parameter[6]);
+		attackThreshHoldWeight = Double.valueOf(parameter[7]);
+		borderWeight = Double.valueOf(parameter[8]);
+		neutralDeterrentWeight = Double.valueOf(parameter[9]);
+		moveInWeight = Double.valueOf(parameter[10]);
+		moveInRefinedWeight = Double.valueOf(parameter[11]);
+		enemyTargetWeight = Double.valueOf(parameter[12]);
+		enemyWinChanceWeight = Double.valueOf(parameter[13]);
+		defendingScaleWeight = Double.valueOf(parameter[14]);
+		weakContinentBorderWeight = Double.valueOf(parameter[15]);
+		largeAccumulationDeterrent = Double.valueOf(parameter[16]);
+	}
 	/**
 	 * -----Public API-----
 	 * **/
